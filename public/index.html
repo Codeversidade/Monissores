@@ -1,8 +1,29 @@
 <head>
+  <!--Importar o Bootstrap-->
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Monissores</title>
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+    integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65"
+    crossorigin="anonymous"
+  />
+  <link
+    rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+  />
+
+  <script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+    crossorigin="anonymous"
+  ></script>
+
+  <!--Importar e configurar as ferramentas do Firebase-->
   <script src="https://www.gstatic.com/firebasejs/7.16.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/7.16.1/firebase-auth.js"></script>
   <script src="https://www.gstatic.com/firebasejs/7.16.1/firebase-firestore.js"></script>
-
   <script>
     var firebaseConfig = {
       apiKey: 'AIzaSyB9zK2OlUwp1N43nM-O-_EB1TI5x1BTq_E',
@@ -15,8 +36,10 @@
     };
     firebase.initializeApp(firebaseConfig);
   </script>
+  
 
   <script src="app.js" defer></script>
+
 </head>
 
 <body>
@@ -25,20 +48,464 @@
   <section id="secaoLogin">
     <!--Aqui vai a tela de Login com o Google-->
     <button id="logarComGoogleBtn">Sign in with Google</button>
+
   </section>
 
   <section id="secaoPrincipal" hidden="true">
     <!--Aqui vai a tela de Principal do Aplicativo, com a appbar e com a lista de alunos e como o botão para adicionar mais-->
 
-    <div id="userDetails"></div>
-    <button id="deslogarDoGoogleBtn">Sign Out</button>
+    <div style="position: absolute">
+      <!--Cabeçalho-->
+      <div class="fixed-top text-light shadow bg-primary">
+        <!--Linha com o texto da nav bar e botões-->
+        <nav class="navbar navbar-dark bg-primary">
+          <div class="container-fluid">
+            <a class="navbar-brand" href="#"> Relatório Monitoria </a>
+            <div>
+              <!--Botão de Pesquisar-->
+              <button
+                id="pesquisarBtn"
+              >
+                <span class="material-symbols-outlined">search</span>
+              </button>
+              <!--Botão de Gerar Relatório-->
+              <button
+                id="relatorioBtn"
+                data-bs-toggle="modal"
+                data-bs-target="#relatorioModalDialog"
+              >
+                <span class="material-symbols-outlined">description</span>
+              </button>
+              <!--Botão de abrir Configurações-->
+              <button
+                id="configsBtn"
+                data-bs-toggle="modal"
+                data-bs-target="#configsModalDialog"
+              >
+                <span class="material-symbols-outlined">settings</span>
+              </button>
 
-    <button id="addAluno">Adicionar Aluno</button>
+              <!--Botão de editar aluno (Só aparece quando apenas 1 item do listgroup está selecionado)-->
+              <button
+                id="editBtn"
+                data-bs-toggle="modal"
+                data-bs-target="#editAlunoModalDialog"
+                hidden="true"
+              >
+                <span class="material-symbols-outlined">edit</span>
+              </button>
 
-    <button id="editAluno">Editar Aluno</button>
+              <!--Botão de deletar aluno (Só aparece quando algum item do listgroup está selecionado)-->
+              <button
+                id="removeBtn"
+                data-bs-toggle="modal"
+                data-bs-target="#removeAlunoModalDialog"
+                hidden="true"
+              >
+                <span class="material-symbols-outlined">delete</span>
+              </button>
+            </div>
+          </div>
+        </nav>
+        <!--Final da NavBar-->
 
-    <button id="removeAluno">Remover Aluno</button>
+        <!-- Aqui começa Parte das Abas de Meses-->
+        <ul
+          class="nav justify-content-center nav-pills nav-fill mb-3"
+          id="pills-tab"
+          role="tablist"
+        >
+          <!--Mês 1-->
+          <li class="nav-item" role="presentation">
+            <button
+              class="nav-link active text-light"
+              id="mes-1-tab"
+              data-bs-toggle="pill"
+              data-bs-target="#mes-1"
+              type="button"
+              role="tab"
+              aria-controls="mes-1"
+              aria-selected="true"
+            >
+              1º Mês
+            </button>
+          </li>
+          <!--Mês 2-->
+          <li class="nav-item" role="presentation">
+            <button
+              class="nav-link text-light"
+              id="mes-2-tab"
+              data-bs-toggle="pill"
+              data-bs-target="#mes-2"
+              type="button"
+              role="tab"
+              aria-controls="mes-2"
+              aria-selected="false"
+            >
+              2º Mês
+            </button>
+          </li>
+          <!--Mês 3-->
+          <li class="nav-item" role="presentation">
+            <button
+              class="nav-link text-light"
+              id="tab-mes-3"
+              data-bs-toggle="pill"
+              data-bs-target="#mes-3"
+              type="button"
+              role="tab"
+              aria-controls="mes-3"
+              aria-selected="false"
+            >
+              3º Mês
+            </button>
+          </li>
+          <!--Mês 4-->
+          <li class="nav-item" role="presentation">
+            <button
+              class="nav-link text-light"
+              id="tab-mes-4"
+              data-bs-toggle="pill"
+              data-bs-target="#mes-4"
+              type="button"
+              role="tab"
+              aria-controls="mes-4"
+              aria-selected="false"
+            >
+              4º Mês
+            </button>
+          </li>
+        </ul>
+        <!--Fim da lista de Abas de Meses-->
+      </div>
+      <!--Fim do menu que inclui a navbar e a lista de abas de meses-->
 
-    <ul id="alunosLista"></ul>
+      <!--Aqui é definido o Conteúdo de Cada Tab-->
+      <div
+        class="tab-content bg-white"
+        style="margin-top: 60px"
+        id="pills-tabContent"
+      >
+        <!--Aba Mês 1-->
+        <div
+          class="tab-pane fade show active"
+          id="mes-1"
+          role="tabpanel"
+          aria-labelledby="mes-1-tab"
+          style="width: 100vw"
+        >
+          <!--A Lista de Alunos fica dentro deste list-group-->
+          <div id="alunosLista1" class="list-group"></div>
+        </div>
+
+        <!--Aba Mês 2-->
+        <div
+          class="tab-pane fade"
+          id="mes-2"
+          role="tabpanel"
+          aria-labelledby="mes-2-tab"
+          style="width: 100vw"
+          >
+          <!--A Lista de Alunos fica dentro deste list-group-->
+          <div id="alunosLista2" class="list-group"></div>
+        </div>
+
+        <!--Aba Mês 3-->
+        <div
+          class="tab-pane fade"
+          id="mes-3"
+          role="tabpanel"
+          aria-labelledby="tab-mes-3"
+          style="width: 100vw"
+          >
+          <!--A Lista de Alunos fica dentro deste list-group-->
+          <div id="alunosLista3" class="list-group"></div>
+        </div>
+        
+        <!--Aba Mês 4-->
+        <div
+        class="tab-pane fade"
+        id="mes-4"
+        role="tabpanel"
+        aria-labelledby="tab-mes-4"
+        style="width: 100vw"
+        >
+        <!--A Lista de Alunos fica dentro deste list-group-->
+        <div id="alunosLista4" class="list-group"></div>
+      </div>
+    </div> <!--Fim da div onde fica o conteudo das abas-->
+    </div> <!--Seta a Possition para Absolut-->
+    <!-- Aqui Termina Parte das Abas de Meses-->
+
+    <!--Agora inicia as definições das Caixas de Diálogo de Diversos Tipos-->
+    
+    <!--1. Aqui fica a caixa de diálogo do Relatório-->
+    <div
+      class="modal fade"
+      id="relatorioModalDialog"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="exampleModalCenterTitle"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-fullscreen" role="document">
+        <div class="modal-content">
+          <!--Cabeçalho-->
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLongTitle">Relatório</h5>
+
+            <!--Drowpdown aqui estão as opções de meses que a pessoa pode escolher para gerar o relatório pro mês correto-->
+            <div class="dropdown">
+
+              <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMesesRelatorioBtn" data-bs-toggle="dropdown" aria-expanded="false">
+                Selecione um Mês
+              </button>
+              <ul id="dropdownMesesRelatorio" class="dropdown-menu" aria-labelledby="dropdownMesesRelatorioBtn">
+                <li><a class="dropdown-item" href="#">Mês 1</a></li>
+                <li><a class="dropdown-item" href="#">Mês 2</a></li>
+                <li><a class="dropdown-item" href="#">Mês 3</a></li>
+                <li><a class="dropdown-item" href="#">Mês 4</a></li>
+              </ul>
+            </div>
+
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+            
+          </div>
+          <!--Corpo da Caixa de diálogo, aqui dentro ficará o Relatório-->
+          <div id="corpoCaixaDialogoRelatorio" class="modal-body">
+            <!--É AQUI QUE FICA A TELA Dos relatórios-->
+            Aqui Vai se escrever Alguma coisa
+          </div>
+
+          <!--Rodapé da Caixa de Diálogo-->
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-dismiss="modal"
+              data-bs-dismiss="modal"
+            >
+              Voltar
+            </button>
+
+            <button id="copiarRelatorioBtn" type="button" class="btn btn-primary">
+              <span class="material-symbols-outlined">content_copy</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Caixa de Diálogo das Configurações -->
+    <div
+      class="modal fade"
+      id="configsModalDialog"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="exampleModalCenterTitle"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <!--Cabeçalho Caixa de Diálogo-->
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLongTitle">
+              Configurações
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+              ></button>
+          </div>
+
+          <!--Corpo da Caixa de Diálogo-->
+          <div class="modal-body">
+            <!--É AQUI QUE FICA A TELA DAS CONFIGS-->
+
+            <!--PADRÂO-->
+            <div id="userDetails"></div>
+            <button
+              id="deslogarDoGoogleBtn"
+              data-dismiss="modal"
+              data-bs-dismiss="modal"
+            >
+              Sign Out
+            </button>
+            <button id="editAluno">Editar Aluno</button>
+            <button id="removeAluno">Remover Aluno</button>
+            <!--ul id="alunosLista"></ul-->
+          </div>
+
+          <!--Rodapé da Caixa de Diálogo-->
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-dismiss="modal"
+              data-bs-dismiss="modal"
+            >
+              Close
+            </button>
+
+            <button type="button" class="btn btn-primary">Save changes</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Caixa de Diálogo de adicionar aluno -->
+    <div
+    class="modal fade"
+      id="addAlunoModalDialog"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="exampleModalCenterTitle"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <!--Cabeçalho da Caixa Diálogo-->
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLongTitle">
+              Cadastrar aluno
+            </h5>
+
+            <button
+            type="button"
+            class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+
+          <!--Corpo da CD de Adicionar Aluno-->
+          <div class="modal-body">
+            <!--É AQUI QUE FICA A TELA De adicionar-->
+            <form>
+              <div class="mb-3">
+                <label for="nomeAdicionarAlunoInput" class="form-label"
+                  >Nome Completo</label
+                >
+                <input
+                  type="name"
+                  class="form-control"
+                  id="nomeAdicionarAlunoInput"
+                />
+              </div>
+              <div class="mb-3">
+                <label for="matriculaAdicionarAlunoInput" class="form-label">Matrícula</label>
+                <input class="form-control" id="matriculaAdicionarAlunoInput" />
+              </div>
+
+              <button type="submit" id="salvarAlunoNovoBtn" class="btn btn-primary">Salvar</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Caixa de Diálogo de Editar aluno -->
+    <div
+    class="modal fade"
+      id="editAlunoModalDialog"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="exampleModalCenterTitle"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <!--Cabeçalho da Caixa Diálogo-->
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLongTitle">
+              Editar aluno
+            </h5>
+
+            <button
+            type="button"
+            class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+
+          <!--Corpo da CD de Editar Aluno-->
+          <div class="modal-body">
+            <!--É AQUI QUE FICA A TELA De Editar-->
+            <form>
+              <div class="mb-3">
+                <label for="nomeEditarAlunoInput" class="form-label"
+                  >Nome Completo</label
+                >
+                <input
+                  type="name"
+                  class="form-control"
+                  id="nomeEditarAlunoInput"
+                />
+              </div>
+              <div class="mb-3">
+                <label for="matriculaEditarAlunoInput" class="form-label">Matrícula</label>
+                <input class="form-control" id="matriculaEditarAlunoInput" />
+              </div>
+
+              <button type="submit" id="editarAlunoBtn" class="btn btn-primary">Salvar</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Caixa de Diálogo de deletar aluno -->
+    <div class="modal" tabindex="-1"
+    id="removeAlunoModalDialog">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Deletar aluno</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <p>Essa ação não pode ser desfeita e deletará o aluno de todos os meses.</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Voltar</button>
+            <button type="button" class="btn btn-primary" id="removeAlunoModalDialogBtn">Deletar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!--Botão Add flutuante-->
+    <div
+      class="fixed-top"
+      style="text-align: right; padding: 20px; margin-top: 80vh"
+    >
+      <button
+        id="addAluno"
+        class="text-light bg-primary shadow"
+        style="
+          position: relative;
+          border-radius: 50px;
+          height: 50px;
+          width: 50px;
+          border: 0px;
+          text-align: center;
+          font-size: 30px;
+        "
+        data-bs-toggle="modal"
+        data-bs-target="#addAlunoModalDialog"
+      >
+      <span class="material-symbols-outlined">
+        add
+        </span>
+      </button>
+    </div>
   </section>
 </body>
