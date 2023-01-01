@@ -24,7 +24,7 @@ auth.onAuthStateChanged(user => {
     // Quando o usuário Logar essa parte será executada
     secaoPrincipal.hidden = false;
     secaoLogin.hidden = true;
-    userDetails.innerHTML = `<h3>Hello ${user.displayName}!</h3> <p>User ID: ${user.uid}</p>`;
+    userDetails.innerHTML = `<h3>${user.displayName}!</h3> <p>User ID: ${user.uid}</p>`;
     configsBtn.src = user.photoURL
     
 
