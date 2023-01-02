@@ -8,14 +8,19 @@ const salvarAlunoBtn = document.getElementById('salvarAlunoNovoBtn');
 const nomeAdicionarAlunoInput = document.getElementById('nomeAdicionarAlunoInput');
 const matriculaAdicionarAlunoInput = document.getElementById('matriculaAdicionarAlunoInput');
 const alunosLista1 = document.getElementById('alunosLista1');
-const listGroup = document.getElementsByClassName("list-group");
-
+const groupListMes = document.querySelectorAll('.list-group');
 const auth = firebase.auth();
 const provider = new firebase.auth.GoogleAuthProvider();
+let listMes1;
+let nomes;
 
 /// Sign in event handlers
 
-logarComGoogleBtn.onclick = () => auth.signInWithPopup(provider);
+logarComGoogleBtn.onclick = () => {
+  auth.signInWithPopup(provider);
+  listMes1 = document.getElementsByClassName("list-group-item list-group-item-action flex-column align-items-start");
+  nomes = document.querySelectorAll(".name");
+};
 
 deslogarDoGoogleBtn.onclick = () => auth.signOut();
 
@@ -37,7 +42,10 @@ auth.onAuthStateChanged(user => {
     /*setarAluno(user, alunosRef, 'Luiz Algusto', 2020123459);
     setarAluno(user, alunosRef, 'Inácio Estácio de Sá', 2020123460);
     setarAluno(user, alunosRef, 'Florisvalda Hortência Tulipa', 2020123463);*/
-    salvarAlunoBtn.onclick = () => salvarAluno(user, alunosRef, nomeAdicionarAlunoInput.value, parseInt(matriculaAdicionarAlunoInput.value));
+    salvarAlunoBtn.onclick = () => {
+      salvarAluno(user, alunosRef, nomeAdicionarAlunoInput.value, parseInt(matriculaAdicionarAlunoInput.value));
+      //attListGroup();
+    };
     //addAluno.onclick = () => setarAluno(user, alunosRef, 'Carlos N', 2020123457);
     //editAluno.onclick = () => editarAluno(user, alunosRef, 'Pedro', 2020123457, [2, 0, 0, 0]);
     //removeAluno.onclick = () => removerAluno(user, alunosRef, 2020123457);
@@ -47,6 +55,7 @@ auth.onAuthStateChanged(user => {
     exibirListaDeAlunos(user, alunosRef, alunosLista2, 1);
     exibirListaDeAlunos(user, alunosRef, alunosLista3, 2);
     unsubscribe = exibirListaDeAlunos(user, alunosRef, alunosLista4, 3);
+    selectItemList(listMes1, nomes);
 
   } else {
     //  Quando o usuário estiver deslogado essa parte será executada
@@ -120,18 +129,31 @@ function salvarAluno(user, collectionRef, name, matricula){
   setarAluno(user, collectionRef, name, matricula)
 }
 
-function selectItemList(){
-  for (i = 0; i < listGroup.length; i++) {
-    listGroup[i].onclick=function(){       
-      let name = document.getElementById('nome11');
-      let matricula = document.getElementById('matricula11');
-      console.log(name.innerHTML);
-      console.log(matricula.innerHTML);
+function selectItemList(listUsers, names){
+  for (i = 0; i < listUsers.length/4; i++) {
+    listUsers[i].onclick=function(){
+      console.log(names[i].innerHTML);
+      console.log(i);
     }
   }
-}
+  console.log(i);
+  /*const names = document.querySelectorAll('.name');
+  //const matriculas = document.querySelectorAll('.userMatricula');
+  for (t = 0; t < names.length; t++){}
+  console.log(t);
+   list[i].onclick=function(){       
+      //const names = document.querySelectorAll('.userName');
+      //const matriculas = document.querySelectorAll('.userMatricula');
+      //console.log(names[i].innerHTML);
+      //console.log(matriculas[i].innerHTML);
+      //console.log(i);
+      //const names = document.querySelectorAll('.matricula');
+      //const matriculas = document.querySelectorAll('.userMatricula');
+      //for (t = 0; t < names.length; t++){}
+      console.log(t);
+    }*/
 
-selectItemList();
+}
 
 /*function exibirListaDeAlunos(user, collectionRef) {
     unsubscribe = collectionRef
@@ -155,10 +177,10 @@ function exibirListaDeAlunos(user, collectionRef, listGroup, frequenciaIndex) {
             <!--Dados aluno-->
             <div style="float: left; margin-left: 10px;">
               <span class="material-symbols-outlined">person</span>
-              <label id= "nome11" style="vertical-align: top; max-width: 350px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${doc.data().nome}</label>
+              <label class= "user name ${doc.data().uid}" style="vertical-align: top; max-width: 350px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${doc.data().nome}</label>
               <br>
               <span class="material-symbols-outlined">money</span>
-              <label id= "matricula11" style="vertical-align: top;">${doc.data().matricula}</label>
+              <label class= "user matricula ${doc.data().uid}" style="vertical-align: top;">${doc.data().matricula}</label>
             </div>
             
             <!--Botão-->
@@ -172,6 +194,5 @@ function exibirListaDeAlunos(user, collectionRef, listGroup, frequenciaIndex) {
       });
       listGroup.innerHTML = items.join('');
     });
-
     return unsubscribe
 }
