@@ -7,6 +7,8 @@ const removeAluno = document.getElementById('removeAluno');
 const salvarAlunoBtn = document.getElementById('salvarAlunoNovoBtn');
 const nomeAdicionarAlunoInput = document.getElementById('nomeAdicionarAlunoInput');
 const matriculaAdicionarAlunoInput = document.getElementById('matriculaAdicionarAlunoInput');
+const alunosLista1 = document.getElementById('alunosLista1');
+const listGroup = document.getElementsByClassName("list-group");
 
 const auth = firebase.auth();
 const provider = new firebase.auth.GoogleAuthProvider();
@@ -115,9 +117,21 @@ function editarAluno(user, collectionRef, nome, matricula, frequencia) {
 }
 
 function salvarAluno(user, collectionRef, name, matricula){
-    setarAluno(user, collectionRef, name, matricula)
+  setarAluno(user, collectionRef, name, matricula)
 }
 
+function selectItemList(){
+  for (i = 0; i < listGroup.length; i++) {
+    listGroup[i].onclick=function(){       
+      let name = document.getElementById('nome11');
+      let matricula = document.getElementById('matricula11');
+      console.log(name.innerHTML);
+      console.log(matricula.innerHTML);
+    }
+  }
+}
+
+selectItemList();
 
 /*function exibirListaDeAlunos(user, collectionRef) {
     unsubscribe = collectionRef
@@ -141,10 +155,10 @@ function exibirListaDeAlunos(user, collectionRef, listGroup, frequenciaIndex) {
             <!--Dados aluno-->
             <div style="float: left; margin-left: 10px;">
               <span class="material-symbols-outlined">person</span>
-              <label style="vertical-align: top; max-width: 350px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${doc.data().nome}</label>
+              <label id= "nome11" style="vertical-align: top; max-width: 350px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${doc.data().nome}</label>
               <br>
               <span class="material-symbols-outlined">money</span>
-              <label style="vertical-align: top;">${doc.data().matricula}</label>
+              <label id= "matricula11" style="vertical-align: top;">${doc.data().matricula}</label>
             </div>
             
             <!--Botão-->
