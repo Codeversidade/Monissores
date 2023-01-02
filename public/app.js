@@ -14,7 +14,7 @@ logarComGoogleBtn.onclick = () => auth.signInWithPopup(provider);
 
 deslogarDoGoogleBtn.onclick = () => auth.signOut();
 
-const db = firebase.firestore();
+const db = firebase.firestore(); //Teste
 let alunosRef;
 let unsubscribe;
 
