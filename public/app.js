@@ -11,26 +11,10 @@ const alunosLista1 = document.getElementById('alunosLista1');
 const groupListMes = document.querySelectorAll('.list-group');
 const auth = firebase.auth();
 const provider = new firebase.auth.GoogleAuthProvider();
-let teste;
-let matriculas;
-let listMes1;
-let listAll = [];
-let nomes;
-
 /// Sign in event handlers
 
 logarComGoogleBtn.onclick = () => {
   auth.signInWithPopup(provider);
-  listMes1 = document.getElementsByClassName("list-group-item list-group-item-action flex-column align-items-start");
-  //teste = document.querySelectorAll(".dd");
-  //console.log(teste);
-  matriculas = document.querySelectorAll(".matricula");
-  for (i = 0; i < matriculas.length; i++) {
-    console.log(matriculas[i].innerHTML);
-    //listMes1[i]=(document.getElementById(`#${matriculas[i].innerHTML}`));
-  }
-  console.log(listMes1);
-  nomes = document.querySelectorAll(".name");
 };
 
 deslogarDoGoogleBtn.onclick = () => auth.signOut();
@@ -57,6 +41,8 @@ auth.onAuthStateChanged(user => {
       salvarAluno(user, alunosRef, nomeAdicionarAlunoInput.value, parseInt(matriculaAdicionarAlunoInput.value));
       //attListGroup();
     };
+    
+      
     //addAluno.onclick = () => setarAluno(user, alunosRef, 'Carlos N', 2020123457);
     //editAluno.onclick = () => editarAluno(user, alunosRef, 'Pedro', 2020123457, [2, 0, 0, 0]);
     //removeAluno.onclick = () => removerAluno(user, alunosRef, 2020123457);
@@ -66,15 +52,6 @@ auth.onAuthStateChanged(user => {
     exibirListaDeAlunos(user, alunosRef, alunosLista2, 1);
     exibirListaDeAlunos(user, alunosRef, alunosLista3, 2);
     unsubscribe = exibirListaDeAlunos(user, alunosRef, alunosLista4, 3);
-    for (c = 0; c < listMes1.length/4; c++) {
-      console.log(nomes[c].innerHTML);
-      listMes1[c].addEventListener('click', () =>{
-        console.log(nomes[c].innerHTML);
-        console.log(c);
-      })
-    }
-    console.log(c);
-    //selectItemList(listMes1, nomes);
 
   } else {
     //  Quando o usuário estiver deslogado essa parte será executada
@@ -148,58 +125,30 @@ function salvarAluno(user, collectionRef, name, matricula){
   setarAluno(user, collectionRef, name, matricula)
 }
 
-/*function selectItemList(listUsers, names){
-  const att = listUsers;
-  console.log(att);
-  for (c = 0; c < listUsers.length/4; c++) {
-    console.log(names[c].innerHTML);
-    att[c].addEventListener('click', () =>{
-      console.log(names[c].innerHTML);
-      console.log(c);
-    })
+function selectItemList(info){
+  console.log(info[0]);
+  console.log(info[1]);
+
+  var listItems = $(".list-group-item");
+
+  // Remove 'active' tag for all list items
+  for (let i = 0; i < listItems.length; i++) {
+    listItems[i].classList.remove("active");
   }
-  console.log(c);
-  /*const names = document.querySelectorAll('.name');
-  //const matriculas = document.querySelectorAll('.userMatricula');
-  for (t = 0; t < names.length; t++){}
-  console.log(t);
-   list[i].onclick=function(){       
-      //const names = document.querySelectorAll('.userName');
-      //const matriculas = document.querySelectorAll('.userMatricula');
-      //console.log(names[i].innerHTML);
-      //console.log(matriculas[i].innerHTML);
-      //console.log(i);
-      //const names = document.querySelectorAll('.matricula');
-      //const matriculas = document.querySelectorAll('.userMatricula');
-      //for (t = 0; t < names.length; t++){}
-      console.log(t);
-    }
-
-}*/
-
-/*function exibirListaDeAlunos(user, collectionRef) {
-    unsubscribe = collectionRef
-    .where('uid', '==', user.uid)
-    .onSnapshot(querySnapshot => {
-      const items = querySnapshot.docs.map(doc => {
-        return `<li>${doc.data().nome} \(${doc.data().matricula}\) ${doc.data().frequencia[0]}</li>`;
-      });
-      alunosLista.innerHTML = items.join('');
-    });
-
-    return unsubscribe
-}*/
+  // Add 'active' tag for currently selected item
+  document.getElementById(`${info[1]}`).classList.add("active");
+}
 
 function exibirListaDeAlunos(user, collectionRef, listGroup, frequenciaIndex) {
     unsubscribe = collectionRef
     .where('uid', '==', user.uid)
     .onSnapshot(querySnapshot => {
       const items = querySnapshot.docs.map(doc => {
-        return `<a href="#" id="${doc.data().matricula}" class="list-group-item list-group-item-action flex-column align-items-start">
+        return `<a href="#" id="${doc.data().matricula}" onclick="selectItemList(['${doc.data().nome}', ${doc.data().matricula}]) "class="list-group-item list-group-item-action flex-column align-items-start">
             <!--Dados aluno-->
             <div style="float: left; margin-left: 10px;">
               <span class="material-symbols-outlined">person</span>
-              <label class= "user name ${doc.data().uid}" style="vertical-align: top; max-width: 350px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${doc.data().nome}</label>
+              <label " class= "user name ${doc.data().matricula}" style="vertical-align: top; max-width: 350px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${doc.data().nome}</label>
               <br>
               <span class="material-symbols-outlined">money</span>
               <label class= "user matricula ${doc.data().uid}" style="vertical-align: top;">${doc.data().matricula}</label>
