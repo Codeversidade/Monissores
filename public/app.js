@@ -11,7 +11,10 @@ const alunosLista1 = document.getElementById('alunosLista1');
 const groupListMes = document.querySelectorAll('.list-group');
 const auth = firebase.auth();
 const provider = new firebase.auth.GoogleAuthProvider();
+let teste;
+let matriculas;
 let listMes1;
+let listAll = [];
 let nomes;
 
 /// Sign in event handlers
@@ -19,6 +22,14 @@ let nomes;
 logarComGoogleBtn.onclick = () => {
   auth.signInWithPopup(provider);
   listMes1 = document.getElementsByClassName("list-group-item list-group-item-action flex-column align-items-start");
+  //teste = document.querySelectorAll(".dd");
+  //console.log(teste);
+  matriculas = document.querySelectorAll(".matricula");
+  for (i = 0; i < matriculas.length; i++) {
+    console.log(matriculas[i].innerHTML);
+    //listMes1[i]=(document.getElementById(`#${matriculas[i].innerHTML}`));
+  }
+  console.log(listMes1);
   nomes = document.querySelectorAll(".name");
 };
 
@@ -55,7 +66,15 @@ auth.onAuthStateChanged(user => {
     exibirListaDeAlunos(user, alunosRef, alunosLista2, 1);
     exibirListaDeAlunos(user, alunosRef, alunosLista3, 2);
     unsubscribe = exibirListaDeAlunos(user, alunosRef, alunosLista4, 3);
-    selectItemList(listMes1, nomes);
+    for (c = 0; c < listMes1.length/4; c++) {
+      console.log(nomes[c].innerHTML);
+      listMes1[c].addEventListener('click', () =>{
+        console.log(nomes[c].innerHTML);
+        console.log(c);
+      })
+    }
+    console.log(c);
+    //selectItemList(listMes1, nomes);
 
   } else {
     //  Quando o usuário estiver deslogado essa parte será executada
@@ -129,14 +148,17 @@ function salvarAluno(user, collectionRef, name, matricula){
   setarAluno(user, collectionRef, name, matricula)
 }
 
-function selectItemList(listUsers, names){
-  for (i = 0; i < listUsers.length/4; i++) {
-    listUsers[i].onclick=function(){
-      console.log(names[i].innerHTML);
-      console.log(i);
-    }
+/*function selectItemList(listUsers, names){
+  const att = listUsers;
+  console.log(att);
+  for (c = 0; c < listUsers.length/4; c++) {
+    console.log(names[c].innerHTML);
+    att[c].addEventListener('click', () =>{
+      console.log(names[c].innerHTML);
+      console.log(c);
+    })
   }
-  console.log(i);
+  console.log(c);
   /*const names = document.querySelectorAll('.name');
   //const matriculas = document.querySelectorAll('.userMatricula');
   for (t = 0; t < names.length; t++){}
@@ -151,9 +173,9 @@ function selectItemList(listUsers, names){
       //const matriculas = document.querySelectorAll('.userMatricula');
       //for (t = 0; t < names.length; t++){}
       console.log(t);
-    }*/
+    }
 
-}
+}*/
 
 /*function exibirListaDeAlunos(user, collectionRef) {
     unsubscribe = collectionRef
@@ -173,7 +195,7 @@ function exibirListaDeAlunos(user, collectionRef, listGroup, frequenciaIndex) {
     .where('uid', '==', user.uid)
     .onSnapshot(querySnapshot => {
       const items = querySnapshot.docs.map(doc => {
-        return `<a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+        return `<a href="#" id="${doc.data().matricula}" class="list-group-item list-group-item-action flex-column align-items-start">
             <!--Dados aluno-->
             <div style="float: left; margin-left: 10px;">
               <span class="material-symbols-outlined">person</span>
