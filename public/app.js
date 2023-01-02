@@ -134,19 +134,30 @@ function selectItemList(info){
   // Remove 'active' tag for all list items
   for (let i = 0; i < listItems.length; i++) {
     listItems[i].classList.remove("active");
+    /*if ((' ' + listItems[i].classList + ' ').indexOf(' active ') > -1){
+      console.log()
+    }else{
+  
+    }*/
   }
   // Add 'active' tag for currently selected item
   var classList = document.getElementById(`${info[1]}-${info[2]}`).classList;
   console.log(classList);
   //console.log(classList[4] != "active");
-  console.log(classList.contains("active"))
-  if(!classList.contains("active")){
+  console.log(classList.contains("active"));
+  if ((' ' + classList + ' ').indexOf(' active ') > -1){
+    console.log("ta ativado");
+  }else{
+    console.log("ta desativado");
+  }
+  classList.add("active");
+  /*if(!classList.contains("active")){
     classList.add("active");
     mudarEstadosDaNavBar();
     //console.log(classList.contains("active"))
   }else{
     classList.remove("active");
-  }
+  }*/
 }
 
 function mudarEstadosDaNavBar(){
