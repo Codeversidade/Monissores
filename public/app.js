@@ -4,6 +4,9 @@ const configsBtn = document.getElementById('configsBtn');
 const addAluno = document.getElementById('addAluno');
 const editAluno = document.getElementById('editAluno');
 const removeAluno = document.getElementById('removeAluno');
+const salvarAlunoBtn = document.getElementById('salvarAlunoNovoBtn');
+const nomeAdicionarAlunoInput = document.getElementById('nomeAdicionarAlunoInput');
+const matriculaAdicionarAlunoInput = document.getElementById('matriculaAdicionarAlunoInput');
 
 const auth = firebase.auth();
 const provider = new firebase.auth.GoogleAuthProvider();
@@ -32,9 +35,10 @@ auth.onAuthStateChanged(user => {
     /*setarAluno(user, alunosRef, 'Luiz Algusto', 2020123459);
     setarAluno(user, alunosRef, 'Inácio Estácio de Sá', 2020123460);
     setarAluno(user, alunosRef, 'Florisvalda Hortência Tulipa', 2020123463);*/
-    addAluno.onclick = () => setarAluno(user, alunosRef, 'Carlos N', 2020123457);
-    editAluno.onclick = () => editarAluno(user, alunosRef, 'Pedro', 2020123457, [2, 0, 0, 0]);
-    removeAluno.onclick = () => removerAluno(user, alunosRef, 2020123457);
+    salvarAlunoBtn.onclick = () => salvarAluno(user, alunosRef, nomeAdicionarAlunoInput.value, parseInt(matriculaAdicionarAlunoInput.value));
+    //addAluno.onclick = () => setarAluno(user, alunosRef, 'Carlos N', 2020123457);
+    //editAluno.onclick = () => editarAluno(user, alunosRef, 'Pedro', 2020123457, [2, 0, 0, 0]);
+    //removeAluno.onclick = () => removerAluno(user, alunosRef, 2020123457);
 
     // Pega os dados dos alunos cadastrados no servidor e exibe eles na tela
     exibirListaDeAlunos(user, alunosRef, alunosLista1, 0);
@@ -57,7 +61,8 @@ function setarAluno(user, collectionRef, nome, matricula) {
     .then(doc => {
       let alunoExiste = doc.exists;
 
-      collectionRef
+      if(!alunoExiste){
+        collectionRef
         .doc(`${user.uid}.A${matricula}`)
         .set({
           uid: user.uid,
@@ -72,6 +77,8 @@ function setarAluno(user, collectionRef, nome, matricula) {
         .catch(e => {
           console.error('Error adding document: ', e);
         });
+      }else{console.log('Aluno existente')
+      }
     })
     .catch(error => {
       console.log('Error getting document:', error);
@@ -105,6 +112,10 @@ function editarAluno(user, collectionRef, nome, matricula, frequencia) {
           // Se der erro o documento provavelmente não existe.
           console.error("Error updating document: ", error);
       });
+}
+
+function salvarAluno(user, collectionRef, name, matricula){
+    setarAluno(user, collectionRef, name, matricula)
 }
 
 
