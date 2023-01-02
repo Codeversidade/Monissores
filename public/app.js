@@ -136,7 +136,30 @@ function selectItemList(info){
     listItems[i].classList.remove("active");
   }
   // Add 'active' tag for currently selected item
-  document.getElementById(`${info[1]}`).classList.add("active");
+  var classList = document.getElementById(`${info[1]}-${info[2]}`).classList;
+  console.log(classList);
+  //console.log(classList[4] != "active");
+  console.log(classList.contains("active"))
+  if(!classList.contains("active")){
+    classList.add("active");
+    mudarEstadosDaNavBar();
+    //console.log(classList.contains("active"))
+  }else{
+    classList.remove("active");
+  }
+}
+
+function mudarEstadosDaNavBar(){
+  var buttonsPadrão = document.querySelectorAll('.buttonsPadrão');
+  var buttonsExtra = document.querySelectorAll('.buttonsExtra');
+
+  var ativacao = buttonsPadrão[2].hidden;
+  for(b = 0; b < buttonsPadrão.length; b++){
+    buttonsPadrão[b].hidden = !ativacao;
+  }
+  for(b = 0; b < buttonsExtra.length; b++){
+    buttonsExtra[b].hidden = ativacao;
+  }
 }
 
 function exibirListaDeAlunos(user, collectionRef, listGroup, frequenciaIndex) {
@@ -144,7 +167,7 @@ function exibirListaDeAlunos(user, collectionRef, listGroup, frequenciaIndex) {
     .where('uid', '==', user.uid)
     .onSnapshot(querySnapshot => {
       const items = querySnapshot.docs.map(doc => {
-        return `<a href="#" id="${doc.data().matricula}" onclick="selectItemList(['${doc.data().nome}', ${doc.data().matricula}]) "class="list-group-item list-group-item-action flex-column align-items-start">
+        return `<a href="#" id="${doc.data().matricula}-${frequenciaIndex}" onclick="selectItemList(['${doc.data().nome}', ${doc.data().matricula}, ${frequenciaIndex}]) "class="list-group-item list-group-item-action flex-column align-items-start">
             <!--Dados aluno-->
             <div style="float: left; margin-left: 10px;">
               <span class="material-symbols-outlined">person</span>
