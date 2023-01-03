@@ -5,6 +5,8 @@ const addAluno = document.getElementById('addAluno');
 const editAluno = document.getElementById('editAluno');
 const removeAluno = document.getElementById('removeAluno');
 const salvarAlunoBtn = document.getElementById('salvarAlunoNovoBtn');
+const removeAlunoModalDialogBtn = document.querySelector('.deletarTudo'); //document.getElementById('removeAlunoModalDialogBtnoBtn');
+
 const nomeAdicionarAlunoInput = document.getElementById(
   'nomeAdicionarAlunoInput'
 );
@@ -51,6 +53,11 @@ auth.onAuthStateChanged(user => {
       );
       //attListGroup();
     };
+
+    removeAlunoModalDialogBtn.onclick = () => {
+      configurarBtnRemover(user, alunosRef);
+    };
+    console.log(removeAlunoModalDialogBtn);
     configurarSelecaoDosItensListGroup();
 
     //addAluno.onclick = () => setarAluno(user, alunosRef, 'Carlos N', 2020123457);
@@ -203,11 +210,11 @@ function configurarSelecaoDosItensListGroup() {
     }
 
     console.log(itensSelecionadosListGroup);
-    /*if (itensSelecionadosListGroup.length != 0) {
+    if (itensSelecionadosListGroup.length != 0) {
       console.log(getNameISLG(itensSelecionadosListGroup[0]));
       console.log(getMatriculaISLG(itensSelecionadosListGroup[0]));
       console.log(getMesISLG(itensSelecionadosListGroup[0]));
-    }*/
+    }
     mudarEstadosDaInterfaceNaSelecao(itensSelecionadosListGroup.length, mes);
   });
 }
@@ -234,6 +241,16 @@ function mudarEstadosDaInterfaceNaSelecao(n, index) {
   if (n > 1) {
     buttonsExtra[0].hidden = !ativacao;
   }
+}
+
+function configurarBtnRemover(user, alunosRef) {
+  var matricula = 0;
+
+  itensSelecionadosListGroup.forEach(i => {
+    removerAluno(user, alunosRef, getMatriculaISLG(i));
+  });
+  itensSelecionadosListGroup = [];
+  mudarEstadosDaInterfaceNaSelecao(0, 0);
 }
 
 function exibirListaDeAlunos(user, collectionRef, listGroup, frequenciaIndex) {
