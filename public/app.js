@@ -5,7 +5,7 @@ const addAluno = document.getElementById('addAluno');
 const editAluno = document.getElementById('editAluno');
 const removeAluno = document.getElementById('removeAluno');
 const salvarAlunoBtn = document.getElementById('salvarAlunoNovoBtn');
-const removeAlunoModalDialogBtn = document.querySelector('.deletarTudo'); //document.getElementById('removeAlunoModalDialogBtnoBtn');
+const removeAlunoModalDialogBtn = document.querySelector('.deletarTudo');
 const editarAlunoBtn = document.getElementById('editarAlunoBtn');
 
 const nomeAdicionarAlunoInput = document.getElementById(
@@ -66,10 +66,6 @@ auth.onAuthStateChanged(user => {
     console.log(editarAlunoBtn);
     configurarSelecaoDosItensListGroup();
 
-    //addAluno.onclick = () => setarAluno(user, alunosRef, 'Carlos N', 2020123457);
-    //editAluno.onclick = () => editarAluno(user, alunosRef, 'Pedro', 2020123457, [2, 0, 0, 0]);
-    //removeAluno.onclick = () => removerAluno(user, alunosRef, 2020123457);
-
     // Pega os dados dos alunos cadastrados no servidor e exibe eles na tela
     exibirListaDeAlunos(user, alunosRef, alunosLista1, 0);
     exibirListaDeAlunos(user, alunosRef, alunosLista2, 1);
@@ -127,7 +123,7 @@ function removerAluno(user, collectionRef, matricula) {
     });
 }
 
-function editarAluno(user, collectionRef, nome, matricula, newMatricula, frequencia) {
+/*function editarAluno(user, collectionRef, nome, matricula, newMatricula, frequencia) {
   collectionRef
     .doc(`${user.uid}.A${matricula}`)
     .update({
@@ -148,7 +144,7 @@ function salvarAluno(user, collectionRef, name, matricula, frequencia) {
   setarAluno(user, collectionRef, name, matricula, frequencia);
 }
 
-function selectItemList(info) {
+/*function selectItemList(info) {
   console.log(info[0]);
   console.log(info[1]);
 
@@ -161,7 +157,7 @@ function selectItemList(info) {
       console.log()
     }else{
   
-    }*/
+    }
   }
   // Add 'active' tag for currently selected item
   var classList = document.getElementById(`${info[1]}-${info[2]}`).classList;
@@ -180,8 +176,8 @@ function selectItemList(info) {
     //console.log(classList.contains("active"))
   }else{
     classList.remove("active");
-  }*/
-}
+  }
+}*/
 
 function getNameISLG(i) {
   return i.find('label')[0].innerHTML;
@@ -268,8 +264,10 @@ function configurarBtnEditar(user, alunosRef){
     console.log(doc.data().frequencia);
     setarAluno(user, alunosRef, tempName.value, parseInt(tempMatricula.value), doc.data().frequencia);
     removerAluno(user, alunosRef, getMatriculaISLG(itensSelecionadosListGroup[0]));
+    itensSelecionadosListGroup = [];
     mudarEstadosDaInterfaceNaSelecao(0, 0);
   })
+
 }
 
 function exibirListaDeAlunos(user, collectionRef, listGroup, frequenciaIndex) {
