@@ -6,6 +6,7 @@ const editAluno = document.getElementById('editAluno');
 const removeAluno = document.getElementById('removeAluno');
 const salvarAlunoBtn = document.getElementById('salvarAlunoNovoBtn');
 const removeAlunoModalDialogBtn = document.querySelector('.deletarTudo'); //document.getElementById('removeAlunoModalDialogBtnoBtn');
+const editarAlunoBtn = document.getElementById('editarAlunoBtn');
 
 const nomeAdicionarAlunoInput = document.getElementById(
   'nomeAdicionarAlunoInput'
@@ -49,15 +50,20 @@ auth.onAuthStateChanged(user => {
         user,
         alunosRef,
         nomeAdicionarAlunoInput.value,
-        parseInt(matriculaAdicionarAlunoInput.value)
+        parseInt(matriculaAdicionarAlunoInput.value),
+        [0, 0, 0, 0]
       );
       //attListGroup();
     };
-
+    
     removeAlunoModalDialogBtn.onclick = () => {
       configurarBtnRemover(user, alunosRef);
     };
+    editarAlunoBtn.onclick = () => {
+      configurarBtnEditar(user, alunosRef);
+    };
     console.log(removeAlunoModalDialogBtn);
+    console.log(editarAlunoBtn);
     configurarSelecaoDosItensListGroup();
 
     //addAluno.onclick = () => setarAluno(user, alunosRef, 'Carlos N', 2020123457);
@@ -77,7 +83,7 @@ auth.onAuthStateChanged(user => {
   }
 });
 
-function setarAluno(user, collectionRef, nome, matricula) {
+function setarAluno(user, collectionRef, nome, matricula, frequencia) {
   collectionRef
     .doc(`${user.uid}.A${matricula}`)
     .get()
@@ -91,7 +97,7 @@ function setarAluno(user, collectionRef, nome, matricula) {
             uid: user.uid,
             nome: nome,
             matricula: matricula,
-            frequencia: [0, 0, 0, 0],
+            frequencia: frequencia,
           })
           .then(() => {
             if (alunoExiste) console.log('Editamos o aluno.');
@@ -121,12 +127,12 @@ function removerAluno(user, collectionRef, matricula) {
     });
 }
 
-function editarAluno(user, collectionRef, nome, matricula, frequencia) {
+function editarAluno(user, collectionRef, nome, matricula, newMatricula, frequencia) {
   collectionRef
     .doc(`${user.uid}.A${matricula}`)
     .update({
       nome: nome,
-      matricula: matricula,
+      matricula: newMatricula,
       frequencia: frequencia,
     })
     .then(() => {
@@ -138,8 +144,8 @@ function editarAluno(user, collectionRef, nome, matricula, frequencia) {
     });
 }
 
-function salvarAluno(user, collectionRef, name, matricula) {
-  setarAluno(user, collectionRef, name, matricula);
+function salvarAluno(user, collectionRef, name, matricula, frequencia) {
+  setarAluno(user, collectionRef, name, matricula, frequencia);
 }
 
 function selectItemList(info) {
@@ -244,13 +250,26 @@ function mudarEstadosDaInterfaceNaSelecao(n, index) {
 }
 
 function configurarBtnRemover(user, alunosRef) {
-  var matricula = 0;
-
   itensSelecionadosListGroup.forEach(i => {
     removerAluno(user, alunosRef, getMatriculaISLG(i));
   });
   itensSelecionadosListGroup = [];
   mudarEstadosDaInterfaceNaSelecao(0, 0);
+}
+
+function configurarBtnEditar(user, alunosRef){
+  const tempName = document.getElementById('nomeEditarAlunoInput');
+  const tempMatricula = document.getElementById('matriculaEditarAlunoInput');
+
+  alunosRef
+  .doc(`${user.uid}.A${getMatriculaISLG(itensSelecionadosListGroup[0])}`)
+  .get()
+  .then(doc => {
+    console.log(doc.data().frequencia);
+    setarAluno(user, alunosRef, tempName.value, parseInt(tempMatricula.value), doc.data().frequencia);
+    removerAluno(user, alunosRef, getMatriculaISLG(itensSelecionadosListGroup[0]));
+    mudarEstadosDaInterfaceNaSelecao(0, 0);
+  })
 }
 
 function exibirListaDeAlunos(user, collectionRef, listGroup, frequenciaIndex) {
