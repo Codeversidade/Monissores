@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulário de Presença</title>
+
+    <script src="https://www.gstatic.com/firebasejs/7.16.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.16.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.16.1/firebase-firestore.js"></script>
+
+  <script>
+    var firebaseConfig = {
+      apiKey: 'AIzaSyB9zK2OlUwp1N43nM-O-_EB1TI5x1BTq_E',
+      authDomain: 'monissores.firebaseapp.com',
+      projectId: 'monissores',
+      storageBucket: 'monissores.appspot.com',
+      messagingSenderId: '788929363031',
+      appId: '1:788929363031:web:576f98d7217aa63655f712',
+      measurementId: 'G-0GFKQRZ5FH',
+    };
+    firebase.initializeApp(firebaseConfig);
+  </script>
+
+    <script src="app.js" defer></script>
+</head>
+<body>
+    <!--Exemplo de link http://127.0.0.1:3000/index.html?code=2EGG06sj8rMLwht7KRVhC4CxYQ22&index=1
+    
+        O código é o uid do monitor
+        O index é o mês que ele deseja adicionar a presença.
+
+        Falta implementar uma funçaõ no Monissores que acessa a Coleção 'chamada' e cria nela um documento de id uid com um parametro chamadaAtiva = true or false.
+    
+    
+    -->
+    <h1>Formulário de Presença</h1>
+    <section id="secaoChamadaAtiva">
+    <form>
+        <div class="mb-3">
+        <label for="nomeChamadaInput" class="form-label"
+            >Nome Completo</label
+        >
+        <input
+            type="name"
+            class="form-control"
+            id="nomeChamadaInput"
+        />
+        </div>
+        <div class="mb-3">
+        <label for="matriculaChamadaInput" class="form-label">Matrícula</label>
+        <input class="form-control" id="matriculaChamadaInput" />
+        </div>
+
+        <button type="button" id="enviarChamadaBtn" >Salvar</button>
+
+            <!--Aqui vai a tela de Login com o Google-->
+            <button id="logarComGoogleBtn">Sign in with Google</button> 
+        </section>
+        <section id="secaoChamadaInativa" hidden="true">
+            <h1> ⚠ Erro! Essa chamada não existe ou não está ativa no momento. Verifique o link e se o monitor ativou a chamada.</h1>
+            
+        </section>
+
+        <section id="secaoChamadaPreenchida" hidden="true">
+            <h1> Pronto. Você preencheu a chamada.</h1>
+        </section>
+</body>
+</html>
