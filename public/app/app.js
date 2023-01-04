@@ -263,6 +263,7 @@ function configurarSelecaoDosItensListGroup() {
 }
 
 function configurarCliqueBotoesDosItensListGroup() {
+  // .update("count", firebase.firestore.FieldValue.increment(1));
   /*$('.bd').on('click', function (event) {
     event.preventDefault();
     console.log("Oia" + $(this))
