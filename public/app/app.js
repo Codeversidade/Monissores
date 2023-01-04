@@ -82,6 +82,7 @@ auth.onAuthStateChanged(user => {
     console.log(removeAlunoModalDialogBtn);
     console.log(editarAlunoBtn);
     configurarSelecaoDosItensListGroup();
+    configurarCliqueBotoesDosItensListGroup();
 
     // Pega os dados dos alunos cadastrados no servidor e exibe eles na tela
     exibirListaDeAlunos(user, alunosRef, alunosLista1, 0);
@@ -233,7 +234,7 @@ function removerItemSelecionado(value, index, arr) {
 }
 
 function configurarSelecaoDosItensListGroup() {
-  $('.list-group').on('click', '.list-group-item', function (event) {
+  $('.list-group').on('dblclick', '.list-group-item', function (event) {
     event.preventDefault();
     ultimoItemClicado = $(this);
     var nome = $(this).find('label')[0].innerHTML;
@@ -259,6 +260,13 @@ function configurarSelecaoDosItensListGroup() {
     }*/
     mudarEstadosDaInterfaceNaSelecao(itensSelecionadosListGroup.length, mes);
   });
+}
+
+function configurarCliqueBotoesDosItensListGroup() {
+  /*$('.bd').on('click', function (event) {
+    event.preventDefault();
+    console.log("Oia" + $(this))
+  });*/
 }
 
 function mudarEstadosDaInterfaceNaSelecao(n, index) {
@@ -354,11 +362,11 @@ function exibirListaDeAlunos(user, collectionRef, listGroup, frequenciaIndex) {
             <!--Botão-->
             
             <div class="btn-group" role="group" aria-label="Basic example" style="float: right; margin-right: 10px; margin-top: 10px;">
-                <button type="button" class="btn btn-primary">-</button>
+                <button type="button" id="${doc.data().matricula}-BD${frequenciaIndex}" class="btn btn-primary bd">-</button>
                 <button type="button" class="btn btn-primary">${
                   doc.data().frequencia[frequenciaIndex]
                 }</button>
-                <button type="button" class="btn btn-primary">+</button>
+                <button type="button" id="${doc.data().matricula}-BA${frequenciaIndex}" class="btn btn-primary ba">+</button>
             </div>
           </a>`;
       });
