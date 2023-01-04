@@ -82,7 +82,7 @@ auth.onAuthStateChanged(user => {
     console.log(removeAlunoModalDialogBtn);
     console.log(editarAlunoBtn);
     configurarSelecaoDosItensListGroup();
-    configurarCliqueBotoesDosItensListGroup();
+    configurarSelecaoDeFrequencia(user, alunosRef);
 
     // Pega os dados dos alunos cadastrados no servidor e exibe eles na tela
     exibirListaDeAlunos(user, alunosRef, alunosLista1, 0);
@@ -141,12 +141,10 @@ function removerAluno(user, collectionRef, matricula) {
     });
 }
 
-/*function editarAluno(user, collectionRef, nome, matricula, newMatricula, frequencia) {
+function editarAlunoFrequencia(user, collectionRef, matricula, frequencia) {
   collectionRef
     .doc(`${user.uid}.A${matricula}`)
     .update({
-      nome: nome,
-      matricula: newMatricula,
       frequencia: frequencia,
     })
     .then(() => {
@@ -156,7 +154,7 @@ function removerAluno(user, collectionRef, matricula) {
       // Se der erro o documento provavelmente não existe.
       console.error('Error updating document: ', error);
     });
-}*/
+}
 
 function salvarAluno(
   user,
@@ -175,41 +173,6 @@ function salvarAluno(
   nameInput.value = '';
   matriculaInput.value = '';
 }
-
-/*function selectItemList(info) {
-  console.log(info[0]);
-  console.log(info[1]);
-
-  var listItems = $('.list-group-item');
-
-  // Remove 'active' tag for all list items
-  for (let i = 0; i < listItems.length; i++) {
-    listItems[i].classList.remove('active');
-    /*if ((' ' + listItems[i].classList + ' ').indexOf(' active ') > -1){
-      console.log()
-    }else{
-  
-    }
-  }
-  // Add 'active' tag for currently selected item
-  var classList = document.getElementById(`${info[1]}-${info[2]}`).classList;
-  console.log(classList);
-  //console.log(classList[4] != "active");
-  console.log(classList.contains('active'));
-  if ((' ' + classList + ' ').indexOf(' active ') > -1) {
-    console.log('ta ativado');
-  } else {
-    console.log('ta desativado');
-  }
-  classList.add('active');
-  /*if(!classList.contains("active")){
-    classList.add("active");
-    mudarEstadosDaNavBar();
-    //console.log(classList.contains("active"))
-  }else{
-    classList.remove("active");
-  }
-}*/
 
 function getNameISLG(i) {
   return i.find('label')[0].innerHTML;
@@ -234,15 +197,11 @@ function removerItemSelecionado(value, index, arr) {
 }
 
 function configurarSelecaoDosItensListGroup() {
-  $('.list-group').on('dblclick', '.list-group-item', function (event) {
+  $('.list-group').on('contextmenu', '.list-group-item', function (event) {
     event.preventDefault();
     ultimoItemClicado = $(this);
-    var nome = $(this).find('label')[0].innerHTML;
-    var matricula = parseInt($(this).find('label')[1].innerHTML);
     var mes = parseInt(`${$(this)[0].id}`.slice(-1));
     //console.log(mes)
-    //console.log(nome)
-    //console.log(matricula)
 
     if (this.classList.contains('active')) {
       $(this).removeClass('active');
@@ -262,12 +221,24 @@ function configurarSelecaoDosItensListGroup() {
   });
 }
 
-function configurarCliqueBotoesDosItensListGroup() {
-  // .update("count", firebase.firestore.FieldValue.increment(1));
-  /*$('.bd').on('click', function (event) {
+function configurarSelecaoDeFrequencia(user, alunosRef){
+  $('.list-group').on('click', '.list-group-item', function (event) {
     event.preventDefault();
-    console.log("Oia" + $(this))
-  });*/
+    var matricula = parseInt($(this).find('label')[1].innerHTML);
+    var mes = parseInt(`${$(this)[0].id}`.slice(-1));
+    var frecButtonSubtract = $(this).find('button')[0];
+    var valorFrec = parseInt($(this).find('button')[1].innerHTML);
+    var frecButtonAdd = $(this).find('button')[2];
+
+    if(valorFrec > 0){
+      frecButtonSubtract.onclick = () => {
+        attFrequencia(user, alunosRef, matricula, mes, parseInt(valorFrec - 1));
+      };    
+    }
+    frecButtonAdd.onclick = () => {
+      attFrequencia(user, alunosRef, matricula, mes, parseInt(valorFrec + 1));
+    }
+  });
 }
 
 function mudarEstadosDaInterfaceNaSelecao(n, index) {
@@ -374,4 +345,15 @@ function exibirListaDeAlunos(user, collectionRef, listGroup, frequenciaIndex) {
       listGroup.innerHTML = items.join('');
     });
   return unsubscribe;
+}
+
+function attFrequencia(user, alunosRef, matricula, mes, valorFrec){
+  alunosRef
+    .doc(`${user.uid}.A${matricula}`)
+    .get()
+    .then(doc => {
+      var frequencia = doc.data().frequencia;
+      frequencia[mes] = valorFrec;
+      editarAlunoFrequencia(user, alunosRef, matricula, frequencia);
+    });
 }
