@@ -82,7 +82,8 @@ auth.onAuthStateChanged(user => {
     console.log(removeAlunoModalDialogBtn);
     console.log(editarAlunoBtn);
     configurarSelecaoDosItensListGroup();
-    configurarSelecaoDeFrequencia(user, alunosRef);
+    buttonAdicionarFrequencia(user, alunosRef);
+    buttonSubtrairFrequencia(user, alunosRef);
 
     // Pega os dados dos alunos cadastrados no servidor e exibe eles na tela
     exibirListaDeAlunos(user, alunosRef, alunosLista1, 0);
@@ -221,25 +222,28 @@ function configurarSelecaoDosItensListGroup() {
   });
 }
 
-function configurarSelecaoDeFrequencia(user, alunosRef){
-  $('.list-group').on('click', '.list-group-item', function (event) {
+function buttonAdicionarFrequencia(user, alunosRef){
+  $('.list-group').on('click', '.ba', function (event) {
     event.preventDefault();
-    var matricula = parseInt($(this).find('label')[1].innerHTML);
+    var matricula = parseInt(`${$(this)[0].id}`.slice(0));
     var mes = parseInt(`${$(this)[0].id}`.slice(-1));
-    var frecButtonSubtract = $(this).find('button')[0];
-    var valorFrec = parseInt($(this).find('button')[1].innerHTML);
-    var frecButtonAdd = $(this).find('button')[2];
+    var valorFrec = parseInt(`${$(this)[0].value}`);
+    attFrequencia(user, alunosRef, matricula, mes, parseInt(valorFrec + 1));
+  });
+}
 
+function buttonSubtrairFrequencia(user, alunosRef){
+  $('.list-group').on('click', '.bd', function (event) {
+    event.preventDefault();
+    var matricula = parseInt(`${$(this)[0].id}`.slice(0));
+    var mes = parseInt(`${$(this)[0].id}`.slice(-1));
+    var valorFrec = parseInt(`${$(this)[0].value}`);
     if(valorFrec > 0){
-      frecButtonSubtract.onclick = () => {
-        attFrequencia(user, alunosRef, matricula, mes, parseInt(valorFrec - 1));
-      };    
-    }
-    frecButtonAdd.onclick = () => {
-      attFrequencia(user, alunosRef, matricula, mes, parseInt(valorFrec + 1));
+      attFrequencia(user, alunosRef, matricula, mes, parseInt(valorFrec - 1));
     }
   });
 }
+
 
 function mudarEstadosDaInterfaceNaSelecao(n, index) {
   if (n == 0) {
@@ -334,11 +338,11 @@ function exibirListaDeAlunos(user, collectionRef, listGroup, frequenciaIndex) {
             <!--Botão-->
             
             <div class="btn-group" role="group" aria-label="Basic example" style="float: right; margin-right: 10px; margin-top: 10px;">
-                <button type="button" id="${doc.data().matricula}-BD${frequenciaIndex}" class="btn btn-primary bd">-</button>
+                <button type="button" id="${doc.data().matricula}-BD${frequenciaIndex}" value="${doc.data().frequencia[frequenciaIndex]}" class="btn btn-primary bd">-</button>
                 <button type="button" class="btn btn-primary">${
                   doc.data().frequencia[frequenciaIndex]
                 }</button>
-                <button type="button" id="${doc.data().matricula}-BA${frequenciaIndex}" class="btn btn-primary ba">+</button>
+                <button type="button" id="${doc.data().matricula}-BA${frequenciaIndex}" value="${doc.data().frequencia[frequenciaIndex]}" class="btn btn-primary ba">+</button>
             </div>
           </a>`;
       });
