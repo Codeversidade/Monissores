@@ -28,6 +28,7 @@ const provider = new firebase.auth.GoogleAuthProvider();
 
 var itensSelecionadosListGroup = [];
 var ultimoItemClicado;
+var mesChamadaVirtual;
 /// Sign in event handlers
 
 logarComGoogleBtn.onclick = () => {

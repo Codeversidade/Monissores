@@ -205,7 +205,9 @@
           aria-labelledby="mes-1-tab"
           style="width: 100vw"
         >
-          <!--A Lista de Alunos fica dentro deste list-group-->
+        <button type="button" id="chamadaVirtual1" data-bs-toggle="modal"
+        data-bs-target="#chamadaVirtualModalDialog">Chamada Virtual Mês 1</button>
+        <!--A Lista de Alunos fica dentro deste list-group-->
           <div id="alunosLista1" class="list-group"></div>
         </div>
 
@@ -216,10 +218,11 @@
           role="tabpanel"
           aria-labelledby="mes-2-tab"
           style="width: 100vw"
-        >
-          <!--A Lista de Alunos fica dentro deste list-group-->
-          <div id="alunosLista2" class="list-group"></div>
-        </div>
+          >
+          <button type="button" id="chamadaVirtual2">Chamada Virtual Mês 2</button>
+            <!--A Lista de Alunos fica dentro deste list-group-->
+            <div id="alunosLista2" class="list-group"></div>
+          </div>
 
         <!--Aba Mês 3-->
         <div
@@ -229,18 +232,20 @@
           aria-labelledby="tab-mes-3"
           style="width: 100vw"
         >
+        <button type="button" id="chamadaVirtual3">Chamada Virtual Mês 3</button>
           <!--A Lista de Alunos fica dentro deste list-group-->
           <div id="alunosLista3" class="list-group"></div>
         </div>
-
+        
         <!--Aba Mês 4-->
         <div
-          class="tab-pane fade"
-          id="mes-4"
-          role="tabpanel"
-          aria-labelledby="tab-mes-4"
+        class="tab-pane fade"
+        id="mes-4"
+        role="tabpanel"
+        aria-labelledby="tab-mes-4"
           style="width: 100vw"
         >
+        <button type="button" id="chamadaVirtual4">Chamada Virtual Mês 4</button>
           <!--A Lista de Alunos fica dentro deste list-group-->
           <div id="alunosLista4" class="list-group"></div>
         </div>
@@ -541,6 +546,61 @@
         </div>
       </div>
     </div>
+
+    <!--Caixa de diálogo da Chamada Virtual-->
+    <div
+      class="modal fade"
+      id="chamadaVirtualModalDialog"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="exampleModalCenterTitle"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-fullscreen" role="document">
+        <div class="modal-content">
+          <!--Cabeçalho-->
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLongTitle">Relatório</h5>
+
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <!--Corpo da Caixa de diálogo, aqui dentro ficará o Relatório-->
+          <div class="form-check form-switch form-check-reverse">
+            <label class="form-check-label" for="ativarCVSwitch">Ativar Chamada</label>
+            <input class="form-check-input" type="checkbox" role="switch" id="ativarCVSwitch">
+          </div>
+          <div id="corpoCaixaDialogoRelatorio" class="modal-body">
+            <!--É AQUI QUE FICA A TELA Dos relatórios-->
+            Aqui Vai se escrever Alguma coisa
+          </div>
+
+          <!--Rodapé da Caixa de Diálogo-->
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-dismiss="modal"
+              data-bs-dismiss="modal"
+            >
+              Voltar
+            </button>
+
+            <button
+              id="copiarRelatorioBtn"
+              type="button"
+              class="btn btn-primary"
+            >
+              <span class="material-symbols-outlined">content_copy</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div> <!--FIm da caixa de diálogo da chamada virtual-->
 
     <!--Botão Add flutuante-->
     <div
