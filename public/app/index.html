@@ -69,7 +69,9 @@
               <span class="material-symbols-outlined"> arrow_back </span>
             </button>
 
-            <a id="navBarTitulo" class="navbar-brand" href="#"> Relatório Monitoria </a>
+            <a id="navBarTitulo" class="navbar-brand" href="#">
+              Relatório Monitoria
+            </a>
             <div>
               <!--Botão de Pesquisar-->
               <button id="pesquisarBtn" class="buttonsPadrão pesquisar">
@@ -205,9 +207,15 @@
           aria-labelledby="mes-1-tab"
           style="width: 100vw"
         >
-        <button type="button" id="chamadaVirtual1" data-bs-toggle="modal"
-        data-bs-target="#chamadaVirtualModalDialog">Chamada Virtual Mês 1</button>
-        <!--A Lista de Alunos fica dentro deste list-group-->
+          <button
+            type="button"
+            id="chamadaVirtual1"
+            data-bs-toggle="modal"
+            data-bs-target="#chamadaVirtualModalDialog"
+          >
+            Chamada Virtual Mês 1
+          </button>
+          <!--A Lista de Alunos fica dentro deste list-group-->
           <div id="alunosLista1" class="list-group"></div>
         </div>
 
@@ -218,11 +226,13 @@
           role="tabpanel"
           aria-labelledby="mes-2-tab"
           style="width: 100vw"
-          >
-          <button type="button" id="chamadaVirtual2">Chamada Virtual Mês 2</button>
-            <!--A Lista de Alunos fica dentro deste list-group-->
-            <div id="alunosLista2" class="list-group"></div>
-          </div>
+        >
+          <button type="button" id="chamadaVirtual2">
+            Chamada Virtual Mês 2
+          </button>
+          <!--A Lista de Alunos fica dentro deste list-group-->
+          <div id="alunosLista2" class="list-group"></div>
+        </div>
 
         <!--Aba Mês 3-->
         <div
@@ -232,20 +242,24 @@
           aria-labelledby="tab-mes-3"
           style="width: 100vw"
         >
-        <button type="button" id="chamadaVirtual3">Chamada Virtual Mês 3</button>
+          <button type="button" id="chamadaVirtual3">
+            Chamada Virtual Mês 3
+          </button>
           <!--A Lista de Alunos fica dentro deste list-group-->
           <div id="alunosLista3" class="list-group"></div>
         </div>
-        
+
         <!--Aba Mês 4-->
         <div
-        class="tab-pane fade"
-        id="mes-4"
-        role="tabpanel"
-        aria-labelledby="tab-mes-4"
+          class="tab-pane fade"
+          id="mes-4"
+          role="tabpanel"
+          aria-labelledby="tab-mes-4"
           style="width: 100vw"
         >
-        <button type="button" id="chamadaVirtual4">Chamada Virtual Mês 4</button>
+          <button type="button" id="chamadaVirtual4">
+            Chamada Virtual Mês 4
+          </button>
           <!--A Lista de Alunos fica dentro deste list-group-->
           <div id="alunosLista4" class="list-group"></div>
         </div>
@@ -570,13 +584,24 @@
             ></button>
           </div>
           <!--Corpo da Caixa de diálogo, aqui dentro ficará o Relatório-->
+
           <div class="form-check form-switch form-check-reverse">
-            <label class="form-check-label" for="ativarCVSwitch">Ativar Chamada</label>
-            <input class="form-check-input" type="checkbox" role="switch" id="ativarCVSwitch">
+            <label class="form-check-label" for="ativarCVSwitch"
+              >Ativar Chamada</label
+            >
+            <input
+              class="form-check-input"
+              name="toggleChk"
+              type="checkbox"
+              role="switch"
+              id="ativarCVSwitch"
+            />
           </div>
           <div id="corpoCaixaDialogoRelatorio" class="modal-body">
             <!--É AQUI QUE FICA A TELA Dos relatórios-->
             Aqui Vai se escrever Alguma coisa
+
+            <ul id="alunosListaChamadaVirtual"></ul>
           </div>
 
           <!--Rodapé da Caixa de Diálogo-->
@@ -600,7 +625,8 @@
           </div>
         </div>
       </div>
-    </div> <!--FIm da caixa de diálogo da chamada virtual-->
+    </div>
+    <!--FIm da caixa de diálogo da chamada virtual-->
 
     <!--Botão Add flutuante-->
     <div

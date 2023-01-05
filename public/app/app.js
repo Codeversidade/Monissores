@@ -29,6 +29,7 @@ const provider = new firebase.auth.GoogleAuthProvider();
 var itensSelecionadosListGroup = [];
 var ultimoItemClicado;
 var mesChamadaVirtual;
+var chamadaVirtualAtivada;
 /// Sign in event handlers
 
 logarComGoogleBtn.onclick = () => {
@@ -51,6 +52,8 @@ auth.onAuthStateChanged(user => {
     configsBtn.src = user.photoURL;
 
     alunosRef = db.collection('alunos');
+    chamadaRef = db.collection('chamada')
+    
     /*setarAluno(user, alunosRef, 'Luiz Algusto', 2020123459);
     setarAluno(user, alunosRef, 'Inácio Estácio de Sá', 2020123460);
     setarAluno(user, alunosRef, 'Florisvalda Hortência Tulipa', 2020123463);*/
@@ -77,12 +80,30 @@ auth.onAuthStateChanged(user => {
         itensSelecionadosListGroup[0]
       );
     });
+    chamadaVirtualModalDialog.addEventListener('show.bs.modal', event => {
+      
+        chamadaRef
+        .doc(`${user.uid}`)
+        .get().then((doc) => {
+          chamadaVirtualAtivada = doc.data().chamadaAtiva
+        }).then(() => {
+          console.log("A DANDA DA CHAMDA TÀ" + chamadaVirtualAtivada)
+            if (chamadaVirtualAtivada) { 
+              $('#ativarCVSwitch').trigger( "click" );
+            } else {
+              $('#ativarCVSwitch').removeClass('active');
+            }
+        });
+        
+        console.log("OLAAA" + chamadaVirtualAtivada)
+    });
     desselecionarTudoBtn.onclick = () => {
       configurarBtnDesselecionar();
     };
     console.log(removeAlunoModalDialogBtn);
     console.log(editarAlunoBtn);
     configurarSelecaoDosItensListGroup();
+    configurarSwitchAtivacaoChamadaVirtual(user, chamadaRef);
     buttonAdicionarFrequencia(user, alunosRef);
     buttonSubtrairFrequencia(user, alunosRef);
 
@@ -314,6 +335,62 @@ function configurarBtnEditar(user, alunosRef) {
     });
 }
 
+function configurarSwitchAtivacaoChamadaVirtual(user, collectionRef) {
+  
+  $('#ativarCVSwitch').change(function (event) {
+    var ativou = $(this).is(':checked')
+    mesChamadaVirtual = 0;
+    
+    /*collectionRef
+        .doc(`${searchParams.get('code')}`)
+        .get().then((doc) => {
+            var chamadaAtiva = doc.data().*/
+    if (ativou && !chamadaVirtualAtivada)
+    {
+      collectionRef
+      .doc(`${user.uid}`)
+      .set
+      ({
+          chamadaAtiva: ativou,
+          mes: mesChamadaVirtual
+      }).catch((e) =>{
+          console.error("Error adding document: ", e);
+      })
+      console.log(`Chamada aberta já pode compartilhar o link. http://localhost:5005/${user.uid}`)
+    }
+    else if (ativou == false && chamadaVirtualAtivada)
+    {
+      chamadaRef
+      .doc(`${user.uid}`)
+      .set
+      ({
+          chamadaAtiva: ativou
+      }).then(() => {
+        chamadaVirtualAtivada = ativou;
+      }).catch((e) =>{
+          console.error("Error adding document: ", e);
+      })
+      console.log('Chamada fechada é hora de importar os alunos e mudar o estado da interface.')
+      }
+      
+      
+        /*.get().then((doc) => {
+            var chamadaAtiva = doc.data().chamadaAtiva
+
+
+            .set
+            ({
+                chamadaAtiva: ativou,
+                mes: mesChamadaVirtual
+            }).catch((e) =>{
+                console.error("Error adding document: ", e);
+            })
+    
+    chamadaVirtualAtivada =   */ 
+
+  });
+}
+
 function exibirListaDeAlunos(user, collectionRef, listGroup, frequenciaIndex) {
   unsubscribe = collectionRef
     .where('uid', '==', user.uid)
@@ -346,6 +423,18 @@ function exibirListaDeAlunos(user, collectionRef, listGroup, frequenciaIndex) {
                 <button type="button" id="${doc.data().matricula}-BA${frequenciaIndex}" value="${doc.data().frequencia[frequenciaIndex]}" class="btn btn-primary ba">+</button>
             </div>
           </a>`;
+      });
+      listGroup.innerHTML = items.join('');
+    });
+  return unsubscribe;
+}
+
+function exibirListaDeAlunosChamadaVirtual(user, collectionRef) {
+  unsubscribe = collectionRef
+    .where('uid', '==', user.uid)
+    .onSnapshot(querySnapshot => {
+      const items = querySnapshot.docs.map(doc => {
+        return `<li>${doc.data().nome} \(${doc.data().matricula}\)</li>`;
       });
       listGroup.innerHTML = items.join('');
     });
