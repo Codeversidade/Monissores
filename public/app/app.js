@@ -41,9 +41,9 @@ logarComGoogleBtn.onclick = () => {
 };
 
 deslogarDoGoogleBtn.onclick = () => {
-    auth.signOut();
-    unsubscribeLA && unsubscribeLA();
-}
+  auth.signOut();
+  unsubscribeLA && unsubscribeLA();
+};
 
 const db = firebase.firestore(); //Teste
 let alunosRef;
@@ -60,8 +60,8 @@ auth.onAuthStateChanged(user => {
     configsBtn.src = user.photoURL;
 
     alunosRef = db.collection('alunos');
-    chamadaRef = db.collection('chamada')
-    
+    chamadaRef = db.collection('chamada');
+
     /*setarAluno(user, alunosRef, 'Luiz Algusto', 2020123459);
     setarAluno(user, alunosRef, 'Inácio Estácio de Sá', 2020123460);
     setarAluno(user, alunosRef, 'Florisvalda Hortência Tulipa', 2020123463);*/
@@ -89,20 +89,24 @@ auth.onAuthStateChanged(user => {
       );
     });
     chamadaVirtualModalDialog.addEventListener('show.bs.modal', event => {
-        chamadaRef
+      chamadaRef
         .doc(`${user.uid}`)
-        .get().then((doc) => {
-          chamadaVirtualAtivadaServer = doc.data().chamadaAtiva
-      
+        .get()
+        .then(doc => {
+          chamadaVirtualAtivadaServer = doc.data().chamadaAtiva;
+
           //Se estiver ativada no servidor ativa no cliente
-          if (chamadaVirtualAtivadaServer) { 
-            $('#ativarCVSwitch').trigger( "click" );
-            unsubscribeLCV = exibirListaDeAlunosChamadaVirtual(user, chamadaRef)
+          if (chamadaVirtualAtivadaServer) {
+            $('#ativarCVSwitch').trigger('click');
+            unsubscribeLCV = exibirListaDeAlunosChamadaVirtual(
+              user,
+              chamadaRef
+            );
           }
         });
     });
     chamadaVirtualModalDialog.addEventListener('hide.bs.modal', event => {
-      unsubscribeLCV &&  unsubscribeLCV();
+      unsubscribeLCV && unsubscribeLCV();
     });
     desselecionarTudoBtn.onclick = () => {
       configurarBtnDesselecionar();
@@ -251,7 +255,7 @@ function configurarSelecaoDosItensListGroup() {
   });
 }
 
-function buttonAdicionarFrequencia(user, alunosRef){
+function buttonAdicionarFrequencia(user, alunosRef) {
   $('.list-group').on('click', '.ba', function (event) {
     event.preventDefault();
     var matricula = parseInt(`${$(this)[0].id}`.slice(0));
@@ -261,18 +265,17 @@ function buttonAdicionarFrequencia(user, alunosRef){
   });
 }
 
-function buttonSubtrairFrequencia(user, alunosRef){
+function buttonSubtrairFrequencia(user, alunosRef) {
   $('.list-group').on('click', '.bd', function (event) {
     event.preventDefault();
     var matricula = parseInt(`${$(this)[0].id}`.slice(0));
     var mes = parseInt(`${$(this)[0].id}`.slice(-1));
     var valorFrec = parseInt(`${$(this)[0].value}`);
-    if(valorFrec > 0){
+    if (valorFrec > 0) {
       attFrequencia(user, alunosRef, matricula, mes, parseInt(valorFrec - 1));
     }
   });
 }
-
 
 function mudarEstadosDaInterfaceNaSelecao(n, index) {
   if (n == 0) {
@@ -343,53 +346,60 @@ function configurarBtnEditar(user, alunosRef) {
 }
 
 function configurarSwitchAtivacaoChamadaVirtual(user, collectionRef) {
-  
   $('#ativarCVSwitch').change(function (event) {
-    chamadaVirtualAtivadaClient = $(this).is(':checked')
+    chamadaVirtualAtivadaClient = $(this).is(':checked');
     mesChamadaVirtual = 0;
-    
-    chamadaRef
-        .doc(`${user.uid}`)
-        .get().then((doc) => {
-            chamadaVirtualAtivadaServer = doc.data().chamadaAtiva
-          
-            if (chamadaVirtualAtivadaClient == true && chamadaVirtualAtivadaServer == false)
-            {
-                collectionRef
-                .doc(`${user.uid}`)
-                .set
-                ({
-                    chamadaAtiva: chamadaVirtualAtivadaClient,
-                    mes: mesChamadaVirtual
-                }).then(() => {
-                    console.log(`Chamada ativada agora já pode compartilhar o link. http://localhost:5005/?code=${user.uid}`)
-                })
-                .catch((e) =>{
-                    console.error("Error adding document: ", e);
-                })
-                
-            }
-            else if (chamadaVirtualAtivadaClient == false && chamadaVirtualAtivadaServer == true)
-            {
-              chamadaRef
-              .doc(`${user.uid}`)
-              .set
-              ({
-                  chamadaAtiva: chamadaVirtualAtivadaClient
-              }).then(() => {
-                console.log(`'Chamada fechada é hora de importar os alunos e mudar o estado da interface.'`)
-              }).catch((e) =>{
-                  console.error("Error adding document: ", e);
-              })}
 
-        });
+    chamadaRef
+      .doc(`${user.uid}`)
+      .get()
+      .then(doc => {
+        chamadaVirtualAtivadaServer = doc.data().chamadaAtiva;
+
+        if (
+          chamadaVirtualAtivadaClient == true &&
+          chamadaVirtualAtivadaServer == false
+        ) {
+          collectionRef
+            .doc(`${user.uid}`)
+            .set({
+              chamadaAtiva: chamadaVirtualAtivadaClient,
+              mes: mesChamadaVirtual,
+            })
+            .then(() => {
+              console.log(
+                `Chamada ativada agora já pode compartilhar o link. http://localhost:5005/?code=${user.uid}`
+              );
+            })
+            .catch(e => {
+              console.error('Error adding document: ', e);
+            });
+        } else if (
+          chamadaVirtualAtivadaClient == false &&
+          chamadaVirtualAtivadaServer == true
+        ) {
+          chamadaRef
+            .doc(`${user.uid}`)
+            .set({
+              chamadaAtiva: chamadaVirtualAtivadaClient,
+            })
+            .then(() => {
+              console.log(
+                `'Chamada fechada é hora de importar os alunos e mudar o estado da interface.'`
+              );
+              importarAlunosChamadaVirtual(user, alunosRef);
+            })
+            .catch(e => {
+              console.error('Error adding document: ', e);
+            });
+        }
+      });
     /*collectionRef
         .doc(`${searchParams.get('code')}`)
         .get().then((doc) => {
             var chamadaAtiva = doc.data().*/
-      
-      
-        /*.get().then((doc) => {
+
+    /*.get().then((doc) => {
             var chamadaAtiva = doc.data().chamadaAtiva
 
 
@@ -401,9 +411,12 @@ function configurarSwitchAtivacaoChamadaVirtual(user, collectionRef) {
                 console.error("Error adding document: ", e);
             })
     
-    chamadaVirtualAtivada =   */ 
-
+    chamadaVirtualAtivada =   */
   });
+}
+
+function importarAlunosChamadaVirtual(user, alunosRef) {
+  //TODO
 }
 
 function exibirListaDeAlunos(user, collectionRef, listGroup, frequenciaIndex) {
@@ -431,11 +444,19 @@ function exibirListaDeAlunos(user, collectionRef, listGroup, frequenciaIndex) {
             <!--Botão-->
             
             <div class="btn-group" role="group" aria-label="Basic example" style="float: right; margin-right: 10px; margin-top: 10px;">
-                <button type="button" id="${doc.data().matricula}-BD${frequenciaIndex}" value="${doc.data().frequencia[frequenciaIndex]}" class="btn btn-primary bd">-</button>
+                <button type="button" id="${
+                  doc.data().matricula
+                }-BD${frequenciaIndex}" value="${
+          doc.data().frequencia[frequenciaIndex]
+        }" class="btn btn-primary bd">-</button>
                 <button type="button" class="btn btn-primary">${
                   doc.data().frequencia[frequenciaIndex]
                 }</button>
-                <button type="button" id="${doc.data().matricula}-BA${frequenciaIndex}" value="${doc.data().frequencia[frequenciaIndex]}" class="btn btn-primary ba">+</button>
+                <button type="button" id="${
+                  doc.data().matricula
+                }-BA${frequenciaIndex}" value="${
+          doc.data().frequencia[frequenciaIndex]
+        }" class="btn btn-primary ba">+</button>
             </div>
           </a>`;
       });
@@ -457,7 +478,7 @@ function exibirListaDeAlunosChamadaVirtual(user, collectionRef) {
   return unsubscribe;
 }
 
-function attFrequencia(user, alunosRef, matricula, mes, valorFrec){
+function attFrequencia(user, alunosRef, matricula, mes, valorFrec) {
   alunosRef
     .doc(`${user.uid}.A${matricula}`)
     .get()
