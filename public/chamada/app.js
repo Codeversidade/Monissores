@@ -1,56 +1,64 @@
-const enviarBtn = document.getElementById('enviarChamadaBtn')
-const nomeInput = document.getElementById("nomeChamadaInput")
-const matriculaInput = document.getElementById("matriculaChamadaInput")
+const enviarBtn = document.getElementById('enviarChamadaBtn');
+const nomeInput = document.getElementById('nomeChamadaInput');
+const matriculaInput = document.getElementById('matriculaChamadaInput');
 
 const paramsString = window.location.search;
 const searchParams = new URLSearchParams(paramsString);
 
 const db = firebase.firestore();
 
-
-chamadaRef = db.collection('chamada')
-
+chamadaRef = db.collection('chamada');
 chamadaRef
-        .doc(`${searchParams.get('code')}`)
-        .get().then((doc) => {
-            var chamadaAtiva = doc.data().chamadaAtiva
+  .doc(`${searchParams.get('code')}`)
+  .get()
+  .then(doc => {
+    var chamadaAtiva = doc.data().chamadaAtiva;
 
-            if (chamadaAtiva)
-            {
-                secaoChamadaInativa.hiden = true
-                enviarBtn.onclick = () => { 
-                    chamadaRef
-                        .doc(`${searchParams.get('code')}.A${matriculaInput.value}`)
-                        .get().then((doc) => {
-                        let alunoExiste = doc.exists
-                        
-                        var frequencia = alunoExiste ? doc.data().frequencia : [0,0,0,0];
-                        frequencia[searchParams.get('index')] += 1;
-                
-                        chamadaRef
-                        .doc(`${searchParams.get('code')}.A${matriculaInput.value}`)
-                        .set
-                        ({
-                            uid: searchParams.get('code'),
-                            nome: nomeInput.value,
-                            matricula: matriculaInput.value,
-                            frequencia: frequencia,
-                        }).catch((e) =>{
-                            console.error("Error adding document: ", e);
-                        })
-                    }).catch((error) => {
-                        console.log("Error getting document:", error);
-                    });
-                }
-            }
-            else 
-            {
-                secaoChamadaAtiva.hidden = true
-                secaoChamadaInativa.hidden = false
-            }
-        }).catch((error) => {
-            console.log("Essa chamada não existe ou não está ativa no momento.", error);
-            secaoChamadaAtiva.hidden = true
-            secaoChamadaInativa.hidden = false
-        });
+    if (chamadaAtiva) {
+      secaoChamadaInativa.hiden = true;
+      enviarBtn.onclick = () => {
+        
+        if (checarInputs()) {
+            chamadaRef
+              .doc(`${searchParams.get('code')}.A${matriculaInput.value}`)
+              .set({
+                code: searchParams.get('code'),
+                nome: nomeInput.value,
+                matricula: parseInt(matriculaInput.value),
+              })
+              .then(() => {
+                  console.log(`Aluno A${matriculaInput.value} preencheu a chamada.`)
+                  secaoChamadaPreenchida.hidden = false
+                  secaoChamadaAtiva.hidden = true
+              })
+              .catch(e => {
+                console.error('Error adding document: ', e);
+              });
+        }
+      };
+    } else {
+      secaoChamadaAtiva.hidden = true;
+      secaoChamadaInativa.hidden = false;
+    }
+  })
+  .catch(error => {
+    console.log('Essa chamada não existe ou não está ativa no momento.', error);
+    secaoChamadaAtiva.hidden = true;
+    secaoChamadaInativa.hidden = false;
+  });
 
+function checarInputs() {
+    
+    if (nomeInput.value == '' || matriculaInput.value == '')
+    {
+        window.alert('O nome e o número de matrícula devem ser preenchidos.')
+    }
+    else if (parseInt(matriculaInput.value) < 2008100000) {
+        window.alert('O número de matrícula informado é inválido.')
+    }
+    else
+    {
+        return true;
+    }
+    return false;
+}

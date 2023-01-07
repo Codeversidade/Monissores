@@ -26,8 +26,8 @@
         firebase.initializeApp(firebaseConfig);
     </script>
 
+    <script src="app.js" defer></script>
     <!--
-        <script src="app.js" defer></script>
 
     -->
 
@@ -57,7 +57,7 @@
         }
 
         .container {
-            background-color: ;
+            
             height: 400px;
             position: relative;
         }
@@ -138,7 +138,7 @@
         <h1>Chamada Virtual</h1>
     </header>
 
-    <section id="secaoChamadaAtiva" class="container" hidden="true">
+    <section id="secaoChamadaAtiva" class="container" >
 
         <p>Usando este recurso você está ajudando o monitor(a) a registrar a sua presença. <strong>Preencha com
                 atenção!</strong></p>
@@ -146,7 +146,7 @@
             <div class="container">
                 <div class="card">
                     <p>Monissor - Chamada Virtual</p>
-                    <input type="text" placeholder="Nome Completo" id="nomeChamadaInput">
+                    <input type="text" placeholder="Nome Completo" id="nomeChamadaInput" >
                     <br>
                     <input type="text" placeholder="Matrícula" id="matriculaChamadaInput">
                     <button type="button" id="enviarChamadaBtn">Presente</button>
@@ -162,7 +162,7 @@
 
     </section>
 
-    <section id="secaoChamadaPreenchida">
+    <section id="secaoChamadaPreenchida" hidden="true">
         <p>✅ <strong>Pronto.</strong> Você preencheu a chamada.</p>
     </section>
 </body>

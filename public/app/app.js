@@ -30,17 +30,25 @@ var itensSelecionadosListGroup = [];
 var ultimoItemClicado;
 var mesChamadaVirtual;
 var chamadaVirtualAtivada;
+
+var chamadaVirtualAtivadaServer;
+var chamadaVirtualAtivadaClient;
+
 /// Sign in event handlers
 
 logarComGoogleBtn.onclick = () => {
   auth.signInWithPopup(provider);
 };
 
-deslogarDoGoogleBtn.onclick = () => auth.signOut();
+deslogarDoGoogleBtn.onclick = () => {
+    auth.signOut();
+    unsubscribeLA && unsubscribeLA();
+}
 
 const db = firebase.firestore(); //Teste
 let alunosRef;
-let unsubscribe;
+let unsubscribeLA;
+let unsubscribeLCV;
 
 auth.onAuthStateChanged(user => {
   if (user) {
@@ -81,21 +89,20 @@ auth.onAuthStateChanged(user => {
       );
     });
     chamadaVirtualModalDialog.addEventListener('show.bs.modal', event => {
-      
         chamadaRef
         .doc(`${user.uid}`)
         .get().then((doc) => {
-          chamadaVirtualAtivada = doc.data().chamadaAtiva
-        }).then(() => {
-          console.log("A DANDA DA CHAMDA TÀ" + chamadaVirtualAtivada)
-            if (chamadaVirtualAtivada) { 
-              $('#ativarCVSwitch').trigger( "click" );
-            } else {
-              $('#ativarCVSwitch').removeClass('active');
-            }
+          chamadaVirtualAtivadaServer = doc.data().chamadaAtiva
+      
+          //Se estiver ativada no servidor ativa no cliente
+          if (chamadaVirtualAtivadaServer) { 
+            $('#ativarCVSwitch').trigger( "click" );
+            unsubscribeLCV = exibirListaDeAlunosChamadaVirtual(user, chamadaRef)
+          }
         });
-        
-        console.log("OLAAA" + chamadaVirtualAtivada)
+    });
+    chamadaVirtualModalDialog.addEventListener('hide.bs.modal', event => {
+      unsubscribeLCV &&  unsubscribeLCV();
     });
     desselecionarTudoBtn.onclick = () => {
       configurarBtnDesselecionar();
@@ -111,7 +118,7 @@ auth.onAuthStateChanged(user => {
     exibirListaDeAlunos(user, alunosRef, alunosLista1, 0);
     exibirListaDeAlunos(user, alunosRef, alunosLista2, 1);
     exibirListaDeAlunos(user, alunosRef, alunosLista3, 2);
-    unsubscribe = exibirListaDeAlunos(user, alunosRef, alunosLista4, 3);
+    unsubscribeLA = exibirListaDeAlunos(user, alunosRef, alunosLista4, 3);
   } else {
     //  Quando o usuário estiver deslogado essa parte será executada
     secaoPrincipal.hidden = true;
@@ -338,40 +345,48 @@ function configurarBtnEditar(user, alunosRef) {
 function configurarSwitchAtivacaoChamadaVirtual(user, collectionRef) {
   
   $('#ativarCVSwitch').change(function (event) {
-    var ativou = $(this).is(':checked')
+    chamadaVirtualAtivadaClient = $(this).is(':checked')
     mesChamadaVirtual = 0;
     
+    chamadaRef
+        .doc(`${user.uid}`)
+        .get().then((doc) => {
+            chamadaVirtualAtivadaServer = doc.data().chamadaAtiva
+          
+            if (chamadaVirtualAtivadaClient == true && chamadaVirtualAtivadaServer == false)
+            {
+                collectionRef
+                .doc(`${user.uid}`)
+                .set
+                ({
+                    chamadaAtiva: chamadaVirtualAtivadaClient,
+                    mes: mesChamadaVirtual
+                }).then(() => {
+                    console.log(`Chamada ativada agora já pode compartilhar o link. http://localhost:5005/?code=${user.uid}`)
+                })
+                .catch((e) =>{
+                    console.error("Error adding document: ", e);
+                })
+                
+            }
+            else if (chamadaVirtualAtivadaClient == false && chamadaVirtualAtivadaServer == true)
+            {
+              chamadaRef
+              .doc(`${user.uid}`)
+              .set
+              ({
+                  chamadaAtiva: chamadaVirtualAtivadaClient
+              }).then(() => {
+                console.log(`'Chamada fechada é hora de importar os alunos e mudar o estado da interface.'`)
+              }).catch((e) =>{
+                  console.error("Error adding document: ", e);
+              })}
+
+        });
     /*collectionRef
         .doc(`${searchParams.get('code')}`)
         .get().then((doc) => {
             var chamadaAtiva = doc.data().*/
-    if (ativou && !chamadaVirtualAtivada)
-    {
-      collectionRef
-      .doc(`${user.uid}`)
-      .set
-      ({
-          chamadaAtiva: ativou,
-          mes: mesChamadaVirtual
-      }).catch((e) =>{
-          console.error("Error adding document: ", e);
-      })
-      console.log(`Chamada aberta já pode compartilhar o link. http://localhost:5005/${user.uid}`)
-    }
-    else if (ativou == false && chamadaVirtualAtivada)
-    {
-      chamadaRef
-      .doc(`${user.uid}`)
-      .set
-      ({
-          chamadaAtiva: ativou
-      }).then(() => {
-        chamadaVirtualAtivada = ativou;
-      }).catch((e) =>{
-          console.error("Error adding document: ", e);
-      })
-      console.log('Chamada fechada é hora de importar os alunos e mudar o estado da interface.')
-      }
       
       
         /*.get().then((doc) => {
@@ -392,7 +407,7 @@ function configurarSwitchAtivacaoChamadaVirtual(user, collectionRef) {
 }
 
 function exibirListaDeAlunos(user, collectionRef, listGroup, frequenciaIndex) {
-  unsubscribe = collectionRef
+  let unsubscribe = collectionRef
     .where('uid', '==', user.uid)
     .onSnapshot(querySnapshot => {
       const items = querySnapshot.docs.map(doc => {
@@ -430,13 +445,14 @@ function exibirListaDeAlunos(user, collectionRef, listGroup, frequenciaIndex) {
 }
 
 function exibirListaDeAlunosChamadaVirtual(user, collectionRef) {
-  unsubscribe = collectionRef
-    .where('uid', '==', user.uid)
+  let unsubscribe = collectionRef
+    .where('code', '==', user.uid)
     .onSnapshot(querySnapshot => {
       const items = querySnapshot.docs.map(doc => {
         return `<li>${doc.data().nome} \(${doc.data().matricula}\)</li>`;
       });
-      listGroup.innerHTML = items.join('');
+      totalAlunosChamadaVirtual.innerHTML = querySnapshot.docs.length;
+      alunosListaChamadaVirtual.innerHTML = items.join('');
     });
   return unsubscribe;
 }
