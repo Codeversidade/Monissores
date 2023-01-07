@@ -1,0 +1,28 @@
+input#searchbar{
+    width: 100%;
+    height: 30px;
+   padding-right: -20px;
+    border-radius: 5px;
+    border: 1px solid #dee0e1;
+}
+#searchbar-div{
+    /*Para fazer a barra de pesquisa desaparecer coloque display:none; e para ativar display:inline-block*/
+    display: none;
+    vertical-align: middle;
+    text-align: center;
+    height: 30px;
+    border: 1px solid red;
+}
+input#searchbar {
+    text-indent: 8px;
+    width: 100%;
+    -webkit-transition: width 0.15s ease-in-out;
+    transition: width 0.15s ease-in-out;
+ }
+
+ /* When the input field gets focus,
+      change its width to 100% */
+input#searchbar:focus {
+   
+   outline: 1px solid #1877F2;
+ }
