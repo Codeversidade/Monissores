@@ -58,7 +58,19 @@
       <!--Cabeçalho-->
       <div class="fixed-top text-light shadow bg-primary">
         <!--Linha com o texto da nav bar e botões-->
+
+        
         <nav class="navbar navbar-dark bg-primary">
+          <!--Botão de Pesquisar-->
+          <button id="pesquisarBtn2" class="buttonsPadrão pesquisar" onclick="procurarAluno()">
+            <span class="material-symbols-outlined">arrow_back</span>
+          </button>
+        
+          <!--Barra de pesquisa-->
+          <div id="searchbar-div">
+             <input id="searchbar" onkeyup="escolherFunc()" type="text"
+             name="search" placeholder="Procurar Aluno">
+          </div>
           <div class="container-fluid">
             <!--Botão de Voltar - Só aparece quando itens estão selecionados no ListGroup-->
             <button
@@ -68,21 +80,24 @@
             >
               <span class="material-symbols-outlined"> arrow_back </span>
             </button>
+            <!--Aqui é o point-->
             
-            <a id="navBarTitulo" style="display:;" class="navbar-brand" href="#">
-              Relatório Monitoria
+            <a id="navBarTitulo" class="navbar-brand" href="#">
+              Monissor
             </a>
-            <div>
-              <!--Barra de pesquisa-->
-              <div id="searchbar-div">
-                 <input id="searchbar" onkeyup="procurarAluno()" type="text"
-                 name="search" placeholder="Procurar Aluno">
-              
-              </div>
+            <a href="">
+              <span class="material-symbols-outlined">arrow_back</span>
+            </a>
+            
+
+            <div id="faixaBtn">
+
               <!--Botão de Pesquisar-->
-              <button id="pesquisarBtn" class="buttonsPadrão pesquisar">
-                <span class="material-symbols-outlined">search</span>
-              </button>
+            <button id="pesquisarBtn" class="buttonsPadrão pesquisar" onclick="procurarAluno()">
+              <span class="material-symbols-outlined">search</span>
+            </button>
+
+              
               <!--Botão de Gerar Relatório-->
               <button
                 id="relatorioBtn"

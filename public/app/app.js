@@ -23,6 +23,18 @@ const matriculaAdicionarAlunoInput = document.getElementById(
 );
 const alunosLista1 = document.getElementById('alunosLista1');
 const groupListMes = document.querySelectorAll('.list-group');
+const searchbarDiv= document.getElementById('searchbar-div');
+searchbarDiv.style.cssText = "display: none";
+var searchbarCliques = 0;
+
+const nomeApp = document.getElementById("navBarTitulo");
+const pesquisarBtn = document.getElementById("pesquisarBtn");
+const pesquisarBtn2 = document.getElementById("pesquisarBtn2");
+pesquisarBtn2.style.cssText = "display: none;";
+
+const relatorioBtn = document.getElementById("relatorioBtn");
+const faixaBtn = document.getElementById("faixaBtn");
+
 const auth = firebase.auth();
 const provider = new firebase.auth.GoogleAuthProvider();
 
@@ -35,7 +47,32 @@ var chamadaVirtualAtivadaServer;
 var chamadaVirtualAtivadaClient;
 
 /// Sign in event handlers
+function procurarAluno(){
+  searchbarCliques++;
+  if(searchbarCliques%2 != 0){
+    searchbarDiv.style.cssText = "display: inline-block;";
+    relatorioBtn.style.cssText = "display: none;";
+    configsBtn.style.cssText = "display: none;";
+    faixaBtn.style.cssText = "display: none;";
+    pesquisarBtn.style.cssText = "display: none;";
+    pesquisarBtn2.style.cssText = "display: inline-block;";
+    nomeApp.innerHTML = '';
+    
+    
+  }
+  else{
+    searchbarDiv.style.cssText = "display: none;";
+    relatorioBtn.style.cssText = "display: inline-block;";
+    configsBtn.style.cssText = "display: inline-block;";
+    faixaBtn.style.cssText = "display: inline-block;";
+    pesquisarBtn2.style.cssText = "display: none;";
+    pesquisarBtn.style.cssText = "display: inline-block;";
+    nomeApp.innerHTML = 'Monissor';
+  } 
+  console.log("O botão de procurar Aluno foi ativada");
+  
 
+}
 logarComGoogleBtn.onclick = () => {
   auth.signInWithPopup(provider);
 };
@@ -207,6 +244,7 @@ function salvarAluno(
   nameInput.value = '';
   matriculaInput.value = '';
 }
+
 
 function getNameISLG(i) {
   return i.find('label')[0].innerHTML;
