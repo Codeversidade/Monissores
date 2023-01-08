@@ -133,10 +133,23 @@ auth.onAuthStateChanged(user => {
         .then(doc => {
           chamadaVirtualAtivadaServer = doc.data().chamadaAtiva;
 
+          var ativar = (chamadaVirtualAtivadaServer) ? 'checked':'';
+          divSwitchAtivarChamada.innerHTML = 
+          `<label class="form-check-label" for="ativarCVSwitch"
+            >Ativar Chamada</label
+          >
+          <input
+            class="form-check-input"
+            name="toggleChk"
+            type="checkbox"
+            role="switch"
+            id="ativarCVSwitch"
+            ${ativar}
+          />`
+          configurarSwitchAtivacaoChamadaVirtual(user, chamadaRef)
           //Se estiver ativada no servidor ativa no cliente
           if (chamadaVirtualAtivadaServer) {
-            chamadaVirtualAtivadaClient = true;
-            $('#ativarCVSwitch').trigger('click');
+            //$('#ativarCVSwitch').trigger('click');
             unsubscribeLCV = exibirListaDeAlunosChamadaVirtual(
               user,
               chamadaRef
@@ -161,7 +174,6 @@ auth.onAuthStateChanged(user => {
     console.log(removeAlunoModalDialogBtn);
     console.log(editarAlunoBtn);
     configurarSelecaoDosItensListGroup();
-    configurarSwitchAtivacaoChamadaVirtual(user, chamadaRef);
     buttonAdicionarFrequencia(user, alunosRef);
     buttonSubtrairFrequencia(user, alunosRef);
 
@@ -368,6 +380,7 @@ function configurarBtnDesselecionar() {
   ultimoItemClicado.removeClass('active');
   mudarEstadosDaInterfaceNaSelecao(0, getMesISLG(ultimoItemClicado));
   itensSelecionadosListGroup = [];
+  
 }
 
 function configurarBtnEditar(user, alunosRef) {
@@ -438,6 +451,7 @@ function configurarSwitchAtivacaoChamadaVirtual(user, collectionRef) {
                 `'Chamada fechada é hora de importar os alunos e mudar o estado da interface.'`
               );
               importarAlunosChamadaVirtual(user, alunosRef, chamadaRef);
+              // TODO usar a função editar para editar a chamada só que sem o problema de deletar o aluno para adicionar de novo, provavelmente tme que usar o merge
             })
             .catch(e => {
               console.error('Error adding document: ', e);
@@ -485,8 +499,8 @@ function importarAlunosChamadaVirtual(user, alunosRef, chamadaRef) {
       });
 
       removerAluno(user, chamadaRef, element.matricula)
-      listaAlunosChamadaVirtual.pop();
   });
+  listaAlunosChamadaVirtual = [];
 }
 
 function exibirListaDeAlunos(user, collectionRef, listGroup, frequenciaIndex) {
