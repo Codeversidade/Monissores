@@ -1,17 +1,19 @@
 input#searchbar{
-    width: 100%;
+    width: 80%;
     height: 30px;
-   padding-right: -20px;
+   
     border-radius: 5px;
     border: 1px solid #dee0e1;
 }
 #searchbar-div{
     /*Para fazer a barra de pesquisa desaparecer coloque display:none; e para ativar display:inline-block*/
-    display: none;
-    vertical-align: middle;
+    /*display: inline-block;*/
+    vertical-align: top;
     text-align: center;
+    width: 80%;
     height: 30px;
-    border: 1px solid red;
+    margin-right: 25px;
+    border: 1px solid rgb(251, 5, 5);
 }
 input#searchbar {
     text-indent: 8px;
@@ -26,3 +28,7 @@ input#searchbar:focus {
    
    outline: 1px solid #1877F2;
  }
+
+#pesquisarBtn2{
+    margin-left: 10px;
+}
