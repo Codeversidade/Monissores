@@ -27,6 +27,7 @@ const auth = firebase.auth();
 const provider = new firebase.auth.GoogleAuthProvider();
 
 var itensSelecionadosListGroup = [];
+var listaAlunosChamadaVirtual = [];
 var ultimoItemClicado;
 var mesChamadaVirtual;
 var chamadaVirtualAtivada;
@@ -97,12 +98,21 @@ auth.onAuthStateChanged(user => {
 
           //Se estiver ativada no servidor ativa no cliente
           if (chamadaVirtualAtivadaServer) {
+            chamadaVirtualAtivadaClient = true;
             $('#ativarCVSwitch').trigger('click');
             unsubscribeLCV = exibirListaDeAlunosChamadaVirtual(
               user,
               chamadaRef
             );
           }
+        })  
+        .catch((error) => {
+            chamadaRef
+            .doc(`${user.uid}`)
+            .set({
+              chamadaAtiva: false,
+            });
+            console.error("É a primeira vez da pessoa na feature, criamos o doc.: ", error);
         });
     });
     chamadaVirtualModalDialog.addEventListener('hide.bs.modal', event => {
@@ -349,7 +359,9 @@ function configurarSwitchAtivacaoChamadaVirtual(user, collectionRef) {
   $('#ativarCVSwitch').change(function (event) {
     chamadaVirtualAtivadaClient = $(this).is(':checked');
     mesChamadaVirtual = 0;
-
+    console.log("Client: " + chamadaVirtualAtivadaClient)
+    console.log("Server: " + chamadaVirtualAtivadaServer)
+    console.log("Event" + event.type)
     chamadaRef
       .doc(`${user.uid}`)
       .get()
@@ -387,7 +399,7 @@ function configurarSwitchAtivacaoChamadaVirtual(user, collectionRef) {
               console.log(
                 `'Chamada fechada é hora de importar os alunos e mudar o estado da interface.'`
               );
-              importarAlunosChamadaVirtual(user, alunosRef);
+              importarAlunosChamadaVirtual(user, alunosRef, chamadaRef);
             })
             .catch(e => {
               console.error('Error adding document: ', e);
@@ -415,8 +427,28 @@ function configurarSwitchAtivacaoChamadaVirtual(user, collectionRef) {
   });
 }
 
-function importarAlunosChamadaVirtual(user, alunosRef) {
-  //TODO
+function importarAlunosChamadaVirtual(user, alunosRef, chamadaRef) {
+  listaAlunosChamadaVirtual.forEach(element => {
+    alunosRef
+      .doc(`${user.uid}.A${element.matricula}`)
+      .get()
+      .then(doc => {
+        var frequencia = doc.data().frequencia;
+        frequencia[mesChamadaVirtual] = frequencia[mesChamadaVirtual] + 1;
+        editarAlunoFrequencia(user, alunosRef, matricula, frequencia);
+        console.log("O aluno teve a matrícula atualizada.")
+      })
+      .catch((error) => {
+          // The document probably doesn't exist.
+          var frequencia = [0, 0, 0, 0];
+          frequencia[mesChamadaVirtual] = 1;
+          setarAluno(user, alunosRef, element.nome, element.matricula, frequencia)
+          console.error("O aluno n existia, adicionamos. Error updating document: ", error);
+      });
+
+      removerAluno(user, chamadaRef, element.matricula)
+      listaAlunosChamadaVirtual.pop();
+  });
 }
 
 function exibirListaDeAlunos(user, collectionRef, listGroup, frequenciaIndex) {
@@ -470,6 +502,7 @@ function exibirListaDeAlunosChamadaVirtual(user, collectionRef) {
     .where('code', '==', user.uid)
     .onSnapshot(querySnapshot => {
       const items = querySnapshot.docs.map(doc => {
+        listaAlunosChamadaVirtual.push(doc.data()) 
         return `<li>${doc.data().nome} \(${doc.data().matricula}\)</li>`;
       });
       totalAlunosChamadaVirtual.innerHTML = querySnapshot.docs.length;
