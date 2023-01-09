@@ -47,62 +47,6 @@ var chamadaVirtualAtivada;
 var chamadaVirtualAtivadaServer;
 var chamadaVirtualAtivadaClient;
 
-/// Sign in event handlers
-function procurarAluno(){
-  searchbarCliques++;
-  if(searchbarCliques%2 != 0){
-    searchbarDiv.style.cssText = "display: inline-block;";
-    relatorioBtn.style.cssText = "display: none;";
-    configsBtn.style.cssText = "display: none;";
-    faixaBtn.style.cssText = "display: none;";
-    pesquisarBtn.style.cssText = "display: none;";
-    pesquisarBtn2.style.cssText = "display: inline-block;";
-    nomeApp.innerHTML = '';
-    
-    
-  }
-  else{
-    searchbarDiv.style.cssText = "display: none;";
-    relatorioBtn.style.cssText = "display: inline-block;";
-    configsBtn.style.cssText = "display: inline-block;";
-    faixaBtn.style.cssText = "display: inline-block;";
-    pesquisarBtn2.style.cssText = "display: none;";
-    pesquisarBtn.style.cssText = "display: inline-block;";
-    nomeApp.innerHTML = 'Monissor';
-  } 
-
-}
-
-function escolherFunc(){
-  let groupList = $('.list-group-item');
-  var groupListNames = [];
-  var groupListMatriculas = [];
-  let input = document.getElementById('searchbar').value.toLowerCase();
-  
-  $('.list-group-item').each(function(){
-    groupListNames.push($(this).find('label')[0].innerHTML)
-    groupListMatriculas.push($(this).find('label')[1].innerHTML)
-  })
-
-  if(!isNaN(input)){
-    for(i = 0; i < groupList.length; i++){
-      if(!((String)(groupListMatriculas[i]).toLowerCase().includes(input))){
-        groupList[i].style.display="none";
-      }else{
-        groupList[i].style.display="list-item"
-      }
-    }  
-  }else{
-    for(i = 0; i < groupList.length; i++){
-      if(!(groupListNames[i].toLowerCase().includes(input))){
-        groupList[i].style.display="none";
-      }else{
-        groupList[i].style.display="list-item"
-      }
-    }
-  }
-}
-
 logarComGoogleBtn.onclick = () => {
   auth.signInWithPopup(provider);
 };
@@ -340,6 +284,7 @@ function configurarSelecaoDosItensListGroup() {
       console.log(getMatriculaISLG(itensSelecionadosListGroup[0]));
       console.log(getMesISLG(itensSelecionadosListGroup[0]));
     }*/
+    configurarBtnComeBack()
     mudarEstadosDaInterfaceNaSelecao(itensSelecionadosListGroup.length, mes);
   });
 }
@@ -433,6 +378,58 @@ function configurarBtnEditar(user, alunosRef) {
       itensSelecionadosListGroup = [];
       mudarEstadosDaInterfaceNaSelecao(0, 0);
     });
+}
+
+function configurarBtnToShearch(){
+  searchbarDiv.style.cssText = "display: inline-block;";
+  relatorioBtn.style.cssText = "display: none;";
+  configsBtn.style.cssText = "display: none;";
+  faixaBtn.style.cssText = "display: none;";
+  pesquisarBtn.style.cssText = "display: none;";
+  pesquisarBtn2.style.cssText = "display: inline-block;";
+  nomeApp.innerHTML = '';
+}
+
+function configurarBtnComeBack(){
+  searchbarDiv.style.cssText = "display: none;";
+  relatorioBtn.style.cssText = "display: inline-block;";
+  configsBtn.style.cssText = "display: inline-block;";
+  faixaBtn.style.cssText = "display: inline-block;";
+  pesquisarBtn2.style.cssText = "display: none;";
+  pesquisarBtn.style.cssText = "display: inline-block;";
+  nomeApp.innerHTML = 'Monissor';
+  document.getElementById('searchbar').value = null;
+  escolherFunc();
+}
+
+function escolherFunc(){
+  let groupList = $('.list-group-item');
+  var groupListNames = [];
+  var groupListMatriculas = [];
+  let input = document.getElementById('searchbar').value.toLowerCase();
+  
+  $('.list-group-item').each(function(){
+    groupListNames.push($(this).find('label')[0].innerHTML)
+    groupListMatriculas.push($(this).find('label')[1].innerHTML)
+  })
+
+  if(!isNaN(input)){
+    for(i = 0; i < groupList.length; i++){
+      if(!((String)(groupListMatriculas[i]).toLowerCase().includes(input))){
+        groupList[i].style.display="none";
+      }else{
+        groupList[i].style.display="list-item"
+      }
+    }  
+  }else{
+    for(i = 0; i < groupList.length; i++){
+      if(!(groupListNames[i].toLowerCase().includes(input))){
+        groupList[i].style.display="none";
+      }else{
+        groupList[i].style.display="list-item"
+      }
+    }
+  }
 }
 
 function configurarSwitchAtivacaoChamadaVirtual(user, collectionRef) {
@@ -600,5 +597,6 @@ function attFrequencia(user, alunosRef, matricula, mes, valorFrec) {
       var frequencia = doc.data().frequencia;
       frequencia[mes] = valorFrec;
       editarAlunoFrequencia(user, alunosRef, matricula, frequencia);
+      configurarBtnComeBack();
     });
 }
