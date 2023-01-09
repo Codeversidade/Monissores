@@ -60,25 +60,28 @@
         <!--Linha com o texto da nav bar e botões-->
 
         
-        <nav class="navbar navbar-dark bg-primary">
-          <!--Botão de Pesquisar-->
-          <button id="pesquisarBtn2" class="buttonsPadrão pesquisar" onclick="configurarBtnComeBack()">
-            <span class="material-symbols-outlined">arrow_back</span>
-          </button>
-        
-          <!--Barra de pesquisa-->
-          <div id="searchbar-div">
-             <input id="searchbar" onkeyup="escolherFunc()" type="text"
-             name="search" placeholder="Procurar Aluno">
+        <!--Barra de pesquisa-->
+        <div id="barraDePesquisa">
+          <div>
+            <button id="searchbarBtnComeBack" class="buttonsPadrão pesquisar" onclick="configurarBtnComeBack()">
+              <span class="material-symbols-outlined">arrow_back</span>
+            </button>
+            <input id="searchbar" onkeyup="escolherFunc()" type="text"
+            name="search" placeholder="Procurar Aluno">
           </div>
-          <div class="container-fluid">
+        </div>
+
+        <nav class="navbar navbar-dark bg-primary">
+          
+          <div class="container-fluid" id="cabecalhoInterno1">
             <!--Botão de Voltar - Só aparece quando itens estão selecionados no ListGroup-->
             <button
               id="desselecionarTudoBtn"
-              class="buttonsExtra desselecionarTudo"
+              class="buttonsPadrão buttonsExtra desselecionarTudo"
               hidden="true"
             >
               <span class="material-symbols-outlined"> arrow_back </span>
+              <!--Do lado do butao-->
             </button>
             <!--Aqui é o point-->
             
@@ -86,7 +89,7 @@
               Monissor
             </a>
             <a href="">
-              <span class="material-symbols-outlined">arrow_back</span>
+              <span class="material-symbols-outlined">arrow_back</span> 
             </a>
             
 
@@ -120,7 +123,7 @@
               <!--Botão de editar aluno (Só aparece quando apenas 1 item do listgroup está selecionado)-->
               <button
                 id="editBtn"
-                class="buttonsExtra edit"
+                class="buttonsPadrão buttonsExtra edit"
                 data-bs-toggle="modal"
                 data-bs-target="#editAlunoModalDialog"
                 hidden="true"
@@ -131,7 +134,7 @@
               <!--Botão de deletar aluno (Só aparece quando algum item do listgroup está selecionado)-->
               <button
                 id="removeBtn"
-                class="buttonsExtra remove"
+                class="buttonsPadrão buttonsExtra remove"
                 data-bs-toggle="modal"
                 data-bs-target="#removeAlunoModalDialog"
                 hidden="true"

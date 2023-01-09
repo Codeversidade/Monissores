@@ -24,13 +24,15 @@ const matriculaAdicionarAlunoInput = document.getElementById(
 const alunosLista1 = document.getElementById('alunosLista1');
 const groupListMes = document.querySelectorAll('.list-group');
 const searchbarDiv= document.getElementById('searchbar-div');
-searchbarDiv.style.cssText = "display: none";
+
 var searchbarCliques = 0;
 
 const nomeApp = document.getElementById("navBarTitulo");
+const cabecalhoInterno1 = document.getElementById("cabecalhoInterno1");
+const barraDePesquisa = document.getElementById("barraDePesquisa");
 const pesquisarBtn = document.getElementById("pesquisarBtn");
-const pesquisarBtn2 = document.getElementById("pesquisarBtn2");
-pesquisarBtn2.style.cssText = "display: none;";
+const searchbarBtnComeBack = document.getElementById("searchbarBtnComeBack");
+barraDePesquisa.style.cssText = "display: none;";
 
 const relatorioBtn = document.getElementById("relatorioBtn");
 const faixaBtn = document.getElementById("faixaBtn");
@@ -393,28 +395,21 @@ function configurarBtnEditar(user, alunosRef) {
       mudarEstadosDaInterfaceNaSelecao(0, 0);
     });
 }
-
+//Facilitando botão de Pesquisa
+////////////////////////////////////////
 function configurarBtnToShearch(){
-  searchbarDiv.style.cssText = "display: inline-block;";
-  relatorioBtn.style.cssText = "display: none;";
-  configsBtn.style.cssText = "display: none;";
-  faixaBtn.style.cssText = "display: none;";
-  pesquisarBtn.style.cssText = "display: none;";
-  pesquisarBtn2.style.cssText = "display: inline-block;";
-  nomeApp.innerHTML = '';
+  cabecalhoInterno1.style.cssText = "display: none;";
+  barraDePesquisa.style.cssText = "display: block;"
+
 }
 
 function configurarBtnComeBack(){
-  searchbarDiv.style.cssText = "display: none;";
-  relatorioBtn.style.cssText = "display: inline-block;";
-  configsBtn.style.cssText = "display: inline-block;";
-  faixaBtn.style.cssText = "display: inline-block;";
-  pesquisarBtn2.style.cssText = "display: none;";
-  pesquisarBtn.style.cssText = "display: inline-block;";
-  nomeApp.innerHTML = 'Monissor';
+  cabecalhoInterno1.style.cssText = "display: flex;";
+  barraDePesquisa.style.cssText = "display: none;"
   document.getElementById('searchbar').value = null;
   escolherFunc();
 }
+////////////////////////////////////////////////
 
 function escolherFunc(){
   let groupList = $('.list-group-item');
