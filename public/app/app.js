@@ -163,6 +163,10 @@ auth.onAuthStateChanged(user => {
           chamadaVirtualAtivadaServer = doc.data().chamadaAtiva;
 
           var ativar = (chamadaVirtualAtivadaServer) ? 'checked':'';
+          if (chamadaVirtualAtivadaServer)
+          {
+            $('#ativarCVSwitch').addClass('checked');
+          }
           divSwitchAtivarChamada.innerHTML = 
           `<label class="form-check-label" for="ativarCVSwitch"
             >Ativar Chamada</label
@@ -462,6 +466,10 @@ function configurarSwitchAtivacaoChamadaVirtual(user, collectionRef) {
               console.log(
                 `Chamada ativada agora já pode compartilhar o link. http://localhost:5005/?code=${user.uid}`
               );
+              unsubscribeLCV = exibirListaDeAlunosChamadaVirtual(
+                user,
+                chamadaRef
+              );
             })
             .catch(e => {
               console.error('Error adding document: ', e);
@@ -516,7 +524,7 @@ function importarAlunosChamadaVirtual(user, alunosRef, chamadaRef) {
       .then(doc => {
         var frequencia = doc.data().frequencia;
         frequencia[mesChamadaVirtual] = frequencia[mesChamadaVirtual] + 1;
-        editarAlunoFrequencia(user, alunosRef, matricula, frequencia);
+        editarAlunoFrequencia(user, alunosRef, element.matricula, frequencia);
         console.log("O aluno teve a matrícula atualizada.")
       })
       .catch((error) => {
