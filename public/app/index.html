@@ -607,12 +607,21 @@
           <!--Corpo da Caixa de diálogo, aqui dentro ficará o Relatório-->
 
           <div class="form-check form-switch form-check-reverse" id="divSwitchAtivarChamada">
-      
+            <label class="form-check-label" for="ativarCVSwitch"
+            >Ativar Chamada</label
+          >
+          <input
+            class="form-check-input"
+            name="toggleChk"
+            type="checkbox"
+            role="switch"
+            id="ativarCVSwitch"
+          />
           </div>
           <div id="corpoCaixaDialogoRelatorio" class="modal-body">
             <!--É AQUI QUE FICA A TELA Dos relatórios-->
             Aqui Vai se escrever Alguma coisa
-            <p id="totalAlunosChamadaVirtual">
+            <p id="totalAlunosChamadaVirtual"></p>
 
             <ul id="alunosListaChamadaVirtual"></ul>
           </div>
