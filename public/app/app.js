@@ -70,10 +70,39 @@ function procurarAluno(){
     pesquisarBtn.style.cssText = "display: inline-block;";
     nomeApp.innerHTML = 'Monissor';
   } 
-  console.log("O botão de procurar Aluno foi ativada");
-  
 
 }
+
+function escolherFunc(){
+  let groupList = $('.list-group-item');
+  var groupListNames = [];
+  var groupListMatriculas = [];
+  let input = document.getElementById('searchbar').value.toLowerCase();
+  
+  $('.list-group-item').each(function(){
+    groupListNames.push($(this).find('label')[0].innerHTML)
+    groupListMatriculas.push($(this).find('label')[1].innerHTML)
+  })
+
+  if(!isNaN(input)){
+    for(i = 0; i < groupList.length; i++){
+      if(!((String)(groupListMatriculas[i]).toLowerCase().includes(input))){
+        groupList[i].style.display="none";
+      }else{
+        groupList[i].style.display="list-item"
+      }
+    }  
+  }else{
+    for(i = 0; i < groupList.length; i++){
+      if(!(groupListNames[i].toLowerCase().includes(input))){
+        groupList[i].style.display="none";
+      }else{
+        groupList[i].style.display="list-item"
+      }
+    }
+  }
+}
+
 logarComGoogleBtn.onclick = () => {
   auth.signInWithPopup(provider);
 };
