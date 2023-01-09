@@ -257,6 +257,10 @@ function getMesISLG(i) {
   return parseInt(`${i[0].id}`.slice(-1));
 }
 
+function getDivBunttonsFrequenciaISLG(i) {
+  return i.find('div')[1];
+}
+
 function removerItemSelecionado(value, index, arr) {
   // If the value at the current array index matches the specified value (2)
   if (getMatriculaISLG(value) === getMatriculaISLG(ultimoItemClicado)) {
@@ -277,9 +281,11 @@ function configurarSelecaoDosItensListGroup() {
     if (this.classList.contains('active')) {
       $(this).removeClass('active');
       itensSelecionadosListGroup.filter(removerItemSelecionado);
+      $(this).find('div')[1].style.display=null;
     } else {
       $(this).addClass('active'); //.siblings().removeClass('active');
       itensSelecionadosListGroup.push($(this));
+      $(this).find('div')[1].style.display="none";
     }
 
     console.log(itensSelecionadosListGroup);
@@ -324,6 +330,9 @@ function mudarEstadosDaInterfaceNaSelecao(n, index) {
     ativacao = false;
   }
 
+  //mostra de volta a parte de frequencia
+  //for(i = 0; i <= n; i++){getDivISLG(itensSelecionadosListGroup[i+1]).style.display=null}
+
   var buttonsPadrão = document.querySelectorAll('.buttonsPadrão');
   var buttonsExtra = document.querySelectorAll('.buttonsExtra');
   var buttonsAbas = document.querySelectorAll('.linhaAbas');
@@ -357,8 +366,9 @@ function configurarBtnDesselecionar() {
   ultimoItemClicado.siblings().removeClass('active');
   ultimoItemClicado.removeClass('active');
   mudarEstadosDaInterfaceNaSelecao(0, getMesISLG(ultimoItemClicado));
+  //Exibi novamente inteface da frequencia do items selecionados
+  for(i = 0; i < itensSelecionadosListGroup.length; i++){getDivBunttonsFrequenciaISLG(itensSelecionadosListGroup[i]).style.display=null}
   itensSelecionadosListGroup = [];
-  
 }
 
 function configurarBtnEditar(user, alunosRef) {
@@ -605,6 +615,6 @@ function attFrequencia(user, alunosRef, matricula, mes, valorFrec) {
       var frequencia = doc.data().frequencia;
       frequencia[mes] = valorFrec;
       editarAlunoFrequencia(user, alunosRef, matricula, frequencia);
-      configurarBtnComeBack();
+      configurarBtnComeBack(); //reseta display pro estado original
     });
 }
