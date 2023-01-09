@@ -155,6 +155,7 @@ auth.onAuthStateChanged(user => {
     configurarSelecaoDosItensListGroup();
     buttonAdicionarFrequencia(user, alunosRef);
     buttonSubtrairFrequencia(user, alunosRef);
+    configuraBtnMes(user, alunosRef);
 
     // Pega os dados dos alunos cadastrados no servidor e exibe eles na tela
     exibirListaDeAlunos(user, alunosRef, alunosLista1, 0);
@@ -439,6 +440,31 @@ function escolherFunc(){
       }
     }
   }
+}
+
+function configuraBtnMes(user, collectionRef){
+  $('.dropdown').on('click', '.dropdown-item', function (event) {
+    event.preventDefault();
+    configurarBtnRelatorio(user, collectionRef, (parseInt($(this).html().slice(-1)) - 1))
+    //console.log(parseInt($(this).html().slice(-1)));
+  })
+}
+
+function configurarBtnRelatorio(user, collectionRef, frequenciaIndex){
+  let unsubscribe = collectionRef
+    .where('uid', '==', user.uid)
+    .onSnapshot(querySnapshot => {
+      const items = querySnapshot.docs.map(doc => {
+        return `${doc.data().nome}/${doc.data().matricula}/${doc.data().frequencia[frequenciaIndex]};<br>`;
+      });
+      listaAlunosRelatorio.innerHTML = items.join('');
+      //console.log(listaAlunosRelatorio.innerHTML)
+    });
+}
+
+function copyButton(){
+  //console.log($("#listaAlunosRelatorio").text());
+  navigator.clipboard.writeText($("#listaAlunosRelatorio").text())
 }
 
 function configurarSwitchAtivacaoChamadaVirtual(user, collectionRef) {

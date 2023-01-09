@@ -343,6 +343,7 @@
           <!--Corpo da Caixa de diálogo, aqui dentro ficará o Relatório-->
           <div id="corpoCaixaDialogoRelatorio" class="modal-body">
             <!--É AQUI QUE FICA A TELA Dos relatórios-->
+            <ul id="listaAlunosRelatorio"></ul>
             Aqui Vai se escrever Alguma coisa
           </div>
 
@@ -361,6 +362,7 @@
               id="copiarRelatorioBtn"
               type="button"
               class="btn btn-primary"
+              onclick="copyButton()"
             >
               <span class="material-symbols-outlined">content_copy</span>
             </button>
