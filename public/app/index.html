@@ -88,9 +88,7 @@
             <a id="navBarTitulo" class="navbar-brand" href="#">
               Monissor
             </a>
-            <a href="">
-              <span class="material-symbols-outlined">arrow_back</span> 
-            </a>
+            
             
 
             <div id="faixaBtn">
@@ -152,6 +150,7 @@
           id="linhaAbas"
           role="tablist"
         >
+        
           <!--Mês 1-->
           <li class="nav-item" role="presentation">
             <button
@@ -231,14 +230,26 @@
           aria-labelledby="mes-1-tab"
           style="width: 100vw"
         >
-          <button
-            type="button"
-            id="chamadaVirtual1"
-            data-bs-toggle="modal"
-            data-bs-target="#chamadaVirtualModalDialog"
-          >
-            Chamada Virtual Mês 1
-          </button>
+          
+          <!--Botão da chamada Virtual-->
+            <button
+              type="button"
+              id="chamadaVirtual1"
+              data-bs-toggle="modal"
+              data-bs-target="#chamadaVirtualModalDialog"
+              class="btnChamadaVirtual"
+            >
+              <table>
+                <tr>
+                  <th rowspan="2"><span class="material-symbols-outlined">link</span></th>
+                  <td><strong>Chamada Virtual do 1º Mês</strong></td>
+                </tr>
+                <tr>
+                  <td >Estado: Desativada</td>
+                </tr>
+              </table>
+            </button>
+          
           <!--A Lista de Alunos fica dentro deste list-group-->
           <div id="alunosLista1" class="list-group"></div>
         </div>
@@ -403,11 +414,12 @@
               id="deslogarDoGoogleBtn"
               data-dismiss="modal"
               data-bs-dismiss="modal"
+              class="btn btn-primary"
             >
               Sair da conta do Google
             </button>
-            <button id="editAluno">Editar Aluno</button>
-            <button id="removeAluno">Remover Aluno</button>
+            <button id="editAluno" class="btn btn-primary">Editar Aluno</button>
+            <button id="removeAluno" class="btn btn-primary">Remover Aluno</button>
             <!--ul id="alunosLista"></ul-->
           </div>
 
@@ -660,7 +672,7 @@
     >
       <button
         id="addAluno"
-        class="text-light bg-primary shadow"
+        class="text-light shadow"
         style="
           position: relative;
           border-radius: 50px;
@@ -669,6 +681,7 @@
           border: 0px;
           text-align: center;
           font-size: 30px;
+          background-color: #004BA0;
         "
         data-bs-toggle="modal"
         data-bs-target="#addAlunoModalDialog"

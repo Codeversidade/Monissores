@@ -399,7 +399,9 @@ function configurarBtnEditar(user, alunosRef) {
 ////////////////////////////////////////
 function configurarBtnToShearch(){
   cabecalhoInterno1.style.cssText = "display: none;";
-  barraDePesquisa.style.cssText = "display: block;"
+  barraDePesquisa.style.cssText = "display: block;";
+  document.getElementById("searchbar").focus();
+  console.log("teste")
 
 }
 
@@ -409,6 +411,7 @@ function configurarBtnComeBack(){
   document.getElementById('searchbar').value = null;
   escolherFunc();
 }
+
 ////////////////////////////////////////////////
 
 function escolherFunc(){
@@ -435,7 +438,7 @@ function escolherFunc(){
       if(!(groupListNames[i].toLowerCase().includes(input))){
         groupList[i].style.display="none";
       }else{
-        groupList[i].style.display="list-item"
+        groupList[i].style.display="list-item";
       }
     }
   }

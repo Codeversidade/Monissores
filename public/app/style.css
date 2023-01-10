@@ -21,6 +21,7 @@ div#barraDePesquisa {
     margin: 10px;
     padding-top: 2px;
     border-radius: 10px;
+    box-shadow: 0px 0px 5px #0da9fd5d;
 }
 
 #searchbarBtnComeBack {
@@ -35,4 +36,21 @@ div#barraDePesquisa {
     border: none;
     color: white;
     background-color: #0D6EFD;
+}
+
+.btnChamadaVirtual {
+    width: -webkit-fill-available;
+    text-align: left;
+    vertical-align: top;
+    border: none;
+    background-color: whitesmoke;
+    
+}
+.btnChamadaVirtual > table{
+    font-size: 0.8em;
+    height: 50%;
+
+}
+.btnChamadaVirtual th{
+    width: 40px;
 }
