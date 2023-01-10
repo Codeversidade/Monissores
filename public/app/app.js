@@ -455,7 +455,8 @@ function configurarBtnRelatorio(user, collectionRef, frequenciaIndex){
     .where('uid', '==', user.uid)
     .onSnapshot(querySnapshot => {
       const items = querySnapshot.docs.map(doc => {
-        return `${doc.data().nome}/${doc.data().matricula}/${doc.data().frequencia[frequenciaIndex]};<br>`;
+        var freq = doc.data().frequencia[frequenciaIndex];
+        return `${doc.data().nome}/${doc.data().matricula}/${freq} ${(freq == 1) ? 'vez': 'vezes'};<br>`;
       });
       listaAlunosRelatorio.innerHTML = items.join('');
       //console.log(listaAlunosRelatorio.innerHTML)
