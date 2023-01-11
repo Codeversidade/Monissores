@@ -389,6 +389,7 @@ function configurarBtnDesselecionar() {
   //Exibi novamente inteface da frequencia do items selecionados
   for(i = 0; i < itensSelecionadosListGroup.length; i++){getDivBunttonsFrequenciaISLG(itensSelecionadosListGroup[i]).style.display=null}
   itensSelecionadosListGroup = [];
+  escolherFunc();
 }
 
 function configurarBtnEditar(user, alunosRef) {
@@ -427,9 +428,7 @@ function configurarBtnComeBack(){
   cabecalhoInterno1.style.cssText = "display: flex;";
   barraDePesquisa.style.cssText = "display: none;"
   document.getElementById('searchbar').value = null;
-  if(itensSelecionadosListGroup.length == 0 /*nenhum item estiverr selecionado*/){
-    escolherFunc()
-  }
+
 }
 
 ////////////////////////////////////////////////
