@@ -1,0 +1,17 @@
+{
+    "name": "Monissores",
+    "short_name": "Monissor",
+    "theme_color": "blue",
+    "background_color": "white",
+    "start_url": "./",
+    "id": "demo-1",
+    "display": "standalone",
+    "scope": "./",
+    "icons": [
+        {
+            "src": "icons/512.png",
+            "type": "image/png",
+            "sizes": "512x512"
+        }
+    ]
+}

@@ -1,3 +1,5 @@
+navigator.serviceWorker.register("sw.js") // Cria o Service Worker do PWA
+
 const logarComGoogleBtn = document.getElementById('logarComGoogleBtn');
 const deslogarDoGoogleBtn = document.getElementById('deslogarDoGoogleBtn');
 const configsBtn = document.getElementById('configsBtn');
