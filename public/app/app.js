@@ -325,14 +325,18 @@ function buttonSubtrairFrequencia(user, alunosRef) {
 }
 
 function mudarEstadosDaInterfaceNaSelecao(n, index) {
+  
   if (n == 0) {
-    navBarTitulo.innerHTML = 'Relatório Monitoria';
+    navBarTitulo.innerHTML = 'Monissor';
     ativacao = true;
   } else if (n == 1) {
     navBarTitulo.innerHTML = `${n} item selecionado`;
     ativacao = false;
+  } if (n > 1) {
+    buttonsExtra[1].hidden = !ativacao;
+    navBarTitulo.innerHTML = `${n} itens selecionados`;
   }
-
+  
   //mostra de volta a parte de frequencia
   //for(i = 0; i <= n; i++){getDivISLG(itensSelecionadosListGroup[i+1]).style.display=null}
 
@@ -351,10 +355,6 @@ function mudarEstadosDaInterfaceNaSelecao(n, index) {
     buttonsAbas[index].hidden = false;
   }
   addAluno.hidden = !ativacao;
-  if (n > 1) {
-    buttonsExtra[1].hidden = !ativacao;
-    navBarTitulo.innerHTML = `${n} itens selecionados`;
-  }
 }
 
 function configurarBtnRemover(user, alunosRef) {
@@ -410,7 +410,9 @@ function configurarBtnComeBack(){
   cabecalhoInterno1.style.cssText = "display: flex;";
   barraDePesquisa.style.cssText = "display: none;"
   document.getElementById('searchbar').value = null;
-  escolherFunc();
+  if(itensSelecionadosListGroup.length == 0 /*nenhum item estiverr selecionado*/){
+    escolherFunc()
+  }
 }
 
 ////////////////////////////////////////////////
