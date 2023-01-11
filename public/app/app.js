@@ -167,7 +167,8 @@ auth.onAuthStateChanged(user => {
     };
     console.log(removeAlunoModalDialogBtn);
     console.log(editarAlunoBtn);
-    configurarSelecaoDosItensListGroup();
+    configurarSelecaoInicialDosItensListGroup();
+    configurarSelecaoDosItensListGroupClick();
     buttonAdicionarFrequencia(user, alunosRef);
     buttonSubtrairFrequencia(user, alunosRef);
     configuraBtnMes(user, alunosRef);
@@ -289,7 +290,7 @@ function removerItemSelecionado(value, index, arr) {
   return false;
 }
 
-function configurarSelecaoDosItensListGroup() {
+function configurarSelecaoInicialDosItensListGroup() {
   $('.list-group').on('contextmenu', '.list-group-item', function (event) {
     event.preventDefault();
     ultimoItemClicado = $(this);
@@ -306,7 +307,34 @@ function configurarSelecaoDosItensListGroup() {
       $(this).find('div')[1].style.display="none";
     }
 
-    console.log(itensSelecionadosListGroup);
+    /*if (itensSelecionadosListGroup.length != 0) {
+      console.log(getNameISLG(itensSelecionadosListGroup[0]));
+      console.log(getMatriculaISLG(itensSelecionadosListGroup[0]));
+      console.log(getMesISLG(itensSelecionadosListGroup[0]));
+    }*/
+    configurarBtnComeBack()
+    mudarEstadosDaInterfaceNaSelecao(itensSelecionadosListGroup.length, mes);
+  });
+}
+
+function configurarSelecaoDosItensListGroupClick() {
+  $('.list-group').on('click', '.list-group-item', function (event) {
+    event.preventDefault();
+    ultimoItemClicado = $(this);
+    var mes = parseInt(`${$(this)[0].id}`.slice(-1));
+    //console.log(mes)
+
+    if (this.classList.contains('active')) {
+      $(this).removeClass('active');
+      itensSelecionadosListGroup.filter(removerItemSelecionado);
+      $(this).find('div')[1].style.display=null;
+    } else if (itensSelecionadosListGroup.length != 0) {
+
+      $(this).addClass('active'); //.siblings().removeClass('active');
+      itensSelecionadosListGroup.push($(this));
+      $(this).find('div')[1].style.display="none";
+    }
+
     /*if (itensSelecionadosListGroup.length != 0) {
       console.log(getNameISLG(itensSelecionadosListGroup[0]));
       console.log(getMatriculaISLG(itensSelecionadosListGroup[0]));
@@ -343,6 +371,9 @@ function mudarEstadosDaInterfaceNaSelecao(n, index) {
   var buttonsPadrão = document.querySelectorAll('.buttonsPadrão');
   var buttonsExtra = document.querySelectorAll('.buttonsExtra');
   var buttonsAbas = document.querySelectorAll('.linhaAbas');
+  var buttonsDiminuir = document.querySelectorAll('.bd');
+  var buttonsAumentar = document.querySelectorAll('.ba');
+  var buttonsFrequencia = document.querySelectorAll('.bf');
 
   if (n == 0) {
     navBarTitulo.innerHTML = 'Monissor';
@@ -357,6 +388,11 @@ function mudarEstadosDaInterfaceNaSelecao(n, index) {
   
   for (b = 0; b < buttonsPadrão.length; b++) {
     buttonsPadrão[b].hidden = !ativacao;
+  }
+  for (b = 0; b < buttonsAumentar.length; b++) {
+    buttonsAumentar[b].disabled = !ativacao;
+    buttonsDiminuir[b].disabled = !ativacao;
+    buttonsFrequencia[b].disabled = !ativacao;
   }
   for (b = 0; b < buttonsExtra.length; b++) {
     buttonsExtra[b].hidden = ativacao;
@@ -620,7 +656,7 @@ function exibirListaDeAlunos(user, collectionRef, listGroup, frequenciaIndex) {
                 }-BD${frequenciaIndex}" value="${
           doc.data().frequencia[frequenciaIndex]
         }" class="btn btn-primary bd">-</button>
-                <button type="button" class="btn btn-primary">${
+                <button type="button" class="btn btn-primary bf">${
                   doc.data().frequencia[frequenciaIndex]
                 }</button>
                 <button type="button" id="${
