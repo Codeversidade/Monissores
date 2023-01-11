@@ -3,6 +3,13 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Monissores</title>
+  <!--  Web App Manifest include o App é PWA  -->
+  <link rel="manifest" href="app.webmanifest">
+  <meta name="theme-color" content="#0F0ADE"/>
+  <!-- iOS and iPadOS icon -->
+  <link rel="apple-touch-icon" href="/icons/192.png">
+
+
   <link
     href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
     rel="stylesheet"
@@ -38,6 +45,10 @@
       measurementId: 'G-0GFKQRZ5FH',
     };
     firebase.initializeApp(firebaseConfig);
+
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register("sw.js") // Cria o Service Worker do PWA
+    }
   </script>
 
   <script src="app.js" defer></script>
@@ -77,7 +88,7 @@
             <!--Botão de Voltar - Só aparece quando itens estão selecionados no ListGroup-->
             <button
               id="desselecionarTudoBtn"
-              class="buttonsPadrão buttonsExtra desselecionarTudo"
+              class="buttonsExtra desselecionarTudo"
               hidden="true"
             >
               <span class="material-symbols-outlined"> arrow_back </span>
@@ -121,7 +132,7 @@
               <!--Botão de editar aluno (Só aparece quando apenas 1 item do listgroup está selecionado)-->
               <button
                 id="editBtn"
-                class="buttonsPadrão buttonsExtra edit"
+                class="buttonsExtra edit"
                 data-bs-toggle="modal"
                 data-bs-target="#editAlunoModalDialog"
                 hidden="true"
@@ -132,7 +143,7 @@
               <!--Botão de deletar aluno (Só aparece quando algum item do listgroup está selecionado)-->
               <button
                 id="removeBtn"
-                class="buttonsPadrão buttonsExtra remove"
+                class="buttonsExtra remove"
                 data-bs-toggle="modal"
                 data-bs-target="#removeAlunoModalDialog"
                 hidden="true"

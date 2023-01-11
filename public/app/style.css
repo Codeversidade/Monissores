@@ -38,6 +38,12 @@ div#barraDePesquisa {
     background-color: #0D6EFD;
 }
 
+.buttonsExtra {
+    border: none;
+    color: white;
+    background-color: #0D6EFD;
+}
+
 .btnChamadaVirtual {
     width: -webkit-fill-available;
     text-align: left;

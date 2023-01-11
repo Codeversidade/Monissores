@@ -1,3 +1,18 @@
+
+firebase.firestore().enablePersistence()
+.catch((err) => {
+    if (err.code == 'failed-precondition') {
+        // Multiple tabs open, persistence can only be enabled
+        // in one tab at a a time.
+        // ...
+    } else if (err.code == 'unimplemented') {
+        // The current browser does not support all of the
+        // features required to enable persistence
+        // ...
+    }
+});
+
+
 const logarComGoogleBtn = document.getElementById('logarComGoogleBtn');
 const deslogarDoGoogleBtn = document.getElementById('deslogarDoGoogleBtn');
 const configsBtn = document.getElementById('configsBtn');
@@ -325,25 +340,21 @@ function buttonSubtrairFrequencia(user, alunosRef) {
 }
 
 function mudarEstadosDaInterfaceNaSelecao(n, index) {
-  
+  var buttonsPadrão = document.querySelectorAll('.buttonsPadrão');
+  var buttonsExtra = document.querySelectorAll('.buttonsExtra');
+  var buttonsAbas = document.querySelectorAll('.linhaAbas');
+
   if (n == 0) {
     navBarTitulo.innerHTML = 'Monissor';
     ativacao = true;
   } else if (n == 1) {
     navBarTitulo.innerHTML = `${n} item selecionado`;
     ativacao = false;
-  } if (n > 1) {
-    buttonsExtra[1].hidden = !ativacao;
-    navBarTitulo.innerHTML = `${n} itens selecionados`;
-  }
+  } 
   
   //mostra de volta a parte de frequencia
   //for(i = 0; i <= n; i++){getDivISLG(itensSelecionadosListGroup[i+1]).style.display=null}
-
-  var buttonsPadrão = document.querySelectorAll('.buttonsPadrão');
-  var buttonsExtra = document.querySelectorAll('.buttonsExtra');
-  var buttonsAbas = document.querySelectorAll('.linhaAbas');
-
+  
   for (b = 0; b < buttonsPadrão.length; b++) {
     buttonsPadrão[b].hidden = !ativacao;
   }
@@ -354,7 +365,13 @@ function mudarEstadosDaInterfaceNaSelecao(n, index) {
     buttonsAbas[b].hidden = !ativacao;
     buttonsAbas[index].hidden = false;
   }
+
   addAluno.hidden = !ativacao;
+
+  if (n > 1) {
+    buttonsExtra[1].hidden = !ativacao;
+    navBarTitulo.innerHTML = `${n} itens selecionados`;
+  }
 }
 
 function configurarBtnRemover(user, alunosRef) {
