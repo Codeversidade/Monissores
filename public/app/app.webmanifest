@@ -1,36 +1,47 @@
 {
-    "name": "Monissores",
-    "short_name": "Monissor",
-    "theme_color": "#0F0ADE",
-    "background_color": "#0F0ADE",
-    "start_url": "./",
-    "id": "demo-1",
-    "display": "standalone",
-    "scope": "./",
-    "icons": [
-          {
-            "src": "icons/192.png",
-            "sizes": "192x192",
-            "type": "image/png",
-            "purpose": "any"
-          },
-          {
-            "src": "icons/192.png",
-            "sizes": "192x192",
-            "type": "image/png",
-            "purpose": "maskable"
-          },
-          {
-            "src": "icons/512.png",
-            "sizes": "512x512",
-            "type": "image/png",
-            "purpose": "any"
-          },
-          {
-            "src": "icons/512.png",
-            "sizes": "512x512",
-            "type": "image/png",
-            "purpose": "maskable"
-          }
-    ]
+  "name": "Monissores",
+  "short_name": "Monissor",
+  "theme_color": "#0F0ADE",
+  "background_color": "#0F0ADE",
+  "start_url": "./",
+  "id": "demo-1",
+  "display": "standalone",
+  "scope": "./",
+  "icons": [
+    {
+      "src": "icons/192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "icons/512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "description": "Monitor + Professor = Monissor. O app que te salva na hora de fazer relatórios para a monitoria.",
+  "dir": "auto",
+  "lang": "pt",
+  "orientation": "any",
+  "display_override": [
+    "standalone"
+  ],
+  "prefer_related_applications": false,
+  "categories": [
+    "education"
+  ]
 }
