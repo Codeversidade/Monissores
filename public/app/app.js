@@ -12,8 +12,6 @@ firebase.firestore().enablePersistence()
     }
 });
 
-
-const logarComGoogleBtn = document.getElementById('logarComGoogleBtn');
 const deslogarDoGoogleBtn = document.getElementById('deslogarDoGoogleBtn');
 const configsBtn = document.getElementById('configsBtn');
 const addAluno = document.getElementById('addAluno');
@@ -53,7 +51,6 @@ const relatorioBtn = document.getElementById("relatorioBtn");
 const faixaBtn = document.getElementById("faixaBtn");
 
 const auth = firebase.auth();
-const provider = new firebase.auth.GoogleAuthProvider();
 
 var itensSelecionadosListGroup = [];
 var listaAlunosChamadaVirtual = [];
@@ -63,10 +60,6 @@ var chamadaVirtualAtivada;
 
 var chamadaVirtualAtivadaServer;
 var chamadaVirtualAtivadaClient;
-
-logarComGoogleBtn.onclick = () => {
-  auth.signInWithPopup(provider);
-};
 
 deslogarDoGoogleBtn.onclick = () => {
   auth.signOut();
