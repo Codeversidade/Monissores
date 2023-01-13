@@ -18,7 +18,7 @@ const addAluno = document.getElementById('addAluno');
 const editAluno = document.getElementById('editAluno');
 const removeAluno = document.getElementById('removeAluno');
 const salvarAlunoBtn = document.getElementById('salvarAlunoNovoBtn');
-const editAlunoModalDialog = document.getElementById('editAlunoModalDialog');
+
 const removeAlunoModalDialogBtn = document.querySelector('.deletarTudo');
 
 var desselecionarTudoBtn = document.getElementById('desselecionarTudoBtn');
@@ -103,13 +103,30 @@ auth.onAuthStateChanged(user => {
     editarAlunoBtn.onclick = () => {
       configurarBtnEditar(user, alunosRef);
     };
+    
+    addAlunoModalDialog.addEventListener('show.bs.modal', event => 
+        configurarDialogPushState("dialog", "addAlunoModalDialog", "adicionar")
+    );
+    relatorioModalDialog.addEventListener('show.bs.modal', event => 
+        configurarDialogPushState("dialog", "relatorioModalDialog", "relatorio")
+    );
+    configsModalDialog.addEventListener('show.bs.modal', event => 
+        configurarDialogPushState("dialog", "configsModalDialog", "configs")
+    );
+    
+    removeAlunoModalDialog.addEventListener('show.bs.modal', event => {
+        configurarDialogPushState("dialog", "removeAlunoModalDialog", "remover", "selecao");
+    });
+  
     editAlunoModalDialog.addEventListener('show.bs.modal', event => {
+      configurarDialogPushState("dialog", "editAlunoModalDialog", "editar", "selecao")
       nomeEditarAlunoInput.value = getNameISLG(itensSelecionadosListGroup[0]);
       matriculaEditarAlunoInput.value = getMatriculaISLG(
         itensSelecionadosListGroup[0]
       );
     });
     chamadaVirtualModalDialog.addEventListener('show.bs.modal', event => {
+      configurarDialogPushState("dialog", "chamadaVirtualModalDialog", "chamada_virtual")
       chamadaRef
         .doc(`${user.uid}`)
         .get()
@@ -152,7 +169,18 @@ auth.onAuthStateChanged(user => {
             console.error("É a primeira vez da pessoa na feature, criamos o doc.: ", error);
         });
     });
+    var dialogs = [
+      removeAlunoModalDialog,
+      editAlunoModalDialog,
+      addAlunoModalDialog,
+      relatorioModalDialog,
+      configsModalDialog];
+    configurarDialogPopState(dialogs);
     chamadaVirtualModalDialog.addEventListener('hide.bs.modal', event => {
+      if (history.state.id == 'dialog')
+      {
+          history.go(-1)
+      }
       unsubscribeLCV && unsubscribeLCV();
     });
     desselecionarTudoBtn.onclick = () => {
@@ -165,6 +193,7 @@ auth.onAuthStateChanged(user => {
     buttonAdicionarFrequencia(user, alunosRef);
     buttonSubtrairFrequencia(user, alunosRef);
     configuraBtnMes(user, alunosRef);
+    configurarPopState()
 
     // Pega os dados dos alunos cadastrados no servidor e exibe eles na tela
     exibirListaDeAlunos(user, alunosRef, alunosLista1, 0);
@@ -299,6 +328,14 @@ function configurarSelecaoInicialDosItensListGroup() {
       $(this).addClass('active'); //.siblings().removeClass('active');
       itensSelecionadosListGroup.push($(this));
       $(this).find('div')[1].style.display="none";
+      
+      if (itensSelecionadosListGroup.length == 1 && history.state.id == null)
+      {   
+          console.log("O estado é")
+          console.log(history.state)
+          history.pushState({id:"selecao", lgi_id: $(this).attr('id')}, "selecao", "?selecao")
+          console.log("PUSH de Seleção")
+      }
     }
 
     /*if (itensSelecionadosListGroup.length != 0) {
@@ -411,6 +448,97 @@ function mudarEstadosDaInterfaceNaSelecao(n, index) {
     navBarTitulo.innerHTML = `${n} itens selecionados`;
   }
 }
+function configurarDialogPushState(id, dialog_id, url, state=null) {
+  if (history.state.id == state)
+  {
+      history.pushState({id:id, dialog_id: dialog_id}, dialog_id, `?${url}`);
+  }
+}
+
+function configurarDialogPopState(dialogs) {
+  dialogs.forEach(dialog => {
+        dialog.addEventListener('hide.bs.modal', event => {
+            if (history.state.id == 'dialog')
+            {
+                history.go(-1)
+            }
+      });
+  });
+  
+}
+
+function configurarPopState() {
+    history.replaceState({id: null}, "Default state", "./");
+    window.addEventListener('popstate', e => {
+        if (e.state.id == null)
+        {
+            console.log(" VOlttei pro inicio")
+            history.replaceState({id: null}, "Default state", "./");
+            configurarBtnComeBack()
+            if (itensSelecionadosListGroup.length > 0)
+                configurarBtnDesselecionar();
+            closeAllDialogs()
+
+        }
+        else if (e.state.id == 'pesquisa')
+        {
+            console.log("Quando clica pra frente " + e.state.id)
+            startSearchByID()
+            
+        }
+        else if (e.state.id == 'selecao')
+        {   
+            console.log("Quando clica pra frente na selecao" + e.state.id)
+            startSelectionByID(e.state);
+            closeAllDialogs()
+        }
+        else if (e.state.id == 'dialog')
+        {   
+            console.log("Quando clica pra frente na selecao" + e.state.id);
+            openDialogByID(e.state);
+        }
+        else
+        {
+            console.log("Clicou no botão de voltar")
+            console.log(e.state)
+            //startSearchByID(e.state.id)
+            /*configurarBtnComeBack(e.state.id);
+            configurarBtnDesselecionar(e.state.id);*/
+        }
+    });
+
+    
+}
+
+function startSearchByID() {
+    configurarBtnToShearch();
+}
+
+function startSelectionByID(state) {
+    if (itensSelecionadosListGroup.length == 0)
+    {
+        $(`#${state.lgi_id}`).trigger("contextmenu");
+    }
+}
+
+function openDialogByID(state) {
+    //$(`#${state.btn_id}`).trigger("click");
+    $(`#${state.dialog_id}`).modal('show');
+}
+
+function closeAllDialogs() {
+    var dialogs = ["chamadaVirtualModalDialog",
+    "removeAlunoModalDialog",
+    "editAlunoModalDialog",
+    "addAlunoModalDialog",
+    "relatorioModalDialog",
+    "configsModalDialog"]
+
+    dialogs.forEach(element => {
+        $(`#${element}`).modal('hide');
+    });
+}
+
 
 function configurarBtnRemover(user, alunosRef) {
   itensSelecionadosListGroup.forEach(i => {
@@ -421,6 +549,7 @@ function configurarBtnRemover(user, alunosRef) {
 }
 
 function configurarBtnDesselecionar() {
+  
   ultimoItemClicado.siblings().removeClass('active');
   ultimoItemClicado.removeClass('active');
   mudarEstadosDaInterfaceNaSelecao(0, getMesISLG(ultimoItemClicado));
@@ -430,6 +559,11 @@ function configurarBtnDesselecionar() {
   }
   itensSelecionadosListGroup = [];
   escolherFunc();
+
+  if (history.state.id == 'selecao')
+  {
+      history.go(-1);
+  }
 }
 
 function configurarBtnEditar(user, alunosRef) {
@@ -463,9 +597,12 @@ function configurarBtnToShearch(){
   barraDePesquisa.style.cssText = "display: block;";
   document.getElementById("searchbar").focus();
   //console.log("teste")
-  let stateObj = { foo: "bar" }
-  history.pushState(stateObj, "page 2", "?barhtml")
-  console.log("PUSH")
+
+  if (history.state.id == null)
+  {
+      history.pushState({id:"pesquisa"}, "pesquisa", "?pesquisa")
+      console.log("PUSH de Pesquisar")
+  }
 }
 
 function configurarBtnComeBack(){
@@ -474,6 +611,11 @@ function configurarBtnComeBack(){
   document.getElementById('searchbar').value = null;
   mudarEstadosDaInterfaceNaSelecao(0, 0);
   escolherFunc()
+
+  if (history.state.id == 'pesquisa')
+  {
+      history.go(-1);
+  }
 }
 
 function returnBackPagDesign(){
@@ -715,10 +857,10 @@ function attFrequencia(user, alunosRef, matricula, mes, valorFrec) {
     });
 }
 
-$(window).on('popstate', function (e) {
+/*$(window).on('popstate', function (e) {
   var state = e.originalEvent.state;
   console.log("funcionou");
   if (state !== null) {
     console.log("funcionou");
   }
-});
+});*/
