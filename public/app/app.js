@@ -211,12 +211,13 @@ function setarAluno(user, collectionRef, nome, matricula, frequencia) {
     });
 }
 
-function removerAluno(user, collectionRef, matricula) {
+function removerAluno(user, collectionRef, matricula, tarefa = () => {}) {
   collectionRef
     .doc(`${user.uid}.A${matricula}`)
     .delete()
     .then(() => {
       console.log(`Deletamos aluno A${matricula}`);
+      tarefa();
     })
     .catch(error => {
       console.log('Error deletting document:', error);
@@ -436,18 +437,20 @@ function configurarBtnEditar(user, alunosRef) {
     .doc(`${user.uid}.A${getMatriculaISLG(itensSelecionadosListGroup[0])}`)
     .get()
     .then(doc => {
-      console.log(doc.data().frequencia);
-      setarAluno(
-        user,
-        alunosRef,
-        nomeEditarAlunoInput.value,
-        parseInt(matriculaEditarAlunoInput.value),
-        doc.data().frequencia
-      );
+      var freq = doc.data().frequencia;
+      console.log(freq);
+      
       removerAluno(
         user,
         alunosRef,
-        getMatriculaISLG(itensSelecionadosListGroup[0])
+        getMatriculaISLG(itensSelecionadosListGroup[0]), () =>
+        setarAluno(
+          user,
+          alunosRef,
+          nomeEditarAlunoInput.value,
+          parseInt(matriculaEditarAlunoInput.value),
+          freq
+        )
       );
       itensSelecionadosListGroup = [];
       mudarEstadosDaInterfaceNaSelecao(0, 0);
@@ -460,6 +463,9 @@ function configurarBtnToShearch(){
   barraDePesquisa.style.cssText = "display: block;";
   document.getElementById("searchbar").focus();
   //console.log("teste")
+  let stateObj = { foo: "bar" }
+  history.pushState(stateObj, "page 2", "?barhtml")
+  console.log("PUSH")
 }
 
 function configurarBtnComeBack(){
@@ -711,6 +717,7 @@ function attFrequencia(user, alunosRef, matricula, mes, valorFrec) {
 
 $(window).on('popstate', function (e) {
   var state = e.originalEvent.state;
+  console.log("funcionou");
   if (state !== null) {
     console.log("funcionou");
   }
