@@ -69,3 +69,7 @@ node_modules/
 example.html
 /pictures
 public/app/icons3
+workbox-config.js
+workbox-f4fe0df5.js.map
+workbox-f4fe0df5.js
+sw3.js
