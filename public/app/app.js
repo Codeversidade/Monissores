@@ -305,7 +305,8 @@ function configurarSelecaoInicialDosItensListGroup() {
       console.log(getMatriculaISLG(itensSelecionadosListGroup[0]));
       console.log(getMesISLG(itensSelecionadosListGroup[0]));
     }*/
-    configurarBtnComeBack()
+    //configurarBtnComeBack()
+    returnBackPagDesign()
     mudarEstadosDaInterfaceNaSelecao(itensSelecionadosListGroup.length, mes);
   });
 }
@@ -333,7 +334,8 @@ function configurarSelecaoDosItensListGroupClick() {
       console.log(getMatriculaISLG(itensSelecionadosListGroup[0]));
       console.log(getMesISLG(itensSelecionadosListGroup[0]));
     }*/
-    configurarBtnComeBack()
+    //configurarBtnComeBack()
+    returnBackPagDesign()
     mudarEstadosDaInterfaceNaSelecao(itensSelecionadosListGroup.length, mes);
   });
 }
@@ -369,7 +371,13 @@ function mudarEstadosDaInterfaceNaSelecao(n, index) {
   var buttonsFrequencia = document.querySelectorAll('.bf');
 
   if (n == 0) {
-    navBarTitulo.innerHTML = 'Monissor';
+    //Caso barra de pesquisa esteja preechida
+    if(document.getElementById('searchbar').value != ""){
+      escolherFunc()
+      configurarBtnToShearch();
+    }else{
+      navBarTitulo.innerHTML = 'Monissor';
+    }
     ativacao = true;
   } else if (n == 1) {
     navBarTitulo.innerHTML = `${n} item selecionado`;
@@ -416,7 +424,9 @@ function configurarBtnDesselecionar() {
   ultimoItemClicado.removeClass('active');
   mudarEstadosDaInterfaceNaSelecao(0, getMesISLG(ultimoItemClicado));
   //Exibi novamente inteface da frequencia do items selecionados
-  for(i = 0; i < itensSelecionadosListGroup.length; i++){getDivBunttonsFrequenciaISLG(itensSelecionadosListGroup[i]).style.display=null}
+  for(i = 0; i < itensSelecionadosListGroup.length; i++){
+    getDivBunttonsFrequenciaISLG(itensSelecionadosListGroup[i]).style.display=null
+  }
   itensSelecionadosListGroup = [];
   escolherFunc();
 }
@@ -449,15 +459,20 @@ function configurarBtnToShearch(){
   cabecalhoInterno1.style.cssText = "display: none;";
   barraDePesquisa.style.cssText = "display: block;";
   document.getElementById("searchbar").focus();
-  console.log("teste")
-
+  //console.log("teste")
 }
 
 function configurarBtnComeBack(){
   cabecalhoInterno1.style.cssText = "display: flex;";
   barraDePesquisa.style.cssText = "display: none;"
   document.getElementById('searchbar').value = null;
+  mudarEstadosDaInterfaceNaSelecao(0, 0);
+  escolherFunc()
+}
 
+function returnBackPagDesign(){
+  cabecalhoInterno1.style.cssText = "display: flex;";
+  barraDePesquisa.style.cssText = "display: none;"
 }
 
 ////////////////////////////////////////////////
@@ -661,6 +676,10 @@ function exibirListaDeAlunos(user, collectionRef, listGroup, frequenciaIndex) {
           </a>`;
       });
       listGroup.innerHTML = items.join('');
+      //Caso barra de pesquisa esteja preechida
+      if(document.getElementById('searchbar').value != ""){
+        escolherFunc()//exibe a lista de acordo com a barra de pesquisa
+      }
     });
   return unsubscribe;
 }
@@ -687,6 +706,12 @@ function attFrequencia(user, alunosRef, matricula, mes, valorFrec) {
       var frequencia = doc.data().frequencia;
       frequencia[mes] = valorFrec;
       editarAlunoFrequencia(user, alunosRef, matricula, frequencia);
-      configurarBtnComeBack(); //reseta display pro estado original
     });
 }
+
+$(window).on('popstate', function (e) {
+  var state = e.originalEvent.state;
+  if (state !== null) {
+    console.log("funcionou");
+  }
+});
