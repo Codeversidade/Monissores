@@ -1,3 +1,38 @@
+body {
+    background-color: #F0F2F5;
+}
+#teste{
+    height: 100vh;
+    background-color: red;
+    position: relative;
+}
+#secaoLogin {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: yellow;
+    padding-top: 0px;
+    border: 1px solid black;
+}
+
+#content-secaoLogin {
+    margin-top: 0px;
+}
+#content-secaoLogin > h1{
+    color: #0F0ADE;
+    text-align: center;
+    font-variant: small-caps;
+}
+
+#content-secaoLogin>p {
+    color: black;
+    font-size: 1.1em;
+    text-align: center;
+    padding: 0px 20px;
+    margin-top: 20px;
+}
+
 input#searchbar {
     border: none;
     border-radius: 5px;
@@ -50,13 +85,15 @@ div#barraDePesquisa {
     vertical-align: top;
     border: none;
     background-color: whitesmoke;
-    
+
 }
-.btnChamadaVirtual > table{
+
+.btnChamadaVirtual>table {
     font-size: 0.8em;
     height: 50%;
 
 }
-.btnChamadaVirtual th{
+
+.btnChamadaVirtual th {
     width: 40px;
 }
