@@ -12,7 +12,6 @@
     <script src="https://www.gstatic.com/firebasejs/7.16.1/firebase-firestore.js"></script>
 
 
-
     <script>
         var firebaseConfig = {
             apiKey: 'AIzaSyB9zK2OlUwp1N43nM-O-_EB1TI5x1BTq_E',
@@ -30,7 +29,7 @@
     <!--
 
     -->
-
+    <link rel="stylesheet" href="../app/style.css">
     <style>
         * {
             padding: 0px;
@@ -43,7 +42,7 @@
         }
 
         h1 {
-            color: #1877F2;
+            color: var(--cor-principal);
             text-align: center;
             font-variant: small-caps;
             margin-top: 30px;
@@ -95,11 +94,11 @@
         }
 
         input:focus {
-            outline: 1px solid #1877F2;
+            outline: 1px solid var(--cor-destaque);
         }
 
         button {
-            background-color: #1877F2;
+            background-color: var(--cor-principal);
             color: white;
             font-weight: bold;
             font-size: 1.1em;
@@ -115,11 +114,11 @@
 
         button:hover {
             cursor: pointer;
-            box-shadow: 0px 0px 10px #1876f283;
+            box-shadow: 0px 0px 10px var(--cor-destaque);
         }
 
         strong {
-            color: #1877F2;
+            color: var(--cor-principal);
         }
     </style>
 </head>

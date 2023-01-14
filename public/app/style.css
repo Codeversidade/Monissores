@@ -1,24 +1,23 @@
 body {
     /*#F0F2F5*/
-    background-color: #2222FF;
+    background-color:var(--cor-destaque);
 }
 :root{
     --cor-principal: #0F0ADE;
-    --bg-primary: black;
+    --cor-destaque:  #2222FF;
 }
-#teste{
-    height: 100vh;
-    position: relative;
+.bg-principal{
+    background-color: #0F0ADE;
 }
 #secaoLogin {
     position: absolute;
-    width: 90vw;
+    max-width: 600px;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     background-color: white;
     border-radius: 10px;
-    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.378);
+    box-shadow: 10px 10px 25px rgba(0, 0, 0, 0.419);
     padding: 20px 0px;
 }
 
@@ -27,7 +26,7 @@ body {
     margin-top: 0px;
 }
 #content-secaoLogin > h1{
-    color: #0F0ADE;
+    color: cor;
     text-align: center;
     font-variant: small-caps;
 }
@@ -68,7 +67,7 @@ div#barraDePesquisa {
 
 #searchbarBtnComeBack {
     display: inline;
-    color: #0D6EFD;
+    color: var(--cor-principal);
     background-color: rgba(255, 255, 255, 0);
 
     margin-left: 0px;
@@ -77,13 +76,13 @@ div#barraDePesquisa {
 .buttonsPadrão {
     border: none;
     color: white;
-    background-color: #0D6EFD;
+    background-color: var(--cor-principal);
 }
 
 .buttonsExtra {
     border: none;
     color: white;
-    background-color: #0D6EFD;
+    background-color: var(--cor-principal);
 }
 
 .btnChamadaVirtual {
