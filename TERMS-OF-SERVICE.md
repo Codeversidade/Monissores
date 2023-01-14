@@ -1,4 +1,4 @@
-Termos de Uso
+#Termos de Uso
 
 - Ao persistir no uso do aplicativo Monissores você concorda que o usará única e exclusivamente para Cadastrar, Editar, Remover discentes com informações de nome completo e matrícula bem como Gerar Relatórios das Frequências destes discentes obedecendo as leis locais, normas institucionais, evitando o uso e abuso de possíveis bugs, erros e informações extraídas fora da tela que usuário tem acesso no aplicativo Monissores para benefício e/ou malefício de si próprio e/ou terceiros.
 
