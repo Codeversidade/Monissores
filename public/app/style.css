@@ -1,8 +1,10 @@
 body {
-    background-color: #F0F2F5;
+    /*#F0F2F5*/
+    background-color: #2222FF;
 }
 :root{
     --cor-principal: #0F0ADE;
+    --bg-primary: black;
 }
 #teste{
     height: 100vh;
