@@ -58,11 +58,9 @@
         // tosUrl and privacyPolicyUrl accept either url string or a callback
         // function.
         // Terms of service url/callback.
-        tosUrl: '<your-tos-url>',
+        tosUrl: 'https://github.com/iCarlosCode/Monissores/blob/main/TERMS-OF-SERVICE.md',
         // Privacy policy url/callback.
-        privacyPolicyUrl: function() {
-          window.location.assign('<your-privacy-policy-url>');
-        }
+        privacyPolicyUrl: 'https://github.com/iCarlosCode/Monissores/blob/main/PRIVACY-POLICY.md',
       };
 
     var ui = new firebaseui.auth.AuthUI(firebase.auth());
