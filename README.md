@@ -10,7 +10,7 @@
  Monitor + Professor = Monissor. O app que te salva na hora de fazer relatórios para a monitoria
 
 ## Funções
-<img src="Monissores.png" align="right"></img>
+<img src="public/app/icons/Monissores.png" align="right"></img>
 - Cadastrar, Editar, Remover e Organizar alunos
 - Aumentar e Diminuir frequência de cada aluno
 - Chamada Virtual
