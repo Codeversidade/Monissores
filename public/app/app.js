@@ -1,13 +1,24 @@
-navigator.serviceWorker.register("sw.js") // Cria o Service Worker do PWA
 
-const logarComGoogleBtn = document.getElementById('logarComGoogleBtn');
+firebase.firestore().enablePersistence()
+.catch((err) => {
+    if (err.code == 'failed-precondition') {
+        // Multiple tabs open, persistence can only be enabled
+        // in one tab at a a time.
+        // ...
+    } else if (err.code == 'unimplemented') {
+        // The current browser does not support all of the
+        // features required to enable persistence
+        // ...
+    }
+});
+
 const deslogarDoGoogleBtn = document.getElementById('deslogarDoGoogleBtn');
 const configsBtn = document.getElementById('configsBtn');
 const addAluno = document.getElementById('addAluno');
 const editAluno = document.getElementById('editAluno');
 const removeAluno = document.getElementById('removeAluno');
 const salvarAlunoBtn = document.getElementById('salvarAlunoNovoBtn');
-const editAlunoModalDialog = document.getElementById('editAlunoModalDialog');
+
 const removeAlunoModalDialogBtn = document.querySelector('.deletarTudo');
 
 var desselecionarTudoBtn = document.getElementById('desselecionarTudoBtn');
@@ -40,7 +51,6 @@ const relatorioBtn = document.getElementById("relatorioBtn");
 const faixaBtn = document.getElementById("faixaBtn");
 
 const auth = firebase.auth();
-const provider = new firebase.auth.GoogleAuthProvider();
 
 var itensSelecionadosListGroup = [];
 var listaAlunosChamadaVirtual = [];
@@ -50,10 +60,6 @@ var chamadaVirtualAtivada;
 
 var chamadaVirtualAtivadaServer;
 var chamadaVirtualAtivadaClient;
-
-logarComGoogleBtn.onclick = () => {
-  auth.signInWithPopup(provider);
-};
 
 deslogarDoGoogleBtn.onclick = () => {
   auth.signOut();
@@ -97,13 +103,30 @@ auth.onAuthStateChanged(user => {
     editarAlunoBtn.onclick = () => {
       configurarBtnEditar(user, alunosRef);
     };
+    
+    addAlunoModalDialog.addEventListener('show.bs.modal', event => 
+        configurarDialogPushState("dialog", "addAlunoModalDialog", "adicionar")
+    );
+    relatorioModalDialog.addEventListener('show.bs.modal', event => 
+        configurarDialogPushState("dialog", "relatorioModalDialog", "relatorio")
+    );
+    configsModalDialog.addEventListener('show.bs.modal', event => 
+        configurarDialogPushState("dialog", "configsModalDialog", "configs")
+    );
+    
+    removeAlunoModalDialog.addEventListener('show.bs.modal', event => {
+        configurarDialogPushState("dialog", "removeAlunoModalDialog", "remover", "selecao");
+    });
+  
     editAlunoModalDialog.addEventListener('show.bs.modal', event => {
+      configurarDialogPushState("dialog", "editAlunoModalDialog", "editar", "selecao")
       nomeEditarAlunoInput.value = getNameISLG(itensSelecionadosListGroup[0]);
       matriculaEditarAlunoInput.value = getMatriculaISLG(
         itensSelecionadosListGroup[0]
       );
     });
     chamadaVirtualModalDialog.addEventListener('show.bs.modal', event => {
+      configurarDialogPushState("dialog", "chamadaVirtualModalDialog", "chamada_virtual")
       chamadaRef
         .doc(`${user.uid}`)
         .get()
@@ -146,7 +169,18 @@ auth.onAuthStateChanged(user => {
             console.error("É a primeira vez da pessoa na feature, criamos o doc.: ", error);
         });
     });
+    var dialogs = [
+      removeAlunoModalDialog,
+      editAlunoModalDialog,
+      addAlunoModalDialog,
+      relatorioModalDialog,
+      configsModalDialog];
+    configurarDialogPopState(dialogs);
     chamadaVirtualModalDialog.addEventListener('hide.bs.modal', event => {
+      if (history.state.id == 'dialog')
+      {
+          history.go(-1)
+      }
       unsubscribeLCV && unsubscribeLCV();
     });
     desselecionarTudoBtn.onclick = () => {
@@ -154,10 +188,12 @@ auth.onAuthStateChanged(user => {
     };
     console.log(removeAlunoModalDialogBtn);
     console.log(editarAlunoBtn);
-    configurarSelecaoDosItensListGroup();
+    configurarSelecaoInicialDosItensListGroup();
+    configurarSelecaoDosItensListGroupClick();
     buttonAdicionarFrequencia(user, alunosRef);
     buttonSubtrairFrequencia(user, alunosRef);
     configuraBtnMes(user, alunosRef);
+    configurarPopState()
 
     // Pega os dados dos alunos cadastrados no servidor e exibe eles na tela
     exibirListaDeAlunos(user, alunosRef, alunosLista1, 0);
@@ -204,12 +240,13 @@ function setarAluno(user, collectionRef, nome, matricula, frequencia) {
     });
 }
 
-function removerAluno(user, collectionRef, matricula) {
+function removerAluno(user, collectionRef, matricula, tarefa = () => {}) {
   collectionRef
     .doc(`${user.uid}.A${matricula}`)
     .delete()
     .then(() => {
       console.log(`Deletamos aluno A${matricula}`);
+      tarefa();
     })
     .catch(error => {
       console.log('Error deletting document:', error);
@@ -276,7 +313,7 @@ function removerItemSelecionado(value, index, arr) {
   return false;
 }
 
-function configurarSelecaoDosItensListGroup() {
+function configurarSelecaoInicialDosItensListGroup() {
   $('.list-group').on('contextmenu', '.list-group-item', function (event) {
     event.preventDefault();
     ultimoItemClicado = $(this);
@@ -291,15 +328,52 @@ function configurarSelecaoDosItensListGroup() {
       $(this).addClass('active'); //.siblings().removeClass('active');
       itensSelecionadosListGroup.push($(this));
       $(this).find('div')[1].style.display="none";
+      
+      if (itensSelecionadosListGroup.length == 1 && history.state.id == null)
+      {   
+          console.log("O estado é")
+          console.log(history.state)
+          history.pushState({id:"selecao", lgi_id: $(this).attr('id')}, "selecao", "?selecao")
+          console.log("PUSH de Seleção")
+      }
     }
 
-    console.log(itensSelecionadosListGroup);
     /*if (itensSelecionadosListGroup.length != 0) {
       console.log(getNameISLG(itensSelecionadosListGroup[0]));
       console.log(getMatriculaISLG(itensSelecionadosListGroup[0]));
       console.log(getMesISLG(itensSelecionadosListGroup[0]));
     }*/
-    configurarBtnComeBack()
+    //configurarBtnComeBack()
+    returnBackPagDesign()
+    mudarEstadosDaInterfaceNaSelecao(itensSelecionadosListGroup.length, mes);
+  });
+}
+
+function configurarSelecaoDosItensListGroupClick() {
+  $('.list-group').on('click', '.list-group-item', function (event) {
+    event.preventDefault();
+    ultimoItemClicado = $(this);
+    var mes = parseInt(`${$(this)[0].id}`.slice(-1));
+    //console.log(mes)
+
+    if (this.classList.contains('active')) {
+      $(this).removeClass('active');
+      itensSelecionadosListGroup.filter(removerItemSelecionado);
+      $(this).find('div')[1].style.display=null;
+    } else if (itensSelecionadosListGroup.length != 0) {
+
+      $(this).addClass('active'); //.siblings().removeClass('active');
+      itensSelecionadosListGroup.push($(this));
+      $(this).find('div')[1].style.display="none";
+    }
+
+    /*if (itensSelecionadosListGroup.length != 0) {
+      console.log(getNameISLG(itensSelecionadosListGroup[0]));
+      console.log(getMatriculaISLG(itensSelecionadosListGroup[0]));
+      console.log(getMesISLG(itensSelecionadosListGroup[0]));
+    }*/
+    //configurarBtnComeBack()
+    returnBackPagDesign()
     mudarEstadosDaInterfaceNaSelecao(itensSelecionadosListGroup.length, mes);
   });
 }
@@ -327,23 +401,37 @@ function buttonSubtrairFrequencia(user, alunosRef) {
 }
 
 function mudarEstadosDaInterfaceNaSelecao(n, index) {
+  var buttonsPadrão = document.querySelectorAll('.buttonsPadrão');
+  var buttonsExtra = document.querySelectorAll('.buttonsExtra');
+  var buttonsAbas = document.querySelectorAll('.linhaAbas');
+  var buttonsDiminuir = document.querySelectorAll('.bd');
+  var buttonsAumentar = document.querySelectorAll('.ba');
+  var buttonsFrequencia = document.querySelectorAll('.bf');
+
   if (n == 0) {
-    navBarTitulo.innerHTML = 'Relatório Monitoria';
+    //Caso barra de pesquisa esteja preechida
+    if(document.getElementById('searchbar').value != ""){
+      escolherFunc()
+      configurarBtnToShearch();
+    }else{
+      navBarTitulo.innerHTML = 'Monissor';
+    }
     ativacao = true;
   } else if (n == 1) {
     navBarTitulo.innerHTML = `${n} item selecionado`;
     ativacao = false;
-  }
-
+  } 
+  
   //mostra de volta a parte de frequencia
   //for(i = 0; i <= n; i++){getDivISLG(itensSelecionadosListGroup[i+1]).style.display=null}
-
-  var buttonsPadrão = document.querySelectorAll('.buttonsPadrão');
-  var buttonsExtra = document.querySelectorAll('.buttonsExtra');
-  var buttonsAbas = document.querySelectorAll('.linhaAbas');
-
+  
   for (b = 0; b < buttonsPadrão.length; b++) {
     buttonsPadrão[b].hidden = !ativacao;
+  }
+  for (b = 0; b < buttonsAumentar.length; b++) {
+    buttonsAumentar[b].disabled = !ativacao;
+    buttonsDiminuir[b].disabled = !ativacao;
+    buttonsFrequencia[b].disabled = !ativacao;
   }
   for (b = 0; b < buttonsExtra.length; b++) {
     buttonsExtra[b].hidden = ativacao;
@@ -352,12 +440,105 @@ function mudarEstadosDaInterfaceNaSelecao(n, index) {
     buttonsAbas[b].hidden = !ativacao;
     buttonsAbas[index].hidden = false;
   }
+
   addAluno.hidden = !ativacao;
+
   if (n > 1) {
     buttonsExtra[1].hidden = !ativacao;
     navBarTitulo.innerHTML = `${n} itens selecionados`;
   }
 }
+function configurarDialogPushState(id, dialog_id, url, state=null) {
+  if (history.state.id == state)
+  {
+      history.pushState({id:id, dialog_id: dialog_id}, dialog_id, `?${url}`);
+  }
+}
+
+function configurarDialogPopState(dialogs) {
+  dialogs.forEach(dialog => {
+        dialog.addEventListener('hide.bs.modal', event => {
+            if (history.state.id == 'dialog')
+            {
+                history.go(-1)
+            }
+      });
+  });
+  
+}
+
+function configurarPopState() {
+    history.replaceState({id: null}, "Default state", "./");
+    window.addEventListener('popstate', e => {
+        if (e.state.id == null)
+        {
+            console.log(" VOlttei pro inicio")
+            history.replaceState({id: null}, "Default state", "./");
+            configurarBtnComeBack()
+            if (itensSelecionadosListGroup.length > 0)
+                configurarBtnDesselecionar();
+            closeAllDialogs()
+
+        }
+        else if (e.state.id == 'pesquisa')
+        {
+            console.log("Quando clica pra frente " + e.state.id)
+            startSearchByID()
+            
+        }
+        else if (e.state.id == 'selecao')
+        {   
+            console.log("Quando clica pra frente na selecao" + e.state.id)
+            startSelectionByID(e.state);
+            closeAllDialogs()
+        }
+        else if (e.state.id == 'dialog')
+        {   
+            console.log("Quando clica pra frente na selecao" + e.state.id);
+            openDialogByID(e.state);
+        }
+        else
+        {
+            console.log("Clicou no botão de voltar")
+            console.log(e.state)
+            //startSearchByID(e.state.id)
+            /*configurarBtnComeBack(e.state.id);
+            configurarBtnDesselecionar(e.state.id);*/
+        }
+    });
+
+    
+}
+
+function startSearchByID() {
+    configurarBtnToShearch();
+}
+
+function startSelectionByID(state) {
+    if (itensSelecionadosListGroup.length == 0)
+    {
+        $(`#${state.lgi_id}`).trigger("contextmenu");
+    }
+}
+
+function openDialogByID(state) {
+    //$(`#${state.btn_id}`).trigger("click");
+    $(`#${state.dialog_id}`).modal('show');
+}
+
+function closeAllDialogs() {
+    var dialogs = ["chamadaVirtualModalDialog",
+    "removeAlunoModalDialog",
+    "editAlunoModalDialog",
+    "addAlunoModalDialog",
+    "relatorioModalDialog",
+    "configsModalDialog"]
+
+    dialogs.forEach(element => {
+        $(`#${element}`).modal('hide');
+    });
+}
+
 
 function configurarBtnRemover(user, alunosRef) {
   itensSelecionadosListGroup.forEach(i => {
@@ -368,12 +549,21 @@ function configurarBtnRemover(user, alunosRef) {
 }
 
 function configurarBtnDesselecionar() {
+  
   ultimoItemClicado.siblings().removeClass('active');
   ultimoItemClicado.removeClass('active');
   mudarEstadosDaInterfaceNaSelecao(0, getMesISLG(ultimoItemClicado));
   //Exibi novamente inteface da frequencia do items selecionados
-  for(i = 0; i < itensSelecionadosListGroup.length; i++){getDivBunttonsFrequenciaISLG(itensSelecionadosListGroup[i]).style.display=null}
+  for(i = 0; i < itensSelecionadosListGroup.length; i++){
+    getDivBunttonsFrequenciaISLG(itensSelecionadosListGroup[i]).style.display=null
+  }
   itensSelecionadosListGroup = [];
+  escolherFunc();
+
+  if (history.state.id == 'selecao')
+  {
+      history.go(-1);
+  }
 }
 
 function configurarBtnEditar(user, alunosRef) {
@@ -381,18 +571,20 @@ function configurarBtnEditar(user, alunosRef) {
     .doc(`${user.uid}.A${getMatriculaISLG(itensSelecionadosListGroup[0])}`)
     .get()
     .then(doc => {
-      console.log(doc.data().frequencia);
-      setarAluno(
-        user,
-        alunosRef,
-        nomeEditarAlunoInput.value,
-        parseInt(matriculaEditarAlunoInput.value),
-        doc.data().frequencia
-      );
+      var freq = doc.data().frequencia;
+      console.log(freq);
+      
       removerAluno(
         user,
         alunosRef,
-        getMatriculaISLG(itensSelecionadosListGroup[0])
+        getMatriculaISLG(itensSelecionadosListGroup[0]), () =>
+        setarAluno(
+          user,
+          alunosRef,
+          nomeEditarAlunoInput.value,
+          parseInt(matriculaEditarAlunoInput.value),
+          freq
+        )
       );
       itensSelecionadosListGroup = [];
       mudarEstadosDaInterfaceNaSelecao(0, 0);
@@ -402,16 +594,35 @@ function configurarBtnEditar(user, alunosRef) {
 ////////////////////////////////////////
 function configurarBtnToShearch(){
   cabecalhoInterno1.style.cssText = "display: none;";
-  barraDePesquisa.style.cssText = "display: block;"
+  barraDePesquisa.style.cssText = "display: block;";
+  document.getElementById("searchbar").focus();
+  //console.log("teste")
 
+  if (history.state.id == null)
+  {
+      history.pushState({id:"pesquisa"}, "pesquisa", "?pesquisa")
+      console.log("PUSH de Pesquisar")
+  }
 }
 
 function configurarBtnComeBack(){
   cabecalhoInterno1.style.cssText = "display: flex;";
   barraDePesquisa.style.cssText = "display: none;"
   document.getElementById('searchbar').value = null;
-  escolherFunc();
+  mudarEstadosDaInterfaceNaSelecao(0, 0);
+  escolherFunc()
+
+  if (history.state.id == 'pesquisa')
+  {
+      history.go(-1);
+  }
 }
+
+function returnBackPagDesign(){
+  cabecalhoInterno1.style.cssText = "display: flex;";
+  barraDePesquisa.style.cssText = "display: none;"
+}
+
 ////////////////////////////////////////////////
 
 function escolherFunc(){
@@ -438,7 +649,7 @@ function escolherFunc(){
       if(!(groupListNames[i].toLowerCase().includes(input))){
         groupList[i].style.display="none";
       }else{
-        groupList[i].style.display="list-item"
+        groupList[i].style.display="list-item";
       }
     }
   }
@@ -601,7 +812,7 @@ function exibirListaDeAlunos(user, collectionRef, listGroup, frequenciaIndex) {
                 }-BD${frequenciaIndex}" value="${
           doc.data().frequencia[frequenciaIndex]
         }" class="btn btn-primary bd">-</button>
-                <button type="button" class="btn btn-primary">${
+                <button type="button" class="btn btn-primary bf">${
                   doc.data().frequencia[frequenciaIndex]
                 }</button>
                 <button type="button" id="${
@@ -613,6 +824,10 @@ function exibirListaDeAlunos(user, collectionRef, listGroup, frequenciaIndex) {
           </a>`;
       });
       listGroup.innerHTML = items.join('');
+      //Caso barra de pesquisa esteja preechida
+      if(document.getElementById('searchbar').value != ""){
+        escolherFunc()//exibe a lista de acordo com a barra de pesquisa
+      }
     });
   return unsubscribe;
 }
@@ -639,6 +854,13 @@ function attFrequencia(user, alunosRef, matricula, mes, valorFrec) {
       var frequencia = doc.data().frequencia;
       frequencia[mes] = valorFrec;
       editarAlunoFrequencia(user, alunosRef, matricula, frequencia);
-      configurarBtnComeBack(); //reseta display pro estado original
     });
 }
+
+/*$(window).on('popstate', function (e) {
+  var state = e.originalEvent.state;
+  console.log("funcionou");
+  if (state !== null) {
+    console.log("funcionou");
+  }
+});*/

@@ -67,5 +67,9 @@ node_modules/
 
 # Arquivos extras a serem ignorados
 example.html
-pictures/
-icons/
+/pictures
+public/app/icons3
+workbox-config.js
+workbox-f4fe0df5.js.map
+workbox-f4fe0df5.js
+sw3.js
