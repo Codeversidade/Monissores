@@ -99,10 +99,8 @@
 
     <div style="position: absolute">
       <!--Cabeçalho-->
-      <div class="fixed-top text-light shadow bg-principal">
+      <div class="fixed-top  text-light shadow bg-principal" id="cabecalho">
         <!--Linha com o texto da nav bar e botões-->
-
-        
         <!--Barra de pesquisa-->
         <div id="barraDePesquisa">
           <div>
@@ -114,7 +112,7 @@
           </div>
         </div>
 
-        <nav class="navbar navbar-dark bg-principal">
+        <nav class=" navbar navbar-dark bg-principal">
           
           <div class="container-fluid" id="cabecalhoInterno1">
             <!--Botão de Voltar - Só aparece quando itens estão selecionados no ListGroup-->
@@ -185,6 +183,7 @@
             </div>
           </div>
         </nav>
+
         <!--Final da NavBar-->
 
         <!-- Aqui começa Parte das Abas de Meses-->
@@ -255,14 +254,33 @@
             </button>
           </li>
         </ul>
+
+        <!--Botão da chamada Virtual-->
+        <button
+        type="button"
+        id="chamadaVirtual"
+        data-bs-toggle="modal"
+        data-bs-target="#chamadaVirtualModalDialog"
+        class="btnChamadaVirtual"
+      >
+        <table>
+          <tr>
+            <th rowspan="2"><span class="material-symbols-outlined">link</span></th>
+            <td><strong>Chamada Virtual do 1º Mês</strong></td>
+          </tr>
+          <tr>
+            <td >Estado: Desativada</td>
+          </tr>
+        </table>
+      </button>
         <!--Fim da lista de Abas de Meses-->
       </div>
       <!--Fim do menu que inclui a navbar e a lista de abas de meses-->
 
       <!--Aqui é definido o Conteúdo de Cada Tab-->
       <div
-        class="tab-content bg-white"
-        style="margin-top: 60px"
+        class="fixed-middle tab-content bg-white"
+        
         id="linhaAbasContent"
       >
         <!--Aba Mês 1-->
@@ -271,27 +289,11 @@
           id="mes-1"
           role="tabpanel"
           aria-labelledby="mes-1-tab"
-          style="width: 100vw"
+          style="width: 100vw;
+          "
         >
           
-          <!--Botão da chamada Virtual-->
-            <button
-              type="button"
-              id="chamadaVirtual"
-              data-bs-toggle="modal"
-              data-bs-target="#chamadaVirtualModalDialog"
-              class="btnChamadaVirtual"
-            >
-              <table>
-                <tr>
-                  <th rowspan="2"><span class="material-symbols-outlined">link</span></th>
-                  <td><strong>Chamada Virtual do 1º Mês</strong></td>
-                </tr>
-                <tr>
-                  <td >Estado: Desativada</td>
-                </tr>
-              </table>
-            </button>
+          <!-- Botão da chamada virtual estava aqui 14/01/2023-->
           
           <!--A Lista de Alunos fica dentro deste list-group-->
           <div id="alunosLista1" class="list-group"></div>

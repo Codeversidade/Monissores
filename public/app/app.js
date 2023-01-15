@@ -9,8 +9,8 @@ firebase.firestore().enablePersistence()
         // The current browser does not support all of the
         // features required to enable persistence
         // ...
-    }
-});
+      }
+    });
 
 const deslogarDoGoogleBtn = document.getElementById('deslogarDoGoogleBtn');
 const configsBtn = document.getElementById('configsBtn');
@@ -186,6 +186,7 @@ auth.onAuthStateChanged(user => {
     desselecionarTudoBtn.onclick = () => {
       configurarBtnDesselecionar();
     };
+    desgrudar()
     console.log(removeAlunoModalDialogBtn);
     console.log(editarAlunoBtn);
     configurarSelecaoInicialDosItensListGroup();
@@ -207,6 +208,16 @@ auth.onAuthStateChanged(user => {
     userDetails.innerHTML = '';
   }
 });
+
+///////////////////////////////////////////
+//Impedindo que a lista de alunos fique debaixo do cabeçalho lá no html
+window.addEventListener('resize',desgrudar);
+function desgrudar(){
+  var alturaCabecalho = document.getElementById("cabecalho").offsetHeight
+  var divConteudo = document.getElementById('linhaAbasContent')
+  divConteudo.style.marginTop = alturaCabecalho + "px";
+}
+//////////////////////////////////////////////
 
 function setarAluno(user, collectionRef, nome, matricula, frequencia) {
   collectionRef
