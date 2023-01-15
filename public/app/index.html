@@ -188,7 +188,7 @@
 
         <!-- Aqui começa Parte das Abas de Meses-->
         <ul
-          class="nav justify-content-center nav-pills nav-fill mb-3"
+          class="nav justify-content-center nav-pills nav-fill mb"
           id="linhaAbas"
           role="tablist"
         >
@@ -255,34 +255,35 @@
           </li>
         </ul>
 
-        <!--Botão da chamada Virtual-->
-        <button
-        type="button"
-        id="chamadaVirtual"
-        data-bs-toggle="modal"
-        data-bs-target="#chamadaVirtualModalDialog"
-        class="btnChamadaVirtual"
-      >
-        <table>
-          <tr>
-            <th rowspan="2"><span class="material-symbols-outlined">link</span></th>
-            <td><strong>Chamada Virtual do 1º Mês</strong></td>
-          </tr>
-          <tr>
-            <td >Estado: Desativada</td>
-          </tr>
-        </table>
-      </button>
+        
         <!--Fim da lista de Abas de Meses-->
       </div>
       <!--Fim do menu que inclui a navbar e a lista de abas de meses-->
 
       <!--Aqui é definido o Conteúdo de Cada Tab-->
       <div
-        class="fixed-middle tab-content bg-white"
+        class="tab-content bg-white"
         
         id="linhaAbasContent"
       >
+      <!--Botão da chamada Virtual-->
+      <button
+      type="button"
+      id="chamadaVirtual"
+      data-bs-toggle="modal"
+      data-bs-target="#chamadaVirtualModalDialog"
+      class="btnChamadaVirtual"
+    >
+      <table>
+        <tr>
+          <th rowspan="2"><span class="material-symbols-outlined">link</span></th>
+          <td><strong>Chamada Virtual do 1º Mês</strong></td>
+        </tr>
+        <tr>
+          <td >Estado: Desativada</td>
+        </tr>
+      </table>
+    </button>
         <!--Aba Mês 1-->
         <div
           class="tab-pane fade show active"
@@ -294,6 +295,7 @@
         >
           
           <!-- Botão da chamada virtual estava aqui 14/01/2023-->
+          
           
           <!--A Lista de Alunos fica dentro deste list-group-->
           <div id="alunosLista1" class="list-group"></div>
@@ -307,9 +309,12 @@
           aria-labelledby="mes-2-tab"
           style="width: 100vw"
         >
+        <!--
           <button type="button" id="chamadaVirtual2">
             Chamada Virtual Mês 2
           </button>
+        -->
+
           <!--A Lista de Alunos fica dentro deste list-group-->
           <div id="alunosLista2" class="list-group"></div>
         </div>
@@ -322,9 +327,11 @@
           aria-labelledby="tab-mes-3"
           style="width: 100vw"
         >
+        <!--
           <button type="button" id="chamadaVirtual3">
             Chamada Virtual Mês 3
           </button>
+        -->
           <!--A Lista de Alunos fica dentro deste list-group-->
           <div id="alunosLista3" class="list-group"></div>
         </div>
@@ -337,9 +344,12 @@
           aria-labelledby="tab-mes-4"
           style="width: 100vw"
         >
+        <!--
           <button type="button" id="chamadaVirtual4">
             Chamada Virtual Mês 4
           </button>
+        -->
+        
           <!--A Lista de Alunos fica dentro deste list-group-->
           <div id="alunosLista4" class="list-group"></div>
         </div>

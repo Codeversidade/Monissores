@@ -614,6 +614,7 @@ function configurarBtnToShearch(){
       history.pushState({id:"pesquisa"}, "pesquisa", "?pesquisa")
       console.log("PUSH de Pesquisar")
   }
+  desgrudar()
 }
 
 function configurarBtnComeBack(){
@@ -627,6 +628,7 @@ function configurarBtnComeBack(){
   {
       history.go(-1);
   }
+  desgrudar()
 }
 
 function returnBackPagDesign(){
