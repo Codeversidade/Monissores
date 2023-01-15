@@ -195,6 +195,7 @@ auth.onAuthStateChanged(user => {
     buttonSubtrairFrequencia(user, alunosRef);
     configuraBtnMes(user, alunosRef);
     configurarPopState()
+    configurarTitlyMonissor()
 
     // Pega os dados dos alunos cadastrados no servidor e exibe eles na tela
     exibirListaDeAlunos(user, alunosRef, alunosLista1, 0);
@@ -870,10 +871,11 @@ function attFrequencia(user, alunosRef, matricula, mes, valorFrec) {
     });
 }
 
-/*$(window).on('popstate', function (e) {
-  var state = e.originalEvent.state;
-  console.log("funcionou");
-  if (state !== null) {
-    console.log("funcionou");
-  }
-});*/
+function configurarTitlyMonissor(){
+  $("#navBarTitulo").on('click', function(e){
+    e.preventDefault()
+    configurarBtnComeBack()
+    escolherFunc()
+    console.log('ta funfando')
+  })
+}
