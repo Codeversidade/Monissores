@@ -138,17 +138,28 @@ auth.onAuthStateChanged(user => {
             $('#ativarCVSwitch').addClass('checked');
           }
           divSwitchAtivarChamada.innerHTML = 
-          `<label class="form-check-label" for="ativarCVSwitch"
-            >Ativar Chamada</label
-          >
-          <input
-            class="form-check-input"
-            name="toggleChk"
-            type="checkbox"
-            role="switch"
-            id="ativarCVSwitch"
-            ${ativar}
-          />`
+          `<table style="width: -webkit-fill-available;">
+              <tr>
+                <td>
+                  <label class="form-check-label" for="ativarCVSwitch" style="text-align: left;">
+                    <strong>Ativar Chamada Virtual</strong>
+                  </label>
+                </td>
+                  
+                <td>
+                  <input
+                    class="form-check-input"
+                    name="toggleChk"
+                    type="checkbox"
+                    role="switch"
+                    style="text-align: left;"
+                    id="ativarCVSwitch"
+                    ${ativar}
+                    />
+                  
+                </td>
+              </tr>
+            </table>`
           configurarSwitchAtivacaoChamadaVirtual(user, chamadaRef)
           //Se estiver ativada no servidor ativa no cliente
           if (chamadaVirtualAtivadaServer) {
@@ -193,6 +204,7 @@ auth.onAuthStateChanged(user => {
     buttonSubtrairFrequencia(user, alunosRef);
     configuraBtnMes(user, alunosRef);
     configurarPopState()
+    configurarTitlyMonissor()
     configurarTabsPushState()
 
     // Pega os dados dos alunos cadastrados no servidor e exibe eles na tela
@@ -917,10 +929,11 @@ function attFrequencia(user, alunosRef, matricula, mes, valorFrec) {
     });
 }
 
-/*$(window).on('popstate', function (e) {
-  var state = e.originalEvent.state;
-  console.log("funcionou");
-  if (state !== null) {
-    console.log("funcionou");
-  }
-});*/
+function configurarTitlyMonissor(){
+  $("#navBarTitulo").on('click', function(e){
+    e.preventDefault()
+    configurarBtnComeBack()
+    escolherFunc()
+    console.log('ta funfando')
+  })
+}
