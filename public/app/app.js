@@ -21,7 +21,6 @@ const salvarAlunoBtn = document.getElementById('salvarAlunoNovoBtn');
 
 const removeAlunoModalDialogBtn = document.querySelector('.deletarTudo');
 
-var desselecionarTudoBtn = document.getElementById('desselecionarTudoBtn');
 const editarAlunoBtn = document.getElementById('editarAlunoBtn');
 const nomeEditarAlunoInput = document.getElementById('nomeEditarAlunoInput');
 const matriculaEditarAlunoInput = document.getElementById(
@@ -183,9 +182,8 @@ auth.onAuthStateChanged(user => {
       }
       unsubscribeLCV && unsubscribeLCV();
     });
-    desselecionarTudoBtn.onclick = () => {
-      configurarBtnDesselecionar();
-    };
+    
+    configurarBtnDesselecionar();
     desgrudar()
     console.log(removeAlunoModalDialogBtn);
     console.log(editarAlunoBtn);
@@ -195,6 +193,7 @@ auth.onAuthStateChanged(user => {
     buttonSubtrairFrequencia(user, alunosRef);
     configuraBtnMes(user, alunosRef);
     configurarPopState()
+    configurarTabsPushState()
 
     // Pega os dados dos alunos cadastrados no servidor e exibe eles na tela
     exibirListaDeAlunos(user, alunosRef, alunosLista1, 0);
@@ -340,7 +339,7 @@ function configurarSelecaoInicialDosItensListGroup() {
       itensSelecionadosListGroup.push($(this));
       $(this).find('div')[1].style.display="none";
       
-      if (itensSelecionadosListGroup.length == 1 && history.state.id == null)
+      if (itensSelecionadosListGroup.length == 1 && (history.state.id == null || history.state.id == 'tabs'))
       {   
           console.log("O estado é")
           console.log(history.state)
@@ -459,11 +458,38 @@ function mudarEstadosDaInterfaceNaSelecao(n, index) {
     navBarTitulo.innerHTML = `${n} itens selecionados`;
   }
 }
-function configurarDialogPushState(id, dialog_id, url, state=null) {
-  if (history.state.id == state)
+
+function configurarDialogPushState(id, dialog_id, url) {
+  if ((history.state.id == null || history.state.id == 'tabs' || history.state.id == 'selecao'))
   {
       history.pushState({id:id, dialog_id: dialog_id}, dialog_id, `?${url}`);
   }
+}
+
+function configurarTabsPushState() {
+  //$()'show.bs.modal'
+  //tab-pane  
+  console.log("FuncFunciona")
+  $('.nav').on('shown.bs.tab', function(event){
+    var tabAtual = $(event.target)[0];       // active tab
+    var y = $(event.relatedTarget).text();  // previous tab
+    console.log(tabAtual.id)
+
+    // Mudar texto do btn chamada virtual
+    // Criar um pushState
+    console.log(history.length)
+    //if (history.state.id == null && tabAtual.id)
+    if (history.state.tab_id != tabAtual.id)
+    {
+      if (!(history.state.id == null && tabAtual.id == "mes-1-tab"))
+        history.pushState({id:"tabs", tab_id: tabAtual.id}, tabAtual.innerHTML, `?${tabAtual.id}`);
+    }
+
+  });
+  /*if (history.state.id == state)
+  {
+      history.pushState({id:id, dialog_id: dialog_id}, dialog_id, `?${url}`);
+  }*/
 }
 
 function configurarDialogPopState(dialogs) {
@@ -487,8 +513,9 @@ function configurarPopState() {
             history.replaceState({id: null}, "Default state", "./");
             configurarBtnComeBack()
             if (itensSelecionadosListGroup.length > 0)
-                configurarBtnDesselecionar();
+                $("#desselecionarTudoBtn").trigger("click");
             closeAllDialogs()
+            $(`#mes-1-tab`).trigger("click");
 
         }
         else if (e.state.id == 'pesquisa')
@@ -508,10 +535,21 @@ function configurarPopState() {
             console.log("Quando clica pra frente na selecao" + e.state.id);
             openDialogByID(e.state);
         }
+        else if (e.state.id == 'tabs')
+        {   
+            console.log("Voltou uma aba aeum" + e.state.id);
+            closeAllDialogs();
+            configurarBtnComeBack();
+            if (itensSelecionadosListGroup.length > 0)
+                console.log("É pra desselecionar")
+                $("#desselecionarTudoBtn").trigger("click");
+            openTabByID(e.state);
+        }
         else
         {
             console.log("Clicou no botão de voltar")
             console.log(e.state)
+            console.log(e.state.id == 'tabs')
             //startSearchByID(e.state.id)
             /*configurarBtnComeBack(e.state.id);
             configurarBtnDesselecionar(e.state.id);*/
@@ -534,7 +572,14 @@ function startSelectionByID(state) {
 
 function openDialogByID(state) {
     //$(`#${state.btn_id}`).trigger("click");
+    // Aqui eu tem que mostrar a tela inicial tab 0
     $(`#${state.dialog_id}`).modal('show');
+}
+
+function openTabByID(state) {
+  console.log("Bora abrir a aba")
+    //$(`#${state.btn_id}`).trigger("click");
+    $(`#${state.tab_id}`).trigger("click");
 }
 
 function closeAllDialogs() {
@@ -560,21 +605,23 @@ function configurarBtnRemover(user, alunosRef) {
 }
 
 function configurarBtnDesselecionar() {
-  
-  ultimoItemClicado.siblings().removeClass('active');
-  ultimoItemClicado.removeClass('active');
-  mudarEstadosDaInterfaceNaSelecao(0, getMesISLG(ultimoItemClicado));
-  //Exibi novamente inteface da frequencia do items selecionados
-  for(i = 0; i < itensSelecionadosListGroup.length; i++){
-    getDivBunttonsFrequenciaISLG(itensSelecionadosListGroup[i]).style.display=null
-  }
-  itensSelecionadosListGroup = [];
-  escolherFunc();
+  $("#desselecionarTudoBtn").on("click", function (event) {
+    event.preventDefault();
+    ultimoItemClicado.siblings().removeClass('active');
+    ultimoItemClicado.removeClass('active');
+    mudarEstadosDaInterfaceNaSelecao(0, getMesISLG(ultimoItemClicado));
+    //Exibi novamente inteface da frequencia do items selecionados
+    for(i = 0; i < itensSelecionadosListGroup.length; i++){
+      getDivBunttonsFrequenciaISLG(itensSelecionadosListGroup[i]).style.display=null
+    }
+    itensSelecionadosListGroup = [];
+    escolherFunc();
 
-  if (history.state.id == 'selecao')
-  {
-      history.go(-1);
-  }
+    if (history.state.id == 'selecao')
+    {
+        history.go(-1);
+    }
+  });
 }
 
 function configurarBtnEditar(user, alunosRef) {
@@ -609,7 +656,7 @@ function configurarBtnToShearch(){
   document.getElementById("searchbar").focus();
   //console.log("teste")
 
-  if (history.state.id == null)
+  if ((history.state.id == null || history.state.id == 'tabs'))
   {
       history.pushState({id:"pesquisa"}, "pesquisa", "?pesquisa")
       console.log("PUSH de Pesquisar")
