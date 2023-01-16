@@ -669,7 +669,7 @@
         <div class="modal-content">
           <!--Cabeçalho-->
           <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLongTitle">Relatório</h5>
+            <h5 class="modal-title" id="exampleModalLongTitle">Chamada Virtual</h5>
 
             <button
               type="button"
@@ -680,23 +680,46 @@
           </div>
           <!--Corpo da Caixa de diálogo, aqui dentro ficará o Relatório-->
 
-          <div class="form-check form-switch form-check-reverse" id="divSwitchAtivarChamada">
-            <label class="form-check-label" for="ativarCVSwitch"
-            >Ativar Chamada</label
-          >
-          <input
-            class="form-check-input"
-            name="toggleChk"
-            type="checkbox"
-            role="switch"
-            id="ativarCVSwitch"
-          />
+          <div class="form-check form-switch form-check-reverse" id="divSwitchAtivarChamada" style="padding: 16px;">
+            
+            
+            
+            
           </div>
           <div id="corpoCaixaDialogoRelatorio" class="modal-body">
             <!--É AQUI QUE FICA A TELA Dos relatórios-->
-            Aqui Vai se escrever Alguma coisa
-            <p id="totalAlunosChamadaVirtual"></p>
+            <p style="text-align: justify; text-indent: 10px;">A chamada virtual permite que os alunos preencham 
+             nome e matrícula por meio de um link. A 
+              frequência dos alunos que preencherem a chamada será importada
+            e atualizada após você desativar a Chamada Virtual.</p>
+            <br>
+            
+            <table style="width: -webkit-fill-available;">
+              <tr>
+                <td>
+                  <strong>Link da Chamada Virtual</strong>
+                </td>
+              </tr>
+              <tr>
+                
+                <td>
+                  <input type="text" value="https://chamada-aprendendofb.web… Lorem ipsum dolor sit amet consectetur adipisicing elit. Nulla provident neque, aliquid doloremque unde, id quis quam temporibus accusamus repellat rerum dolor. Dolorem voluptatibus at vel non dolore numquam tenetur!" style="width: 100%; height: 35px; border: 1px solid rgba(128, 128, 128, 0.384);" readonly>
+                </td>
+                <td style="width: 24px; text-align: right;">
+                  <button style="border: none; background-color: white;">
+                    <span class="material-symbols-outlined" style="color: blue;">
+                      share
+                    </span>
+                  </button>
+                </td>
+              </tr>
+            </table>
+            <center >
+              <img src="https://resizer.glanacion.com/resizer/SDO_FsDmWlIhLb3QTP7vgUCRziE=/879x0/filters:format(webp):quality(80)/cloudfront-us-east-1.images.arcpublishing.com/lanacionar/U5SE7L2DWRCV7JWVQHMVSOARXE.jpg" alt="Qr Code" style="width: 300px;">
+            </center>
+            <p><strong>Alunos Presentes:</strong> <label id="totalAlunosChamadaVirtual"></label></p>
 
+            <p><strong>Lista de Discentes:</strong></p>
             <ul id="alunosListaChamadaVirtual"></ul>
           </div>
 
