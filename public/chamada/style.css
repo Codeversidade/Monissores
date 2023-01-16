@@ -1,0 +1,113 @@
+@charset "UTF-8";
+
+body {
+    /*var(--cor-destaque)*/
+    background-color:#F0F2F5;
+}
+:root{
+    --cor-principal: #0F0ADE;
+    --cor-destaque:  #2222FF;
+}
+.bg-principal{
+    background-color: #0F0ADE;
+}
+#secaoLogin {
+    position: absolute;
+    max-width: 600px;
+    width: 90vw;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 10px 10px 25px rgba(0, 0, 0, 0.419);
+    padding: 20px 0px;
+}
+
+
+#content-secaoLogin {
+    margin-top: 0px;
+}
+#content-secaoLogin > h1{
+    color: cor;
+    text-align: center;
+    font-variant: small-caps;
+}
+
+#content-secaoLogin>p {
+    color: black;
+    font-size: 1.1em;
+    text-align: center;
+    padding: 20px 10px 80px 10px;
+    margin-top: 20px;
+}
+
+input#searchbar {
+    border: none;
+    border-radius: 5px;
+    vertical-align: top;
+    margin-left: 30px;
+    margin-right: 5px;
+    margin-top: -26px;
+    text-indent: 5px;
+    width: -webkit-fill-available;
+}
+
+/* When the input field gets focus,
+      change its width to 100% */
+input#searchbar:focus {
+    outline: none;
+}
+
+div#barraDePesquisa {
+    background-color: white;
+    height: 30px;
+    margin: 10px;
+    padding-top: 2px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 5px #0da9fd5d;
+}
+
+#searchbarBtnComeBack {
+    display: inline;
+    color: var(--cor-principal);
+    background-color: rgba(255, 255, 255, 0);
+
+    margin-left: 0px;
+}
+
+.buttonsPadrão {
+    border: none;
+    color: white;
+    background-color: var(--cor-principal);
+}
+
+.buttonsExtra {
+    border: none;
+    color: white;
+    background-color: var(--cor-principal);
+}
+
+.btnChamadaVirtual {
+    width: -webkit-fill-available;
+    text-align: left;
+    vertical-align: top;
+    border: none;
+    background-color: whitesmoke;
+
+}
+
+.btnChamadaVirtual>table {
+    font-size: 0.8em;
+    height: 50%;
+
+}
+
+.btnChamadaVirtual th {
+    width: 40px;
+}
+.nav-pills {
+    --bs-nav-pills-border-radius: -0.375rem;
+    --bs-nav-pills-link-active-color: #fff;
+    --bs-nav-pills-link-active-bg: #3b3bfb;
+}
