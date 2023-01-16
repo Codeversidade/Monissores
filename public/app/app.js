@@ -1,17 +1,3 @@
-
-firebase.firestore().enablePersistence()
-.catch((err) => {
-    if (err.code == 'failed-precondition') {
-        // Multiple tabs open, persistence can only be enabled
-        // in one tab at a a time.
-        // ...
-    } else if (err.code == 'unimplemented') {
-        // The current browser does not support all of the
-        // features required to enable persistence
-        // ...
-      }
-    });
-
 const deslogarDoGoogleBtn = document.getElementById('deslogarDoGoogleBtn');
 const configsBtn = document.getElementById('configsBtn');
 const addAluno = document.getElementById('addAluno');
@@ -66,6 +52,20 @@ deslogarDoGoogleBtn.onclick = () => {
 };
 
 const db = firebase.firestore(); //Teste
+//firebase.enableIndexDbPersistence(db);
+
+firebase.firestore().enablePersistence()
+.catch((err) => {
+    if (err.code == 'failed-precondition') {
+        // Multiple tabs open, persistence can only be enabled
+        // in one tab at a a time.
+        // ...
+    } else if (err.code == 'unimplemented') {
+        // The current browser does not support all of the
+        // features required to enable persistence
+        // ...
+      }
+});
 let alunosRef;
 let unsubscribeLA;
 let unsubscribeLCV;
@@ -128,7 +128,7 @@ auth.onAuthStateChanged(user => {
       configurarDialogPushState("dialog", "chamadaVirtualModalDialog", "chamada_virtual")
       chamadaRef
         .doc(`${user.uid}`)
-        .get()
+        .get({source: 'cache'})
         .then(doc => {
           chamadaVirtualAtivadaServer = doc.data().chamadaAtiva;
 
@@ -233,7 +233,7 @@ function desgrudar(){
 function setarAluno(user, collectionRef, nome, matricula, frequencia) {
   collectionRef
     .doc(`${user.uid}.A${matricula}`)
-    .get()
+    .get({source: 'cache'})
     .then(doc => {
       let alunoExiste = doc.exists;
 
@@ -259,6 +259,21 @@ function setarAluno(user, collectionRef, nome, matricula, frequencia) {
     })
     .catch(error => {
       console.log('Error getting document:', error);
+      collectionRef
+          .doc(`${user.uid}.A${matricula}`)
+          .set({
+            uid: user.uid,
+            nome: nome,
+            matricula: matricula,
+            frequencia: frequencia,
+          })
+          .then(() => {
+            if (alunoExiste) console.log('Editamos o aluno.');
+            else console.log('Adicionamos o aluno offline.');
+          })
+          .catch(e => {
+            console.error('Error adding document: ', e);
+          });
     });
 }
 
@@ -422,6 +437,11 @@ function buttonSubtrairFrequencia(user, alunosRef) {
   });
 }
 
+function atualizarTextoBtnCV(tabAtual = null) {
+    $('#chamadaVirtualMesText').html(tabAtual == null ? "1º Mês" : tabAtual.innerHTML);
+    console.log("Editado")
+}
+
 function mudarEstadosDaInterfaceNaSelecao(n, index) {
   var buttonsPadrão = document.querySelectorAll('.buttonsPadrão');
   var buttonsExtra = document.querySelectorAll('.buttonsExtra');
@@ -486,7 +506,7 @@ function configurarTabsPushState() {
     var tabAtual = $(event.target)[0];       // active tab
     var y = $(event.relatedTarget).text();  // previous tab
     console.log(tabAtual.id)
-
+    
     // Mudar texto do btn chamada virtual
     // Criar um pushState
     console.log(history.length)
@@ -494,9 +514,12 @@ function configurarTabsPushState() {
     if (history.state.tab_id != tabAtual.id)
     {
       if (!(history.state.id == null && tabAtual.id == "mes-1-tab"))
+      {
         history.pushState({id:"tabs", tab_id: tabAtual.id}, tabAtual.innerHTML, `?${tabAtual.id}`);
+      }
     }
-
+    
+    atualizarTextoBtnCV(tabAtual);
   });
   /*if (history.state.id == state)
   {
@@ -553,8 +576,11 @@ function configurarPopState() {
             closeAllDialogs();
             configurarBtnComeBack();
             if (itensSelecionadosListGroup.length > 0)
-                console.log("É pra desselecionar")
+            {
                 $("#desselecionarTudoBtn").trigger("click");
+
+            }
+                console.log("É pra desselecionar")
             openTabByID(e.state);
         }
         else
@@ -578,6 +604,8 @@ function startSearchByID() {
 function startSelectionByID(state) {
     if (itensSelecionadosListGroup.length == 0)
     {
+        console.log("O item selecionado foi")
+        console.log(state.lgi_id)
         $(`#${state.lgi_id}`).trigger("contextmenu");
     }
 }
@@ -610,7 +638,7 @@ function closeAllDialogs() {
 
 function configurarBtnRemover(user, alunosRef) {
   itensSelecionadosListGroup.forEach(i => {
-    removerAluno(user, alunosRef, getMatriculaISLG(i));
+    removerAluno(user, alunosRef, getMatriculaISLG(i), () => $("#desselecionarTudoBtn").trigger("click"));
   });
   itensSelecionadosListGroup = [];
   mudarEstadosDaInterfaceNaSelecao(0, 0);
@@ -636,29 +664,51 @@ function configurarBtnDesselecionar() {
   });
 }
 
-function configurarBtnEditar(user, alunosRef) {
-  alunosRef
-    .doc(`${user.uid}.A${getMatriculaISLG(itensSelecionadosListGroup[0])}`)
-    .get()
+function configurarBtnEditar(user, collectionRef) {
+  var matricula_velha = getMatriculaISLG(itensSelecionadosListGroup[0]);
+  var matricula_nova = parseInt(matriculaEditarAlunoInput.value)
+
+  if (matricula_velha == matricula_nova)
+  {
+      collectionRef
+      .doc(`${user.uid}.A${matricula_velha}`)
+      .update({
+        nome: nomeEditarAlunoInput.value,
+      })
+      .then(() => {
+        console.log('Editamos o aluno com o update.');
+        $("#desselecionarTudoBtn").trigger("click");
+      })
+      .catch(error => {
+        // Se der erro o documento provavelmente não existe.
+        console.error('Error updating document: ', error);
+      });
+  }
+  else
+  {
+    collectionRef
+    .doc(`${user.uid}.A${matricula_velha}`)
+    .get({source: 'cache'})
     .then(doc => {
       var freq = doc.data().frequencia;
       console.log(freq);
-      
+      setarAluno(
+        user,
+        collectionRef,
+        nomeEditarAlunoInput.value,
+        matricula_nova,
+        freq
+      )
       removerAluno(
         user,
-        alunosRef,
-        getMatriculaISLG(itensSelecionadosListGroup[0]), () =>
-        setarAluno(
-          user,
-          alunosRef,
-          nomeEditarAlunoInput.value,
-          parseInt(matriculaEditarAlunoInput.value),
-          freq
-        )
+        collectionRef,
+        matricula_velha, () =>
+        $("#desselecionarTudoBtn").trigger("click")
       );
       itensSelecionadosListGroup = [];
       mudarEstadosDaInterfaceNaSelecao(0, 0);
     });
+  }
 }
 //Facilitando botão de Pesquisa
 ////////////////////////////////////////
@@ -738,7 +788,7 @@ function configuraBtnMes(user, collectionRef){
 function configurarBtnRelatorio(user, collectionRef, frequenciaIndex){
   let unsubscribe = collectionRef
     .where('uid', '==', user.uid)
-    .onSnapshot(querySnapshot => {
+    .onSnapshot({ includeMetadataChanges: true }, querySnapshot => {
       const items = querySnapshot.docs.map(doc => {
         var freq = doc.data().frequencia[frequenciaIndex];
         return `${doc.data().nome}/${doc.data().matricula}/${freq} ${(freq == 1) ? 'vez': 'vezes'};<br>`;
@@ -834,7 +884,7 @@ function importarAlunosChamadaVirtual(user, alunosRef, chamadaRef) {
   listaAlunosChamadaVirtual.forEach(element => {
     alunosRef
       .doc(`${user.uid}.A${element.matricula}`)
-      .get()
+      .get({source: 'cache'})
       .then(doc => {
         var frequencia = doc.data().frequencia;
         frequencia[mesChamadaVirtual] = frequencia[mesChamadaVirtual] + 1;
@@ -921,7 +971,7 @@ function exibirListaDeAlunosChamadaVirtual(user, collectionRef) {
 function attFrequencia(user, alunosRef, matricula, mes, valorFrec) {
   alunosRef
     .doc(`${user.uid}.A${matricula}`)
-    .get()
+    .get({source: 'cache'})
     .then(doc => {
       var frequencia = doc.data().frequencia;
       frequencia[mes] = valorFrec;
