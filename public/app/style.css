@@ -121,3 +121,13 @@ div#barraDePesquisa {
     background-color: var(--cor-destaque);
     border-color: var(--cor-destaque);
 }
+.btn-primary{
+    background-color: #2222FF;
+}
+.btn-secondary{
+    background-color: #2222FF;
+
+}
+.btn{
+    border: 1px solid #2222FF;
+}
