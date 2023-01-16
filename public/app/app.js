@@ -40,7 +40,7 @@ const auth = firebase.auth();
 var itensSelecionadosListGroup = [];
 var listaAlunosChamadaVirtual = [];
 var ultimoItemClicado;
-var mesChamadaVirtual;
+var mesChamadaVirtual = 0;
 var chamadaVirtualAtivada;
 
 var chamadaVirtualAtivadaServer;
@@ -456,7 +456,7 @@ function mudarEstadosDaInterfaceNaSelecao(n, index) {
       escolherFunc()
       configurarBtnToShearch();
     }else{
-      navBarTitulo.innerHTML = 'Monissor';
+      navBarTitulo.innerHTML = 'Monissores';
     }
     ativacao = true;
   } else if (n == 1) {
@@ -702,9 +702,10 @@ function configurarBtnEditar(user, collectionRef) {
       removerAluno(
         user,
         collectionRef,
-        matricula_velha, () =>
-        $("#desselecionarTudoBtn").trigger("click")
-      );
+        matricula_velha, () => {
+        $("#desselecionarTudoBtn").trigger("click");
+        history.replaceState({id:"selecao", lgi_id: `${matricula_nova}-${getMesISLG(ultimoItemClicado)}`}, "selecao", "?selecao");
+        });
       itensSelecionadosListGroup = [];
       mudarEstadosDaInterfaceNaSelecao(0, 0);
     });
