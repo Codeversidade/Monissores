@@ -88,13 +88,24 @@ div#barraDePesquisa {
     background-color: var(--cor-principal);
 }
 
+.btnChamadaVirtual.Ativada {
+    width: -webkit-fill-available;
+    text-align: left;
+    vertical-align: top;
+    border: none;
+    background-color:#004BA0;
+}
+
+.btnChamadaVirtual.Ativada table {
+    color: white;
+}
+
 .btnChamadaVirtual {
     width: -webkit-fill-available;
     text-align: left;
     vertical-align: top;
     border: none;
     background-color: whitesmoke;
-
 }
 
 .btnChamadaVirtual>table {
