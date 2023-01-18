@@ -1,8 +1,6 @@
 const deslogarDoGoogleBtn = document.getElementById('deslogarDoGoogleBtn');
 const configsBtn = document.getElementById('configsBtn');
 const addAluno = document.getElementById('addAluno');
-const editAluno = document.getElementById('editAluno');
-const removeAluno = document.getElementById('removeAluno');
 const salvarAlunoBtn = document.getElementById('salvarAlunoNovoBtn');
 
 const removeAlunoModalDialogBtn = document.querySelector('.deletarTudo');
