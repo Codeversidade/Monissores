@@ -36,11 +36,9 @@
           <img src="./icons/Monissores.png" alt="Logo Monissores">
         </center>
         <h1>Monissores</h1>
-        <div class="d-flex justify-content-center" style="background-color: #F0F2F5;">
-          <div class="spinner-border text-primary" role="status">
-            <span class="visually-hidden">Loading...</span>
-          </div>
-        </div>
+        <center>
+          <div class="loader"></div>
+        </center>
       </div>
     </section>
 
@@ -216,6 +214,7 @@
         
         id="linhaAbasContent"
       >
+      
       <!--Botão da chamada Virtual-->
       <button
       type="button"
@@ -489,6 +488,7 @@
 
           <!--Corpo da CD de Adicionar Aluno-->
           <div class="modal-body">
+            
             <!--É AQUI QUE FICA A TELA De adicionar-->
             <form>
               <div class="mb-3">
@@ -516,6 +516,14 @@
                 Salvar
               </button>
             </form>
+            <!-- Toast Para Informações Importantes-->
+            <div id="toastAdicionarAluno" class="toast align-items-center text-bg-primary border-0" role="alert" aria-live="assertive" aria-atomic="true">
+              <div class="d-flex">
+                <div id="toastAdicionarAlunoText" class="toast-body" >
+                  O relatório foi copiado com sucesso!
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -546,6 +554,7 @@
 
           <!--Corpo da CD de Editar Aluno-->
           <div class="modal-body">
+            
             <!--É AQUI QUE FICA A TELA De Editar-->
             <form>
               <div class="mb-3">
@@ -564,16 +573,23 @@
                 >
                 <input class="form-control" id="matriculaEditarAlunoInput" />
               </div>
-
+              
               <button
-                type="button"
-                id="editarAlunoBtn"
-                class="btn btn-primary"
-                data-bs-dismiss="modal"
+              type="button"
+              id="editarAlunoBtn"
+              class="btn btn-primary"
+              data-bs-dismiss="modal"
               >
-                Salvar
-              </button>
-            </form>
+              Salvar
+            </button>
+          </form>
+          <div id="toastEditarAluno" class="toast align-items-center text-bg-primary border-0" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+              <div id="toastEditarAlunoText" class="toast-body" >
+              
+              </div>
+            </div>
+          </div>
           </div>
         </div>
       </div>
@@ -713,7 +729,7 @@
       </div>
     </div>
     <!--FIm da caixa de diálogo da chamada virtual-->
-
+    
     <!--Botão Add flutuante-->
     <div
       class="fixed-top"

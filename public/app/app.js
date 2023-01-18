@@ -334,15 +334,22 @@ function salvarAluno(
   matriculaInput,
   frequencia
 ) {
-  setarAluno(
-    user,
-    collectionRef,
-    nameInput.value,
-    parseInt(matriculaInput.value),
-    frequencia
-  );
-  nameInput.value = '';
-  matriculaInput.value = '';
+
+  var matricula_nova = matriculaInput.value; 
+  var nome = nomeAdicionarAlunoInput.value;
+  var valido = sanitizarInputs(nome, matricula_nova, 'toastAdicionarAluno', "Novo aluno cadastrado.")
+  if (valido)
+  {
+    setarAluno(
+      user,
+      collectionRef,
+      nameInput.value,
+      parseInt(matriculaInput.value),
+      frequencia
+    );
+    nameInput.value = '';
+    matriculaInput.value = '';
+  }
 }
 
 
@@ -862,11 +869,32 @@ function configurarBtnDesselecionar() {
   });
 }
 
+function sanitizarInputs(nome, matricula, toast_id, mensagem) {
+    var sucesso = true;
+    if (!/^[a-z A-Z]+$/.test(nome))
+    {
+        mensagem = "O nome só pode conter letras.";
+        sucesso = false;
+    }
+    else if (matricula < 2008100000)
+    {
+        mensagem = "A matrícula informada é inválida";
+        sucesso = false;
+    }
+    $(`#${toast_id}Text`).html(mensagem)
+    const toast = new bootstrap.Toast(document.getElementById(toast_id))
+    toast.show()
+
+    return sucesso;
+}
+
 function configurarBtnEditar(user, collectionRef) {
   var matricula_velha = getMatriculaISLG(itensSelecionadosListGroup[0]);
   var matricula_nova = parseInt(matriculaEditarAlunoInput.value)
-
-  if (matricula_velha == matricula_nova)
+  var nome = nomeEditarAlunoInput.value;
+  var valido = sanitizarInputs(nome, matricula_nova, 'toastEditarAluno', "Cadastro editado.")
+  
+  if (matricula_velha == matricula_nova && valido == true)
   {
       collectionRef
       .doc(`${user.uid}.A${matricula_velha}`)
@@ -882,7 +910,7 @@ function configurarBtnEditar(user, collectionRef) {
         console.error('Error updating document: ', error);
       });
   }
-  else
+  else if (valido == true)
   {
     collectionRef
     .doc(`${user.uid}.A${matricula_velha}`)
