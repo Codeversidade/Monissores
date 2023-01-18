@@ -84,8 +84,9 @@ auth.onAuthStateChanged(user => {
     // Quando o usuário Logar essa parte será executada
     secaoPrincipal.hidden = false;
     secaoLogin.hidden = true;
+    secaoInicial.hidden = true;
     userDetails.innerHTML = `<h3>${user.displayName}!</h3> <p>User ID: ${user.uid}</p>`;
-    configsBtn.src = user.photoURL;
+    
 
     alunosRef = db.collection('alunos');
     chamadaRef = db.collection('chamada');
@@ -119,6 +120,7 @@ auth.onAuthStateChanged(user => {
       configurarBtnEditar(user, alunosRef);
     };
     
+    $('#btnCompartilharLinkChamadaVirtual').on('click', () => compartilharLinkChamadaVirtual())
     addAlunoModalDialog.addEventListener('show.bs.modal', event => 
         configurarDialogPushState("dialog", "addAlunoModalDialog", "adicionar")
     );
@@ -177,13 +179,13 @@ auth.onAuthStateChanged(user => {
     configurarDialogPopState(dialogs);
     window.addEventListener('online', () => {
       online = true;
-      atualizarTextoBtnCV(tabAtual);
+      atualizarTextoBtnCV(user.uid, tabAtual);
       //$('ativarCVSwitch').addClass('checked');
       //atualizarLayoutDialogCV(user.uid);
     });
     window.addEventListener('offline', () => {
         online = false;
-        atualizarTextoBtnCV(tabAtual);
+        atualizarTextoBtnCV(user.uid, tabAtual);
         //atualizarLayoutDialogCV(user.uid);
     });
     chamadaVirtualModalDialog.addEventListener('hide.bs.modal', event => {
@@ -217,6 +219,7 @@ auth.onAuthStateChanged(user => {
   } else {
     //  Quando o usuário estiver deslogado essa parte será executada
     secaoPrincipal.hidden = true;
+    secaoInicial.hidden = true;
     secaoLogin.hidden = false;
     userDetails.innerHTML = '';
   }
@@ -463,6 +466,17 @@ function buttonSubtrairFrequencia(user, alunosRef) {
   });
 }
 
+function compartilharLinkChamadaVirtual() {
+    if (navigator.canShare) {
+        navigator.share(
+          {
+              title: 'Link Chamada Virtual',
+              text: `Responda a chamada virtual.\n${inputLinkChamadaVirtual.value}`
+          }
+        )
+    }
+}
+
 function atualizarLayoutDialogCV(code) {
 
   console.log("Eu sou a func q dá problema")
@@ -548,7 +562,7 @@ function atualizarLayoutDialogCV(code) {
     ativarCVSwitch()*/
 }
 
-function atualizarTextoBtnCV(tabAtual = null) {
+function atualizarTextoBtnCV(code, tabAtual = null) {
   console.log("A funcao TextoBTNCV foi chamada")
   console.log(chamadaVirtualAtivadaServer)
   if (online && chamadaVirtualAtivadaServer == false) {
@@ -597,7 +611,10 @@ function atualizarTextoBtnCV(tabAtual = null) {
       );
       
     }
-    atualizarLayoutDialogCV('B0LiSdSv1MMdy0VxjdswpPkyOXH2')
+    if (code)
+    {
+        atualizarLayoutDialogCV(code);
+    }
 }
 
 function mudarEstadosDaInterfaceNaSelecao(n, index) {
@@ -647,13 +664,18 @@ function mudarEstadosDaInterfaceNaSelecao(n, index) {
     buttonsExtra[1].hidden = !ativacao;
     navBarTitulo.innerHTML = `${n} itens selecionados`;
   }
+
+  if (itensSelecionadosListGroup.length == 0 && history.state.id == 'selecao')
+  {
+      history.go(-1);
+  }
 }
 
 function configurarDialogPushState(id, dialog_id, url) {
-  if ((history.state.id == null || history.state.id == 'tabs' || history.state.id == 'selecao'))
-  {
-      history.pushState({id:id, dialog_id: dialog_id}, dialog_id, `?${url}`);
-  }
+    if ((history.state.id == null || history.state.id == 'tabs' || history.state.id == 'selecao'))
+    {
+        history.pushState({id:id, dialog_id: dialog_id}, dialog_id, `?${url}`);
+    }
 }
 
 function configurarTabsPushState() {
@@ -677,7 +699,7 @@ function configurarTabsPushState() {
       }
     }
     
-    //atualizarTextoBtnCV(tabAtual);
+    atualizarTextoBtnCV(null, tabAtual);
   });
   /*if (history.state.id == state)
   {
@@ -988,6 +1010,9 @@ function configurarBtnRelatorio(user, collectionRef, frequenciaIndex){
 function copyButton(){
   //console.log($("#listaAlunosRelatorio").text());
   navigator.clipboard.writeText($("#listaAlunosRelatorio").text())
+  
+  const toast = new bootstrap.Toast(document.getElementById('toastRelatorioCopiado'))
+  toast.show()
 }
 
 function configurarSwitchAtivacaoChamadaVirtual(user, collectionRef) {
@@ -1148,7 +1173,7 @@ function monitorarEstadoChamadaVirtual(user, collectionRef) {
         const items = querySnapshot.docs.map(doc => {
           chamadaVirtualAtivadaServer = doc.data().chamadaAtiva;
           mesChamadaVirtualServer = doc.data().mes;
-          atualizarTextoBtnCV();
+          atualizarTextoBtnCV(user.uid);
           console.log("A chamada está monitoradacomo" + chamadaVirtualAtivadaServer);  
       })
     });

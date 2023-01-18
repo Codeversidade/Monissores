@@ -132,6 +132,10 @@ div#barraDePesquisa {
     background-color: var(--cor-destaque);
     border-color: var(--cor-destaque);
 }
+
+.d-flex {
+    background-color: #2222FF;
+}
 .btn-primary{
     background-color: #2222FF;
 }
@@ -141,4 +145,8 @@ div#barraDePesquisa {
 }
 .btn{
     border: 1px solid #2222FF;
+}
+.text-primary {
+    --bs-text-opacity: 1;
+    color: #2222FF !important;
 }

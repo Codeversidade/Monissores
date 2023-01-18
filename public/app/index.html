@@ -83,7 +83,7 @@
 
 <body>
   
-    <section id="secaoLogin">
+    <section id="secaoLogin" hidden="true">
       <!--Aqui vai a tela de Login com o Google-->
       <div id="content-secaoLogin">
         <center>
@@ -95,6 +95,20 @@
       <!--
       <button id="logarComGoogleBtn">Sign in with Google</button>
       -->
+    </section>
+    <section id="secaoInicial">
+      
+        <div id="content-secaoLogin">
+        <center>
+          <img src="./icons/Monissores.png" alt="Logo Monissores">
+        </center>
+        <h1>Monissores</h1>
+        <div class="d-flex justify-content-center" style="background-color: #F0F2F5;">
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        </div>
+      </div>
     </section>
 
   <section id="secaoPrincipal" hidden="true">
@@ -379,6 +393,17 @@
           <div class="modal-header">
             <h5 class="modal-title" id="exampleModalLongTitle">Relatório</h5>
 
+            
+
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <!--Corpo da Caixa de diálogo, aqui dentro ficará o Relatório-->
+          <div id="corpoCaixaDialogoRelatorio" class="modal-body">
             <!--Drowpdown aqui estão as opções de meses que a pessoa pode escolher para gerar o relatório pro mês correto-->
             <div class="dropdown">
               <button
@@ -401,22 +426,20 @@
                 <li><a class="dropdown-item" href="#">Mês 4</a></li>
               </ul>
             </div>
-
-            <button
-              type="button"
-              class="btn-close"
-              data-bs-dismiss="modal"
-              aria-label="Close"
-            ></button>
-          </div>
-          <!--Corpo da Caixa de diálogo, aqui dentro ficará o Relatório-->
-          <div id="corpoCaixaDialogoRelatorio" class="modal-body">
             <!--É AQUI QUE FICA A TELA Dos relatórios-->
             <ul id="listaAlunosRelatorio"></ul>
           </div>
 
           <!--Rodapé da Caixa de Diálogo-->
           <div class="modal-footer">
+            <div id="toastRelatorioCopiado" class="toast align-items-center text-bg-primary border-0" role="alert" aria-live="assertive" aria-atomic="true">
+              <div class="d-flex">
+                <div class="toast-body" >
+                  O relatório foi copiado com sucesso!
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+              </div>
+            </div>
             <button
               type="button"
               class="btn btn-secondary"
@@ -724,7 +747,7 @@
                     <input id="inputLinkChamadaVirtual" type="text" value="" style="width: 100%; height: 35px; border: 1px solid rgba(128, 128, 128, 0.384);" readonly>
                   </td>
                   <td style="width: 24px; text-align: right;">
-                    <button style="border: none; background-color: white;">
+                    <button id="btnCompartilharLinkChamadaVirtual" style="border: none; background-color: white;">
                       <span class="material-symbols-outlined" style="color: blue;">
                         share
                       </span>
