@@ -44,7 +44,7 @@ var mesChamadaVirtual = 0;
 var mesChamadaVirtualServer = 0;
 var chamadaVirtualAtivada;
 
-var chamadaVirtualAtivadaServer;
+var chamadaVirtualAtivadaServer = false;
 var chamadaVirtualAtivadaClient;
 var qrCode;
 var tabAtual = $("#mes-1-tab")[0];
@@ -105,13 +105,13 @@ auth.onAuthStateChanged(user => {
     };
 
     // ARMENGE
-    setarAluno(
+    /*setarAluno(
       user,
       alunosRef,
       "Me delete",
       1111,
       [0, 0, 0, 0]
-    );
+    );*/
     removeAlunoModalDialogBtn.onclick = () => {
       configurarBtnRemover(user, alunosRef);
     };
@@ -141,60 +141,6 @@ auth.onAuthStateChanged(user => {
       );
     });
 
-function atualizarLayoutDialogCV() {
-  var ativar = (chamadaVirtualAtivadaServer) ? 'checked':'';
-  if (chamadaVirtualAtivadaServer)
-  {
-    $('#ativarCVSwitch').addClass('checked');
-    $('#chamadaVirtualDialogTitle').html(`Chamada Virtual do ${mesChamadaVirtualServer + 1}º Mês`);
-    secaoChamadaAtivada.hidden = false;
-    secaoChamadaDesativada.hidden = true;
-    
-    inputLinkChamadaVirtual.value = (window.location.hostname == 'localhost') ? `http://localhost:5005/?code=${user.uid}` : `http://monissores-chamada.web.app/?code=${user.uid}`
-    //new QRCode(document.getElementById("qrcode"), inputLinkChamadaVirtual.value);
-    
-    if (qrCode == null)
-    {
-      qrCode = new QRCode(document.getElementById("qrcode"), {
-        text: inputLinkChamadaVirtual.value,
-        width: 128,
-        height: 128,
-        colorDark : "#000000",
-        colorLight : "#ffffff",
-        correctLevel : QRCode.CorrectLevel.H,
-      });
-    }
-  }
-  else
-  {
-    $('#chamadaVirtualDialogTitle').html(`Chamada Virtual do ${tabAtual.innerHTML}`);
-    secaoChamadaAtivada.hidden = true;
-    secaoChamadaDesativada.hidden = false;
-  }
-  divSwitchAtivarChamada.innerHTML = 
-  `<table style="width: -webkit-fill-available;">
-      <tr>
-        <td>
-          <label class="form-check-label" for="ativarCVSwitch" style="text-align: left;">
-            <strong>Ativar Chamada Virtual</strong>
-          </label>
-        </td>
-          
-        <td>
-          <input
-            class="form-check-input"
-            name="toggleChk"
-            type="checkbox"
-            role="switch"
-            style="text-align: left;"
-            id="ativarCVSwitch"
-            ${ativar}
-            />
-          
-        </td>
-      </tr>
-    </table>`
-}
     chamadaVirtualModalDialog.addEventListener('show.bs.modal', event => {
       configurarDialogPushState("dialog", "chamadaVirtualModalDialog", "chamada_virtual")
       chamadaRef
@@ -202,7 +148,7 @@ function atualizarLayoutDialogCV() {
         .get({source: 'cache'})
         .then(doc => {
           //chamadaVirtualAtivadaServer = doc.data().chamadaAtiva;
-          atualizarLayoutDialogCV()
+          //1atualizarLayoutDialogCV(user.uid)
           configurarSwitchAtivacaoChamadaVirtual(user, chamadaRef)
           //Se estiver ativada no servidor ativa no cliente
           if (chamadaVirtualAtivadaServer) {
@@ -229,6 +175,17 @@ function atualizarLayoutDialogCV() {
       relatorioModalDialog,
       configsModalDialog];
     configurarDialogPopState(dialogs);
+    window.addEventListener('online', () => {
+      online = true;
+      atualizarTextoBtnCV(tabAtual);
+      //$('ativarCVSwitch').addClass('checked');
+      //atualizarLayoutDialogCV(user.uid);
+    });
+    window.addEventListener('offline', () => {
+        online = false;
+        atualizarTextoBtnCV(tabAtual);
+        //atualizarLayoutDialogCV(user.uid);
+    });
     chamadaVirtualModalDialog.addEventListener('hide.bs.modal', event => {
       if (history.state.id == 'dialog')
       {
@@ -282,14 +239,7 @@ firebaseRef.child('.info/connected').on('value', function(connectedSnap) {
     console.log("Vish, net caiu")
   }
 });*/
-window.addEventListener('online', () => {
-    online = true;
-    atualizarTextoBtnCV(tabAtual);
-  });
-window.addEventListener('offline', () => {
-    online = false;
-    atualizarTextoBtnCV(tabAtual);
-  });
+
 
 ///////////////////////////////////////////
 //Impedindo que a lista de alunos fique debaixo do cabeçalho lá no html
@@ -513,8 +463,94 @@ function buttonSubtrairFrequencia(user, alunosRef) {
   });
 }
 
+function atualizarLayoutDialogCV(code) {
+
+  console.log("Eu sou a func q dá problema")
+  //var ativar = (chamadaVirtualAtivadaServer) ? 'checked':'';
+
+  if (chamadaVirtualAtivadaServer == true)
+  {
+      $('#ativarCVSwitch').prop('checked', true);
+  }
+  else
+  {
+      $('#ativarCVSwitch').prop('checked', false);
+  }
+  if (online == true)
+  {
+    $('#ativarCVSwitch').prop('disabled', false);
+  }
+  else
+  {
+      $('#ativarCVSwitch').prop('disabled', true);
+  }
+
+  if (online == false)
+  {
+    secaoChamadaAtivada.hidden = true;
+    secaoChamadaDesativada.hidden = true;
+    secaoChamadaOffline.hidden = false;
+  }
+  else if (chamadaVirtualAtivadaServer)
+  {
+    //$('#ativarCVSwitch').addClass('checked');
+    $('#chamadaVirtualDialogTitle').html(`Chamada Virtual do ${mesChamadaVirtualServer + 1}º Mês`);
+    secaoChamadaAtivada.hidden = false;
+    secaoChamadaDesativada.hidden = true;
+    secaoChamadaOffline.hidden = true;
+    
+    inputLinkChamadaVirtual.value = (window.location.hostname == 'localhost') ? `http://localhost:5005/?code=${code}` : `http://monissores-chamada.web.app/?code=${code}`
+    //new QRCode(document.getElementById("qrcode"), inputLinkChamadaVirtual.value);
+    
+    if (qrCode == null)
+    {
+      qrCode = new QRCode(document.getElementById("qrcode"), {
+        text: inputLinkChamadaVirtual.value,
+        width: 128,
+        height: 128,
+        colorDark : "#000000",
+        colorLight : "#ffffff",
+        correctLevel : QRCode.CorrectLevel.H,
+      });
+    }
+  }
+  else
+  {
+    $('#chamadaVirtualDialogTitle').html(`Chamada Virtual do ${tabAtual.innerHTML}`);
+    secaoChamadaAtivada.hidden = true;
+    secaoChamadaDesativada.hidden = false;
+    secaoChamadaOffline.hidden = true;
+  }
+  /*divSwitchAtivarChamada.innerHTML = 
+  `<table style="width: -webkit-fill-available;">
+      <tr>
+        <td>
+          <label class="form-check-label" for="ativarCVSwitch" style="text-align: left;">
+            <strong>Ativar Chamada Virtual</strong>
+          </label>
+        </td>
+          
+        <td>
+          <input
+            class="form-check-input"
+            name="toggleChk"
+            type="checkbox"
+            role="switch"
+            style="text-align: left;"
+            id="ativarCVSwitch"
+            ${ativar}
+            ${desabilitar}
+            />
+          
+        </td>
+      </tr>
+    </table>`
+    ativarCVSwitch()*/
+}
+
 function atualizarTextoBtnCV(tabAtual = null) {
-  console.log("Rodei")
+  console.log("A funcao TextoBTNCV foi chamada")
+  console.log(chamadaVirtualAtivadaServer)
   if (online && chamadaVirtualAtivadaServer == false) {
     $('#chamadaVirtual').removeClass("Ativada");
     $('#chamadaVirtual').html(
@@ -529,7 +565,6 @@ function atualizarTextoBtnCV(tabAtual = null) {
       </table>`
       );
       $('#chamadaVirtualMesText').html(tabAtual == null ? "1º Mês" : tabAtual.innerHTML);
-      $('#chamadaVirtual').attr("disabled", false);
   }
   else if (online && chamadaVirtualAtivadaServer == true) {
     $('#chamadaVirtual').addClass("Ativada");
@@ -546,7 +581,6 @@ function atualizarTextoBtnCV(tabAtual = null) {
         </tr>
         </table>`
       );
-      $('#chamadaVirtual').attr("disabled", false);
     }
   else {
     $('#chamadaVirtual').removeClass("Ativada");
@@ -561,12 +595,9 @@ function atualizarTextoBtnCV(tabAtual = null) {
       </tr>
       </table>`
       );
-      //$('#chamadaVirtual').addClass('disabled');
       
-      //document.getElementById("chamadaVirtual").disabled = true;
-      console.log(document.getElementById("chamadaVirtual"))
     }
-    console.log("Editado")
+    atualizarLayoutDialogCV('B0LiSdSv1MMdy0VxjdswpPkyOXH2')
 }
 
 function mudarEstadosDaInterfaceNaSelecao(n, index) {
@@ -646,7 +677,7 @@ function configurarTabsPushState() {
       }
     }
     
-    atualizarTextoBtnCV(tabAtual);
+    //atualizarTextoBtnCV(tabAtual);
   });
   /*if (history.state.id == state)
   {
@@ -961,63 +992,60 @@ function copyButton(){
 
 function configurarSwitchAtivacaoChamadaVirtual(user, collectionRef) {
   $('#ativarCVSwitch').change(function (event) {
+    console.log("Switcheeeee")
     chamadaVirtualAtivadaClient = $(this).is(':checked');
     mesChamadaVirtual = getMesTabAtual(tabAtual);
     console.log("Client: " + chamadaVirtualAtivadaClient)
     console.log("Server: " + chamadaVirtualAtivadaServer)
-    console.log("Event" + event.type)
-    chamadaRef
-      .doc(`${user.uid}`)
-      .get()
-      .then(doc => {
-        //chamadaVirtualAtivadaServer = doc.data().chamadaAtiva;
+    //console.log("Event" + event.type)
+    
+    //chamadaVirtualAtivadaServer //doc.data().chamadaAtiva;
+        
+    if (
+      chamadaVirtualAtivadaClient == true &&
+      chamadaVirtualAtivadaServer == false
+    ) {
+      collectionRef
+        .doc(`${user.uid}`)
+        .set({
+          chamadaAtiva: chamadaVirtualAtivadaClient,
+          mes: mesChamadaVirtual,
+          uid: user.uid,
+        })
+        .then(() => {
+          //1atualizarLayoutDialogCV(user.uid)
+          unsubscribeLCV = exibirListaDeAlunosChamadaVirtual(
+            user,
+            chamadaRef
+          );
+        })
+        .catch(e => {
+          console.error('Error adding document: ', e);
+        });
+    } else if (
+      chamadaVirtualAtivadaClient == false &&
+      chamadaVirtualAtivadaServer == true
+    ) {
+      chamadaRef
+        .doc(`${user.uid}`)
+        .set({
+          chamadaAtiva: chamadaVirtualAtivadaClient,
+          uid: user.uid,
+        })
+        .then(() => {
+          console.log(
+            `'Chamada fechada é hora de importar os alunos e mudar o estado da interface.'`
+          );
+          //1atualizarLayoutDialogCV(user.uid);
+          importarAlunosChamadaVirtual(user, alunosRef, chamadaRef);
+          // TODO usar a função editar para editar a chamada só que sem o problema de deletar o aluno para adicionar de novo, provavelmente tme que usar o merge
+        })
+        .catch(e => {
+          console.error('Error adding document: ', e);
+        });
+    }
 
-        if (
-          chamadaVirtualAtivadaClient == true &&
-          chamadaVirtualAtivadaServer == false
-        ) {
-          collectionRef
-            .doc(`${user.uid}`)
-            .set({
-              chamadaAtiva: chamadaVirtualAtivadaClient,
-              mes: mesChamadaVirtual,
-              uid: user.uid,
-            })
-            .then(() => {
-              atualizarLayoutDialogCV()
-              unsubscribeLCV = exibirListaDeAlunosChamadaVirtual(
-                user,
-                chamadaRef
-              );
-            })
-            .catch(e => {
-              console.error('Error adding document: ', e);
-            });
-        } else if (
-          chamadaVirtualAtivadaClient == false &&
-          chamadaVirtualAtivadaServer == true
-        ) {
-          chamadaRef
-            .doc(`${user.uid}`)
-            .set({
-              chamadaAtiva: chamadaVirtualAtivadaClient,
-              uid: user.uid,
-            })
-            .then(() => {
-              console.log(
-                `'Chamada fechada é hora de importar os alunos e mudar o estado da interface.'`
-              );
-              atualizarLayoutDialogCV();
-              importarAlunosChamadaVirtual(user, alunosRef, chamadaRef);
-              // TODO usar a função editar para editar a chamada só que sem o problema de deletar o aluno para adicionar de novo, provavelmente tme que usar o merge
-            })
-            .catch(e => {
-              console.error('Error adding document: ', e);
-            });
-        }
-      });
-
-      atualizarTextoBtnCV();
+    //2atualizarTextoBtnCV();
     /*collectionRef
         .doc(`${searchParams.get('code')}`)
         .get().then((doc) => {
@@ -1114,17 +1142,16 @@ function exibirListaDeAlunos(user, collectionRef, listGroup, frequenciaIndex) {
 }
 
 function monitorarEstadoChamadaVirtual(user, collectionRef) {
-    let unsubscribe = collectionRef
+  return collectionRef
       .where('uid', '==', user.uid)
       .onSnapshot(querySnapshot => {
         const items = querySnapshot.docs.map(doc => {
           chamadaVirtualAtivadaServer = doc.data().chamadaAtiva;
           mesChamadaVirtualServer = doc.data().mes;
           atualizarTextoBtnCV();
-          console.log("A chamada está " + chamadaVirtualAtivadaServer);  
+          console.log("A chamada está monitoradacomo" + chamadaVirtualAtivadaServer);  
       })
     });
-    return unsubscribe
 }
 
 function exibirListaDeAlunosChamadaVirtual(user, collectionRef) {

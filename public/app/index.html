@@ -402,13 +402,12 @@
               </ul>
             </div>
 
-            <input
+            <button
               type="button"
               class="btn-close"
               data-bs-dismiss="modal"
               aria-label="Close"
-              name="button"
-            ></input>
+            ></button>
           </div>
           <!--Corpo da Caixa de diálogo, aqui dentro ficará o Relatório-->
           <div id="corpoCaixaDialogoRelatorio" class="modal-body">
@@ -684,7 +683,29 @@
           </div>
           <!--Corpo da Caixa de diálogo, aqui dentro ficará o Relatório-->
 
-          <div class="form-check form-switch form-check-reverse" id="divSwitchAtivarChamada" style="padding: 16px;"></div>
+          <div class="form-check form-switch form-check-reverse" id="divSwitchAtivarChamada" style="padding: 16px;">
+            <table style="width: -webkit-fill-available;">
+              <tr>
+                <td>
+                  <label class="form-check-label" for="ativarCVSwitch" style="text-align: left;">
+                    <strong>Ativar Chamada Virtual</strong>
+                  </label>
+                </td>
+                  
+                <td>
+                  <input
+                    class="form-check-input"
+                    name="toggleChk"
+                    type="checkbox"
+                    role="switch"
+                    style="text-align: left;"
+                    id="ativarCVSwitch"
+                    />
+                  
+                </td>
+              </tr>
+            </table>
+          </div>
           <div id="corpoCaixaDialogoRelatorio" class="modal-body">
             <!--É AQUI QUE FICA A TELA Dos relatórios-->
             <section id="secaoChamadaDesativada">
@@ -721,6 +742,9 @@
               <p><strong>Lista de Discentes:</strong></p>
               <ul id="alunosListaChamadaVirtual"></ul>
 
+            </section>
+            <section id="secaoChamadaOffline">
+              <p style="text-align: justify; text-indent: 10px;">Por favor, conecte-se com a internet para utilizar a Chamada Virtual.</p>
             </section>
           </div>
 
