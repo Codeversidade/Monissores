@@ -10,75 +10,8 @@
   <!-- iOS and iPadOS icon -->
   <link rel="apple-touch-icon" href="/icons/192.png">
   <link rel="shortcut icon" href="./icons/192.png" type="image/x-icon">
+  <link rel="stylesheet" href="style.css">
 
-
-
-  <link
-    href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
-    rel="stylesheet"
-    integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65"
-    crossorigin="anonymous"
-  />
-  <link
-    rel="stylesheet"
-    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
-  />
-<link rel="stylesheet" href="style.css">
-  <script
-    src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
-    crossorigin="anonymous"
-  ></script>
-
-  <script src="
-      https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-
-  <!--Importar e configurar as ferramentas do Firebase-->
-  <script src="https://www.gstatic.com/firebasejs/7.16.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/7.16.1/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/7.16.1/firebase-firestore.js"></script>
-  
-
-  <script src="https://www.gstatic.com/firebasejs/ui/6.0.2/firebase-ui-auth__pt_br.js"></script>
-  <link type="text/css" rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/6.0.2/firebase-ui-auth.css" />
-
-  <script>
-    var firebaseConfig = {
-      apiKey: 'AIzaSyB9zK2OlUwp1N43nM-O-_EB1TI5x1BTq_E',
-      authDomain: 'monissores.firebaseapp.com',
-      projectId: 'monissores',
-      storageBucket: 'monissores.appspot.com',
-      messagingSenderId: '788929363031',
-      appId: '1:788929363031:web:576f98d7217aa63655f712',
-      measurementId: 'G-0GFKQRZ5FH',
-    };
-    firebase.initializeApp(firebaseConfig);
-    var uiConfig = {
-        signInOptions: [
-          // Leave the lines as is for the providers you want to offer your users.
-          firebase.auth.GoogleAuthProvider.PROVIDER_ID
-        ],
-        // tosUrl and privacyPolicyUrl accept either url string or a callback
-        // function.
-        // Terms of service url/callback.
-        tosUrl: '<your-tos-url>',
-        // Privacy policy url/callback.
-        privacyPolicyUrl: function() {
-          window.location.assign('<your-privacy-policy-url>');
-        }
-      };
-
-    var ui = new firebaseui.auth.AuthUI(firebase.auth());
-      // The start method will wait until the DOM is loaded.
-    ui.start('#secaoLogin', uiConfig);
-
-
-    if ('serviceWorker' in navigator) {
-        //navigator.serviceWorker.register("sw.js") // Cria o Service Worker do PWA
-    }
-  </script>
-  <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
-  <script src="app.js" defer></script>
 </head>
 
 <body>
@@ -807,4 +740,71 @@
     </div>
   </section>
 </body>
+
+<link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+    integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65"
+    crossorigin="anonymous"
+  />
+  <link
+    rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+  />
+  <script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+    crossorigin="anonymous"
+  ></script>
+
+  <script src="
+      https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+  <!--Importar e configurar as ferramentas do Firebase-->
+  <script src="https://www.gstatic.com/firebasejs/7.16.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.16.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.16.1/firebase-firestore.js"></script>
+  
+
+  <script src="https://www.gstatic.com/firebasejs/ui/6.0.2/firebase-ui-auth__pt_br.js"></script>
+  <link type="text/css" rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/6.0.2/firebase-ui-auth.css" />
+
+  <script>
+    var firebaseConfig = {
+      apiKey: 'AIzaSyB9zK2OlUwp1N43nM-O-_EB1TI5x1BTq_E',
+      authDomain: 'monissores.firebaseapp.com',
+      projectId: 'monissores',
+      storageBucket: 'monissores.appspot.com',
+      messagingSenderId: '788929363031',
+      appId: '1:788929363031:web:576f98d7217aa63655f712',
+      measurementId: 'G-0GFKQRZ5FH',
+    };
+    firebase.initializeApp(firebaseConfig);
+    var uiConfig = {
+        signInOptions: [
+          // Leave the lines as is for the providers you want to offer your users.
+          firebase.auth.GoogleAuthProvider.PROVIDER_ID
+        ],
+        // tosUrl and privacyPolicyUrl accept either url string or a callback
+        // function.
+        // Terms of service url/callback.
+        tosUrl: '<your-tos-url>',
+        // Privacy policy url/callback.
+        privacyPolicyUrl: function() {
+          window.location.assign('<your-privacy-policy-url>');
+        }
+      };
+
+    var ui = new firebaseui.auth.AuthUI(firebase.auth());
+      // The start method will wait until the DOM is loaded.
+    ui.start('#secaoLogin', uiConfig);
+
+
+    if ('serviceWorker' in navigator) {
+        //navigator.serviceWorker.register("sw.js") // Cria o Service Worker do PWA
+    }
+  </script>
+  <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+  <script src="app.js" defer></script>
+
 </html>
