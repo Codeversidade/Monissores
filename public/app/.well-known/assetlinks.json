@@ -1,0 +1,6 @@
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target" : { "namespace": "android_app", "package_name": "app.web.monissores.twa",
+                   "sha256_cert_fingerprints": ["AC:46:1F:8E:DB:94:30:5A:DE:0F:6A:59:C1:6F:D0:3A:7B:4F:57:D1:C7:1D:87:90:BF:91:25:0B:29:6F:E9:C3"] }
+    }
+]

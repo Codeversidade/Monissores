@@ -46,7 +46,7 @@ var chamadaVirtualAtivadaServer = false;
 var chamadaVirtualAtivadaClient;
 var qrCode;
 var tabAtual = $("#mes-1-tab")[0];
-var online = true;
+var online = navigator.onLine;
 
 deslogarDoGoogleBtn.onclick = () => {
   auth.signOut();

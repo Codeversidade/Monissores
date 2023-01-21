@@ -1,11 +1,19 @@
-self.addEventListener('fetch', event => {
-  // This is a dummy event listener
-  // just to pass the PWA installation criteria on
-  // some browsers
-});
+// This is the "Offline copy of pages" service worker
+
+const CACHE = "pwabuilder-offline";
+
 importScripts('https://storage.googleapis.com/workbox-cdn/releases/5.1.2/workbox-sw.js');
 
+self.addEventListener("message", (event) => {
+  if (event.data && event.data.type === "SKIP_WAITING") {
+    self.skipWaiting();
+  }
+});
 
-workbox.routing.registerRout(({request}) => request.destination === "image",
-	new workbox.strategies.NetworkFirst()
+workbox.routing.registerRoute(
+  new RegExp('/*'),
+  new workbox.strategies.StaleWhileRevalidate({
+    cacheName: CACHE
+  }),
+  new workbox.strategies.NetworkFirst()
 );
