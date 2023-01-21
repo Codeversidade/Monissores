@@ -7,6 +7,7 @@ body {
     background-color:#F0F2F5;
     overscroll-behavior-y: contain;
 }
+
 :root{
     --cor-principal: #0F0ADE;
     --cor-destaque:  #2222FF;
