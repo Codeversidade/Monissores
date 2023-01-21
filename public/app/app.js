@@ -142,7 +142,8 @@ auth.onAuthStateChanged(user => {
     });
 
     chamadaVirtualModalDialog.addEventListener('show.bs.modal', event => {
-      configurarDialogPushState("dialog", "chamadaVirtualModalDialog", "chamada_virtual")
+      atualizarLayoutDialogCV();
+      configurarSwitchAtivacaoChamadaVirtual(user, chamadaRef)
       chamadaRef
         .doc(`${user.uid}`)
         .get({source: 'cache'})
@@ -506,6 +507,7 @@ function atualizarLayoutDialogCV(code) {
 
   if (online == false)
   {
+    $('#chamadaVirtualDialogTitle').html(`Chamada Virtual do ${tabAtual.innerHTML}`);
     secaoChamadaAtivada.hidden = true;
     secaoChamadaDesativada.hidden = true;
     secaoChamadaOffline.hidden = false;
