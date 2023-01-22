@@ -1025,6 +1025,7 @@ function configuraBtnMes(user, collectionRef){
 function configurarBtnRelatorio(user, collectionRef, frequenciaIndex){
   let unsubscribe = collectionRef
     .where('uid', '==', user.uid)
+    .orderBy("nome", "asc")
     .onSnapshot({ includeMetadataChanges: true }, querySnapshot => {
       const items = querySnapshot.docs.map(doc => {
         var freq = doc.data().frequencia[frequenciaIndex];
@@ -1147,6 +1148,7 @@ function importarAlunosChamadaVirtual(user, alunosRef, chamadaRef) {
 function exibirListaDeAlunos(user, collectionRef, listGroup, frequenciaIndex) {
   let unsubscribe = collectionRef
     .where('uid', '==', user.uid)
+    .orderBy("nome", "asc")
     .onSnapshot(querySnapshot => {
       const items = querySnapshot.docs.map(doc => {
         return `<a href="#" id="${doc.data().matricula}-${frequenciaIndex}"  
