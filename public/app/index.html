@@ -1,3 +1,4 @@
+<html lang="pt-br">
 <head>
   <!--Importar o Bootstrap-->
   <meta charset="utf-8" />
@@ -8,81 +9,45 @@
   <meta name="theme-color" content="#0F0ADE"/>
   <!-- iOS and iPadOS icon -->
   <link rel="apple-touch-icon" href="/icons/192.png">
-
-
-  <link
-    href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
-    rel="stylesheet"
-    integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65"
-    crossorigin="anonymous"
-  />
-  <link
-    rel="stylesheet"
-    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
-  />
-<link rel="stylesheet" href="style.css">
-  <script
-    src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
-    crossorigin="anonymous"
-  ></script>
-
-  <script src="
-      https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-
-  <!--Importar e configurar as ferramentas do Firebase-->
-  <script src="https://www.gstatic.com/firebasejs/7.16.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/7.16.1/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/7.16.1/firebase-firestore.js"></script>
+  <link rel="shortcut icon" href="./icons/192.png" type="image/x-icon">
+  <style>
+    .loader {
+    border: 4px solid #F0F2F5;
+    border-radius: 50%;
+    border-top: 4px solid #2222FF;
+    width: 36px;
+    height: 36px;
+    -webkit-animation: spin 2s linear infinite; /* Safari */
+    animation: spin 2s linear infinite;
+  }
   
-
-  <script src="https://www.gstatic.com/firebasejs/ui/6.0.2/firebase-ui-auth__pt_br.js"></script>
-  <link type="text/css" rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/6.0.2/firebase-ui-auth.css" />
+  /* Safari */
+  @-webkit-keyframes spin {
+    0% { -webkit-transform: rotate(0deg); }
+    100% { -webkit-transform: rotate(360deg); }
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  </style>
 
   <script>
-    var firebaseConfig = {
-      apiKey: 'AIzaSyB9zK2OlUwp1N43nM-O-_EB1TI5x1BTq_E',
-      authDomain: 'monissores.firebaseapp.com',
-      projectId: 'monissores',
-      storageBucket: 'monissores.appspot.com',
-      messagingSenderId: '788929363031',
-      appId: '1:788929363031:web:576f98d7217aa63655f712',
-      measurementId: 'G-0GFKQRZ5FH',
-    };
-    firebase.initializeApp(firebaseConfig);
-    var uiConfig = {
-        signInOptions: [
-          // Leave the lines as is for the providers you want to offer your users.
-          firebase.auth.GoogleAuthProvider.PROVIDER_ID
-        ],
-        // tosUrl and privacyPolicyUrl accept either url string or a callback
-        // function.
-        // Terms of service url/callback.
-        tosUrl: 'https://github.com/iCarlosCode/Monissores/blob/main/TERMS-OF-SERVICE.md',
-        // Privacy policy url/callback.
-        privacyPolicyUrl: 'https://github.com/iCarlosCode/Monissores/blob/main/PRIVACY-POLICY.md',
-      };
-
-    var ui = new firebaseui.auth.AuthUI(firebase.auth());
-      // The start method will wait until the DOM is loaded.
-    ui.start('#secaoLogin', uiConfig);
-
-
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register("sw.js") // Cria o Service Worker do PWA
+        console.log("instalado")
     }
   </script>
-
-  <script src="app.js" defer></script>
 </head>
 
 <body>
   
-    <section id="secaoLogin">
+    <section id="secaoLogin" hidden="true">
       <!--Aqui vai a tela de Login com o Google-->
       <div id="content-secaoLogin">
         <center>
-          <img src="https://raw.githubusercontent.com/iCarlosCode/Monissores/f6091c4535763500a7c61853237e7439158cad07/public/app/icons/Monissores.png" alt="Logo Monissores">
+          <img src="./icons/Monissores.png" alt="Logo Monissores">
         </center>
         <h1>Monissores</h1>
         <p>Faça login e entregue <strong>seu Relatório em segundos!</strong></p>
@@ -91,16 +56,26 @@
       <button id="logarComGoogleBtn">Sign in with Google</button>
       -->
     </section>
+    <section id="secaoInicial">
+      
+        <div id="content-secaoLogin">
+        <center>
+          <img src="./icons/Monissores.png" alt="Logo Monissores">
+        </center>
+        <h1>Monissores</h1>
+        <center>
+          <div class="loader"></div>
+        </center>
+      </div>
+    </section>
 
   <section id="secaoPrincipal" hidden="true">
     <!--Aqui vai a tela de Principal do Aplicativo, com a appbar e com a lista de alunos e como o botão para adicionar mais-->
 
     <div style="position: absolute">
       <!--Cabeçalho-->
-      <div class="fixed-top text-light shadow bg-principal">
+      <div class="fixed-top  text-light shadow bg-principal" id="cabecalho">
         <!--Linha com o texto da nav bar e botões-->
-
-        
         <!--Barra de pesquisa-->
         <div id="barraDePesquisa">
           <div>
@@ -112,7 +87,7 @@
           </div>
         </div>
 
-        <nav class="navbar navbar-dark bg-principal">
+        <nav class=" navbar navbar-dark bg-principal">
           
           <div class="container-fluid" id="cabecalhoInterno1">
             <!--Botão de Voltar - Só aparece quando itens estão selecionados no ListGroup-->
@@ -170,6 +145,15 @@
                 <span class="material-symbols-outlined">edit</span>
               </button>
 
+              <!--Botão de Selecionar Tudo (Só aparece quando apenas 1 item do listgroup está selecionado)-->
+              <button
+                id="selecionarTudoBtn"
+                class="buttonsExtra selecionarTudoBtn"
+                hidden="true"
+              >
+                <span class="material-symbols-outlined">select_all</span>
+              </button>
+              
               <!--Botão de deletar aluno (Só aparece quando algum item do listgroup está selecionado)-->
               <button
                 id="removeBtn"
@@ -183,11 +167,12 @@
             </div>
           </div>
         </nav>
+
         <!--Final da NavBar-->
 
         <!-- Aqui começa Parte das Abas de Meses-->
         <ul
-          class="nav justify-content-center nav-pills nav-fill mb-3"
+          class="nav justify-content-center nav-pills nav-fill mb"
           id="linhaAbas"
           role="tablist"
         >
@@ -253,6 +238,8 @@
             </button>
           </li>
         </ul>
+
+        
         <!--Fim da lista de Abas de Meses-->
       </div>
       <!--Fim do menu que inclui a navbar e a lista de abas de meses-->
@@ -260,36 +247,40 @@
       <!--Aqui é definido o Conteúdo de Cada Tab-->
       <div
         class="tab-content bg-white"
-        style="margin-top: 60px"
+        
         id="linhaAbasContent"
       >
+      
+      <!--Botão da chamada Virtual-->
+      <button
+      type="button"
+      id="chamadaVirtual"
+      data-bs-toggle="modal"
+      data-bs-target="#chamadaVirtualModalDialog"
+      class="btnChamadaVirtual"
+    >
+      <table>
+        <tr>
+          <th rowspan="2"><span class="material-symbols-outlined">link</span></th>
+          <td><strong>Chamada Virtual do </strong><strong id="chamadaVirtualMesText">1º Mês</strong></td>
+        </tr>
+        <tr>
+          <td >Estado: Desativada</td>
+        </tr>
+      </table>
+    </button>
         <!--Aba Mês 1-->
         <div
           class="tab-pane fade show active"
           id="mes-1"
           role="tabpanel"
           aria-labelledby="mes-1-tab"
-          style="width: 100vw"
+          style="width: 100vw;
+          "
         >
           
-          <!--Botão da chamada Virtual-->
-            <button
-              type="button"
-              id="chamadaVirtual"
-              data-bs-toggle="modal"
-              data-bs-target="#chamadaVirtualModalDialog"
-              class="btnChamadaVirtual"
-            >
-              <table>
-                <tr>
-                  <th rowspan="2"><span class="material-symbols-outlined">link</span></th>
-                  <td><strong>Chamada Virtual do 1º Mês</strong></td>
-                </tr>
-                <tr>
-                  <td >Estado: Desativada</td>
-                </tr>
-              </table>
-            </button>
+          <!-- Botão da chamada virtual estava aqui 14/01/2023-->
+          
           
           <!--A Lista de Alunos fica dentro deste list-group-->
           <div id="alunosLista1" class="list-group"></div>
@@ -303,9 +294,12 @@
           aria-labelledby="mes-2-tab"
           style="width: 100vw"
         >
+        <!--
           <button type="button" id="chamadaVirtual2">
             Chamada Virtual Mês 2
           </button>
+        -->
+
           <!--A Lista de Alunos fica dentro deste list-group-->
           <div id="alunosLista2" class="list-group"></div>
         </div>
@@ -318,9 +312,11 @@
           aria-labelledby="tab-mes-3"
           style="width: 100vw"
         >
+        <!--
           <button type="button" id="chamadaVirtual3">
             Chamada Virtual Mês 3
           </button>
+        -->
           <!--A Lista de Alunos fica dentro deste list-group-->
           <div id="alunosLista3" class="list-group"></div>
         </div>
@@ -333,9 +329,12 @@
           aria-labelledby="tab-mes-4"
           style="width: 100vw"
         >
+        <!--
           <button type="button" id="chamadaVirtual4">
             Chamada Virtual Mês 4
           </button>
+        -->
+        
           <!--A Lista de Alunos fica dentro deste list-group-->
           <div id="alunosLista4" class="list-group"></div>
         </div>
@@ -362,6 +361,17 @@
           <div class="modal-header">
             <h5 class="modal-title" id="exampleModalLongTitle">Relatório</h5>
 
+            
+
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <!--Corpo da Caixa de diálogo, aqui dentro ficará o Relatório-->
+          <div id="corpoCaixaDialogoRelatorio" class="modal-body">
             <!--Drowpdown aqui estão as opções de meses que a pessoa pode escolher para gerar o relatório pro mês correto-->
             <div class="dropdown">
               <button
@@ -384,22 +394,20 @@
                 <li><a class="dropdown-item" href="#">Mês 4</a></li>
               </ul>
             </div>
-
-            <button
-              type="button"
-              class="btn-close"
-              data-bs-dismiss="modal"
-              aria-label="Close"
-            ></button>
-          </div>
-          <!--Corpo da Caixa de diálogo, aqui dentro ficará o Relatório-->
-          <div id="corpoCaixaDialogoRelatorio" class="modal-body">
             <!--É AQUI QUE FICA A TELA Dos relatórios-->
             <ul id="listaAlunosRelatorio"></ul>
           </div>
 
           <!--Rodapé da Caixa de Diálogo-->
           <div class="modal-footer">
+            <div id="toastRelatorioCopiado" class="toast align-items-center text-bg-primary border-0" role="alert" aria-live="assertive" aria-atomic="true">
+              <div class="d-flex">
+                <div class="toast-body" >
+                  O relatório foi copiado com sucesso!
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+              </div>
+            </div>
             <button
               type="button"
               class="btn btn-secondary"
@@ -457,11 +465,17 @@
               data-dismiss="modal"
               data-bs-dismiss="modal"
               class="btn btn-primary"
+              style="margin: 5px;"
             >
-              Sair da conta do Google
+            <div>Sair da conta do Google</div> <span class="material-symbols-outlined">logout</span>
             </button>
-            <button id="editAluno" class="btn btn-primary">Editar Aluno</button>
-            <button id="removeAluno" class="btn btn-primary">Remover Aluno</button>
+
+            <button class="btn btn-danger" disabled="true" style="margin: 5px; border: none;"> <div>Deletar minha conta</div><span class="material-symbols-outlined">delete_forever</span></button>
+            <br>
+            <a href="https://github.com/iCarlosCode/Monissores/blob/main/PRIVACY-POLICY.md" target="_blank" style="margin: 5px;">Política de Privacidade</a>
+            
+            <a href="https://github.com/iCarlosCode/Monissores/blob/main/TERMS-OF-SERVICE.md" target="_blank">Termos de Uso</a>
+            <br>
             <!--ul id="alunosLista"></ul-->
           </div>
 
@@ -472,6 +486,7 @@
               class="btn btn-secondary"
               data-dismiss="modal"
               data-bs-dismiss="modal"
+              
             >
               Voltar
             </button>
@@ -509,6 +524,7 @@
 
           <!--Corpo da CD de Adicionar Aluno-->
           <div class="modal-body">
+            
             <!--É AQUI QUE FICA A TELA De adicionar-->
             <form>
               <div class="mb-3">
@@ -536,6 +552,14 @@
                 Salvar
               </button>
             </form>
+            <!-- Toast Para Informações Importantes-->
+            <div id="toastAdicionarAluno" class="toast align-items-center text-bg-primary border-0" role="alert" aria-live="assertive" aria-atomic="true">
+              <div class="d-flex">
+                <div id="toastAdicionarAlunoText" class="toast-body" >
+                  O relatório foi copiado com sucesso!
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -566,6 +590,7 @@
 
           <!--Corpo da CD de Editar Aluno-->
           <div class="modal-body">
+            
             <!--É AQUI QUE FICA A TELA De Editar-->
             <form>
               <div class="mb-3">
@@ -584,16 +609,23 @@
                 >
                 <input class="form-control" id="matriculaEditarAlunoInput" />
               </div>
-
+              
               <button
-                type="button"
-                id="editarAlunoBtn"
-                class="btn btn-primary"
-                data-bs-dismiss="modal"
+              type="button"
+              id="editarAlunoBtn"
+              class="btn btn-primary"
+              data-bs-dismiss="modal"
               >
-                Salvar
-              </button>
-            </form>
+              Salvar
+            </button>
+          </form>
+          <div id="toastEditarAluno" class="toast align-items-center text-bg-primary border-0" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+              <div id="toastEditarAlunoText" class="toast-body" >
+              
+              </div>
+            </div>
+          </div>
           </div>
         </div>
       </div>
@@ -652,7 +684,7 @@
         <div class="modal-content">
           <!--Cabeçalho-->
           <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLongTitle">Relatório</h5>
+            <h5 class="modal-title" id="chamadaVirtualDialogTitle">Chamada Virtual do 1º Mês</h5>
 
             <button
               type="button"
@@ -663,50 +695,77 @@
           </div>
           <!--Corpo da Caixa de diálogo, aqui dentro ficará o Relatório-->
 
-          <div class="form-check form-switch form-check-reverse" id="divSwitchAtivarChamada">
-            <label class="form-check-label" for="ativarCVSwitch"
-            >Ativar Chamada</label
-          >
-          <input
-            class="form-check-input"
-            name="toggleChk"
-            type="checkbox"
-            role="switch"
-            id="ativarCVSwitch"
-          />
+          <div class="form-check form-switch form-check-reverse" id="divSwitchAtivarChamada" style="padding: 16px;">
+            <table style="width: -webkit-fill-available;">
+              <tr>
+                <td>
+                  <label class="form-check-label" for="ativarCVSwitch" style="text-align: left;">
+                    <strong>Ativar Chamada Virtual</strong>
+                  </label>
+                </td>
+                  
+                <td>
+                  <input
+                    class="form-check-input"
+                    name="toggleChk"
+                    type="checkbox"
+                    role="switch"
+                    style="text-align: left;"
+                    id="ativarCVSwitch"
+                    />
+                  
+                </td>
+              </tr>
+            </table>
           </div>
           <div id="corpoCaixaDialogoRelatorio" class="modal-body">
             <!--É AQUI QUE FICA A TELA Dos relatórios-->
-            Aqui Vai se escrever Alguma coisa
-            <p id="totalAlunosChamadaVirtual"></p>
+            <section id="secaoChamadaDesativada">
+              <p style="text-align: justify; text-indent: 10px;">A chamada virtual permite que os alunos preencham nome e matrícula por meio de um link. A frequência dos alunos que preencherem a chamada será importada e atualizada após você desativar a Chamada Virtual.</p>
+            </section>
+            <section id="secaoChamadaAtivada" hidden="true">
+              <table style="width: -webkit-fill-available;">
+                <tr>
+                  <td>
+                    <strong>Link da Chamada Virtual</strong>
+                  </td>
+                </tr>
+                <tr>
+                  
+                  <td>
+                    <input id="inputLinkChamadaVirtual" type="text" value="" style="width: 100%; height: 35px; border: 1px solid rgba(128, 128, 128, 0.384);" readonly>
+                  </td>
+                  <td style="width: 24px; text-align: right;">
+                    <button id="btnCompartilharLinkChamadaVirtual" style="border: none; background-color: white;">
+                      <span class="material-symbols-outlined" style="color: blue;">
+                        share
+                      </span>
+                    </button>
+                  </td>
+                </tr>
+              </table>
+              <br>
+              <center>
+                <div id="qrcode"></div>
+              </center>
+              <br>
+              <p><strong>Alunos Presentes:</strong> <label id="totalAlunosChamadaVirtual"></label></p>
+  
+              <p><strong>Lista de Discentes:</strong></p>
+              <ul id="alunosListaChamadaVirtual"></ul>
 
-            <ul id="alunosListaChamadaVirtual"></ul>
+            </section>
+            <section id="secaoChamadaOffline">
+              <p style="text-align: justify; text-indent: 10px;">Por favor, conecte-se com a internet para utilizar a Chamada Virtual.</p>
+            </section>
           </div>
 
-          <!--Rodapé da Caixa de Diálogo-->
-          <div class="modal-footer">
-            <button
-              type="button"
-              class="btn btn-secondary"
-              data-dismiss="modal"
-              data-bs-dismiss="modal"
-            >
-              Voltar
-            </button>
-
-            <button
-              id="copiarRelatorioBtn"
-              type="button"
-              class="btn btn-primary"
-            >
-              <span class="material-symbols-outlined">content_copy</span>
-            </button>
-          </div>
+          
         </div>
       </div>
     </div>
     <!--FIm da caixa de diálogo da chamada virtual-->
-
+    
     <!--Botão Add flutuante-->
     <div
       class="fixed-top"
@@ -733,3 +792,70 @@
     </div>
   </section>
 </body>
+
+<link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+    integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65"
+    crossorigin="anonymous"
+  />
+  <link rel="stylesheet" href="style.css">
+  <link
+    rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+  />
+  <script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+    crossorigin="anonymous"
+  ></script>
+
+  <script src="
+      https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+  <!--Importar e configurar as ferramentas do Firebase-->
+  <script src="https://www.gstatic.com/firebasejs/7.16.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.16.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.16.1/firebase-firestore.js"></script>
+  
+
+  <script src="https://www.gstatic.com/firebasejs/ui/6.0.2/firebase-ui-auth__pt_br.js"></script>
+  <link type="text/css" rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/6.0.2/firebase-ui-auth.css" />
+
+  <script>
+    var firebaseConfig = {
+      apiKey: 'AIzaSyB9zK2OlUwp1N43nM-O-_EB1TI5x1BTq_E',
+      authDomain: 'monissores.firebaseapp.com',
+      projectId: 'monissores',
+      storageBucket: 'monissores.appspot.com',
+      messagingSenderId: '788929363031',
+      appId: '1:788929363031:web:576f98d7217aa63655f712',
+      measurementId: 'G-0GFKQRZ5FH',
+    };
+    firebase.initializeApp(firebaseConfig);
+    var uiConfig = {
+        signInOptions: [
+          // Leave the lines as is for the providers you want to offer your users.
+          firebase.auth.GoogleAuthProvider.PROVIDER_ID
+        ],
+        // tosUrl and privacyPolicyUrl accept either url string or a callback
+        // function.
+        // Terms of service url/callback.
+        tosUrl: '<your-tos-url>',
+        // Privacy policy url/callback.
+        privacyPolicyUrl: function() {
+          window.location.assign('<your-privacy-policy-url>');
+        }
+      };
+
+    var ui = new firebaseui.auth.AuthUI(firebase.auth());
+      // The start method will wait until the DOM is loaded.
+    ui.start('#secaoLogin', uiConfig);
+
+
+    
+  </script>
+  <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+  <script src="app.js" defer></script>
+
+</html>

@@ -1,4 +1,8 @@
+<p align="center">
+<img src="https://user-images.githubusercontent.com/69172891/213947528-6143dc08-66aa-4d93-93ed-0fa141ca76c4.png"/>
 </p>
+
+<p>
 
 
 <a href="https://github.com/iCarlosCode/Problematika/network/members"><img src="https://img.shields.io/github/forks/iCarlosCode/Monissor" alt="forks"/></a>

@@ -1,13 +1,9 @@
 @charset "UTF-8";
-@import "spinners";
-
 
 body {
     /*var(--cor-destaque)*/
     background-color:#F0F2F5;
-    overscroll-behavior-y: contain;
 }
-
 :root{
     --cor-principal: #0F0ADE;
     --cor-destaque:  #2222FF;
@@ -92,24 +88,13 @@ div#barraDePesquisa {
     background-color: var(--cor-principal);
 }
 
-.btnChamadaVirtual.Ativada {
-    width: -webkit-fill-available;
-    text-align: left;
-    vertical-align: top;
-    border: none;
-    background-color:#004BA0;
-}
-
-.btnChamadaVirtual.Ativada table {
-    color: white;
-}
-
 .btnChamadaVirtual {
     width: -webkit-fill-available;
     text-align: left;
     vertical-align: top;
     border: none;
     background-color: whitesmoke;
+
 }
 
 .btnChamadaVirtual>table {
@@ -126,32 +111,3 @@ div#barraDePesquisa {
     --bs-nav-pills-link-active-color: #fff;
     --bs-nav-pills-link-active-bg: #3b3bfb;
 }
-.form-check-reverse .form-check-input {
-    margin-right: 0em;
-}
-.form-switch.form-check-reverse .form-check-input {
-    margin-right: 0em;
-}
-.form-check-input:checked {
-    background-color: var(--cor-destaque);
-    border-color: var(--cor-destaque);
-}
-
-.d-flex {
-    background-color: #2222FF;
-}
-.btn-primary{
-    background-color: #2222FF;
-}
-.btn-secondary{
-    background-color: #2222FF;
-
-}
-.btn{
-    border: 1px solid #2222FF;
-}
-.text-primary {
-    --bs-text-opacity: 1;
-    color: #2222FF !important;
-}
-
