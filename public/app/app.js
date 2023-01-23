@@ -142,7 +142,7 @@ auth.onAuthStateChanged(user => {
     });
 
     chamadaVirtualModalDialog.addEventListener('show.bs.modal', event => {
-      atualizarLayoutDialogCV();
+      atualizarLayoutDialogCV(user.uid);
       configurarSwitchAtivacaoChamadaVirtual(user, chamadaRef)
       chamadaRef
         .doc(`${user.uid}`)
@@ -512,7 +512,7 @@ function atualizarLayoutDialogCV(code) {
     secaoChamadaDesativada.hidden = true;
     secaoChamadaOffline.hidden = false;
   }
-  else if (chamadaVirtualAtivadaServer)
+  else if (chamadaVirtualAtivadaServer == true)
   {
     //$('#ativarCVSwitch').addClass('checked');
     $('#chamadaVirtualDialogTitle').html(`Chamada Virtual do ${mesChamadaVirtualServer + 1}º Mês`);
