@@ -2,7 +2,7 @@
   "name": "Monissores",
   "short_name": "Monissor",
   "theme_color": "#0F0ADE",
-  "background_color": "#0F0ADE",
+  "background_color": "#F0F2F5",
   "start_url": "./",
   "id": "demo-1",
   "display": "standalone",

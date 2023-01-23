@@ -528,8 +528,8 @@ function atualizarLayoutDialogCV(code) {
     {
       qrCode = new QRCode(document.getElementById("qrcode"), {
         text: inputLinkChamadaVirtual.value,
-        width: 128,
-        height: 128,
+        width: 192,
+        height: 192,
         colorDark : "#000000",
         colorLight : "#ffffff",
         correctLevel : QRCode.CorrectLevel.H,
