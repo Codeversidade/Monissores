@@ -457,26 +457,32 @@
           <!--Corpo da Caixa de Diálogo-->
           <div class="modal-body">
             <!--É AQUI QUE FICA A TELA DAS CONFIGS-->
+            <section id="configsPadraoModalDialog">
 
-            <!--PADRÂO-->
-            <div id="userDetails"></div>
-            <button
-              id="deslogarDoGoogleBtn"
-              data-dismiss="modal"
-              data-bs-dismiss="modal"
-              class="btn btn-primary"
-              style="margin: 5px;"
-            >
-            <div>Sair da conta do Google</div> <span class="material-symbols-outlined">logout</span>
-            </button>
-
-            <button class="btn btn-danger" disabled="true" style="margin: 5px; border: none;"> <div>Deletar minha conta</div><span class="material-symbols-outlined">delete_forever</span></button>
-            <br>
-            <a href="https://github.com/iCarlosCode/Monissores/blob/main/PRIVACY-POLICY.md" target="_blank" style="margin: 5px;">Política de Privacidade</a>
-            
-            <a href="https://github.com/iCarlosCode/Monissores/blob/main/TERMS-OF-SERVICE.md" target="_blank">Termos de Uso</a>
-            <br>
-            <!--ul id="alunosLista"></ul-->
+              
+              <!--PADRÂO-->
+              <div id="userDetails"></div>
+              <button
+                id="deslogarDoGoogleBtn"
+                data-dismiss="modal"
+                data-bs-dismiss="modal"
+                class="btn btn-primary"
+                style="margin: 5px;"
+              >
+              <div>Sair da conta do Google</div> <span class="material-symbols-outlined">logout</span>
+              </button>
+  
+              <button id="btnDeletarConta" class="btn btn-danger"  style="margin: 5px; border: none;"> <div>Quero Deletar minha conta</div><span class="material-symbols-outlined">delete_forever</span></button>
+              <br>
+              <a href="https://github.com/iCarlosCode/Monissores/blob/main/PRIVACY-POLICY.md" target="_blank" style="margin: 5px;">Política de Privacidade</a>
+              
+              <a href="https://github.com/iCarlosCode/Monissores/blob/main/TERMS-OF-SERVICE.md" target="_blank">Termos de Uso</a>
+              <br>
+              <!--ul id="alunosLista"></ul-->
+            </section>
+            <section id="configsDeletarContaModalDialog" hidden="true">
+                <p>Envie um e-mail para codeversidade+contato@gmail.com solicitando que sua conta seja deletada e excluiremos a sua conta em até dois dias úteis. Esse é um procedimento para evitar que sua conta seja deletada acidentalmente.</p>
+            </section>
           </div>
 
           <!--Rodapé da Caixa de Diálogo-->

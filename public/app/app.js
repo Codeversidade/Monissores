@@ -117,6 +117,7 @@ auth.onAuthStateChanged(user => {
     editarAlunoBtn.onclick = () => {
       configurarBtnEditar(user, alunosRef);
     };
+    $('#btnDeletarConta').on('click', () => configurarBtnDeletarConta(user));
     
     $('#btnCompartilharLinkChamadaVirtual').on('click', () => compartilharLinkChamadaVirtual())
     addAlunoModalDialog.addEventListener('show.bs.modal', event => 
@@ -683,6 +684,8 @@ function configurarDialogPushState(id, dialog_id, url) {
     {
         history.pushState({id:id, dialog_id: dialog_id}, dialog_id, `?${url}`);
     }
+    configsPadraoModalDialog.hidden = false;
+    configsDeletarContaModalDialog.hidden = true;
 }
 
 function configurarTabsPushState() {
@@ -849,6 +852,11 @@ function configurarBtnRemover(user, alunosRef) {
   });
   itensSelecionadosListGroup = [];
   mudarEstadosDaInterfaceNaSelecao(0, 0);
+}
+
+function configurarBtnDeletarConta(user) {
+  configsPadraoModalDialog.hidden = true;
+  configsDeletarContaModalDialog.hidden = false;
 }
 
 function configurarBtnDesselecionar() {
