@@ -1250,3 +1250,8 @@ function configurarTitlyMonissor(){
     console.log('ta funfando')
   })
 }
+
+
+function obterAlunosDoMonitor(monitor) {
+    // TODO pegar do banco de dados o monitor e filtrar para pegar os alunos
+}
