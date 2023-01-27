@@ -197,7 +197,7 @@ auth.onAuthStateChanged(user => {
     });
     
     configurarBtnDesselecionar();
-    desgrudar()
+    //desgrudar()
     console.log(removeAlunoModalDialogBtn);
     console.log(editarAlunoBtn);
     configurarSelecaoInicialDosItensListGroup();
@@ -251,8 +251,8 @@ function desgrudar(){
   var alturaCabecalho = document.getElementById("cabecalho").offsetHeight
   var divConteudo = document.getElementById('linhaAbasContent')
   divConteudo.style.marginTop = alturaCabecalho + "px";
-  //console.log(alturaCabecalho)
-  //console.log(divConteudo)
+  console.log(alturaCabecalho)
+  console.log(divConteudo)
 }
 //////////////////////////////////////////////
 
@@ -1227,7 +1227,6 @@ function exibirListaDeAlunos(user, collectionRef, listGroup, frequenciaIndex) {
         escolherFunc()//exibe a lista de acordo com a barra de pesquisa
       }
     });
-    desgrudar()
   return unsubscribe;
 }
 
