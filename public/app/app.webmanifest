@@ -54,5 +54,22 @@
       "platform": "itunes",
       "url": "https://itunes.apple.com/app/example-app1/id123456789"
     }
+  ],
+  "screenshots": [
+    {
+      "src": "screenshots/1.png",
+      "sizes": "1080x1872",
+      "type": "image/png"
+    },
+    {
+      "src": "screenshots/2.png",
+      "sizes": "1088x1872",
+      "type": "image/png"
+    },
+    {
+      "src": "screenshots/3.png",
+      "sizes": "1080x1872",
+      "type": "image/png"
+    }
   ]
 }
