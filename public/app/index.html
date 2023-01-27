@@ -7,6 +7,7 @@
   <!--  Web App Manifest include o App é PWA  -->
   <link rel="manifest" href="app.webmanifest">
   <meta name="theme-color" content="#0F0ADE"/>
+  <meta name="theme-color" content="#0F0ADE" media="(prefers-color-scheme: dark)">
   <!-- iOS and iPadOS icon -->
   <link rel="apple-touch-icon" href="/icons/192.png">
   <link rel="shortcut icon" href="./icons/192.png" type="image/x-icon">
@@ -74,7 +75,7 @@
 
     <div style="position: absolute">
       <!--Cabeçalho-->
-      <div class="fixed-top  text-light shadow bg-principal" id="cabecalho">
+      <div class="fixed-top  text-light shadow bg-principal" id="cabecalho">  
         <!--Linha com o texto da nav bar e botões-->
         <!--Barra de pesquisa-->
         <div id="barraDePesquisa">
@@ -101,8 +102,8 @@
             </button>
             <!--Aqui é o point-->
             
-            <a id="navBarTitulo" class="navbar-brand" href="#">
-              Monissor
+            <a id="navBarTitulo" class="navbar-brand">
+              Monissores
             </a>
             
             
@@ -247,7 +248,7 @@
       <!--Aqui é definido o Conteúdo de Cada Tab-->
       <div
         class="tab-content bg-white"
-        
+        style="margin-top: 96px"
         id="linhaAbasContent"
       >
       
@@ -457,26 +458,33 @@
           <!--Corpo da Caixa de Diálogo-->
           <div class="modal-body">
             <!--É AQUI QUE FICA A TELA DAS CONFIGS-->
+            <section id="configsPadraoModalDialog">
 
-            <!--PADRÂO-->
-            <div id="userDetails"></div>
-            <button
-              id="deslogarDoGoogleBtn"
-              data-dismiss="modal"
-              data-bs-dismiss="modal"
-              class="btn btn-primary"
-              style="margin: 5px;"
-            >
-            <div>Sair da conta do Google</div> <span class="material-symbols-outlined">logout</span>
-            </button>
-
-            <button class="btn btn-danger" disabled="true" style="margin: 5px; border: none;"> <div>Deletar minha conta</div><span class="material-symbols-outlined">delete_forever</span></button>
-            <br>
-            <a href="https://github.com/iCarlosCode/Monissores/blob/main/PRIVACY-POLICY.md" target="_blank" style="margin: 5px;">Política de Privacidade</a>
-            
-            <a href="https://github.com/iCarlosCode/Monissores/blob/main/TERMS-OF-SERVICE.md" target="_blank">Termos de Uso</a>
-            <br>
-            <!--ul id="alunosLista"></ul-->
+              
+              <!--PADRÂO-->
+              <div id="userDetails"></div>
+              <button
+                id="deslogarDoGoogleBtn"
+                data-dismiss="modal"
+                data-bs-dismiss="modal"
+                class="btn btn-primary"
+                style="margin: 5px;"
+              >
+              <div>Sair da conta do Google</div> <span class="material-symbols-outlined">logout</span>
+              </button>
+  
+              <button id="btnDeletarConta" class="btn btn-danger"  style="margin: 5px; border: none;"> <div>Quero Deletar minha conta</div><span class="material-symbols-outlined">delete_forever</span></button>
+              <br>
+              <a href="https://github.com/iCarlosCode/Monissores/blob/main/PRIVACY-POLICY.md" target="_blank" style="margin: 5px;">Política de Privacidade</a>
+              
+              <a href="https://github.com/iCarlosCode/Monissores/blob/main/TERMS-OF-SERVICE.md" target="_blank">Termos de Uso</a>
+              <br>
+              <!--ul id="alunosLista"></ul-->
+            </section>
+            <!--Aqui fica a tela pra pessoa deletar a conta-->
+            <section id="configsDeletarContaModalDialog" hidden="true">
+                <p>Envie um e-mail para codeversidade+contato@gmail.com solicitando que sua conta seja deletada e excluiremos a sua conta em até dois dias úteis. Esse é um procedimento para evitar que sua conta seja deletada acidentalmente.</p>
+            </section>
           </div>
 
           <!--Rodapé da Caixa de Diálogo-->

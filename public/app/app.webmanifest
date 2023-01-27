@@ -2,9 +2,10 @@
   "name": "Monissores",
   "short_name": "Monissor",
   "theme_color": "#0F0ADE",
-  "background_color": "#0F0ADE",
+  "background_color": "#F0F2F5",
   "start_url": "./",
   "id": "demo-1",
+  "iarc_rating_id": "9dfcbf4a-503c-4faf-89ef-6bda046dfb5b",
   "display": "standalone",
   "scope": "./",
   "icons": [
@@ -40,8 +41,41 @@
   "display_override": [
     "standalone"
   ],
-  "prefer_related_applications": false,
   "categories": [
-    "education"
+    "education",
+    "productivity",
+    "utilities"
+  ],
+  "related_applications": [
+    {
+      "platform": "play",
+      "url": "https://play.google.com/store/apps/details?id=app.web.monissores.twa",
+      "id": "app.web.monissores.twa"
+    }
+  ],
+  "prefer_related_applications": true,
+  "screenshots": [
+    {
+      "src": "screenshots/1.png",
+      "sizes": "1080x1872",
+      "type": "image/png"
+    },
+    {
+      "src": "screenshots/2.png",
+      "sizes": "1088x1872",
+      "type": "image/png"
+    },
+    {
+      "src": "screenshots/3.png",
+      "sizes": "1080x1872",
+      "type": "image/png"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Home",
+      "url": "/",
+      "description": "Acesse o app Monissores"
+    }
   ]
 }

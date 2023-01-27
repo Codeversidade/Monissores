@@ -2,5 +2,25 @@
       "relation": ["delegate_permission/common.handle_all_urls"],
       "target" : { "namespace": "android_app", "package_name": "app.web.monissores.twa",
                    "sha256_cert_fingerprints": ["AC:46:1F:8E:DB:94:30:5A:DE:0F:6A:59:C1:6F:D0:3A:7B:4F:57:D1:C7:1D:87:90:BF:91:25:0B:29:6F:E9:C3"] }
-    }
+    },
+    {
+        "relation": ["delegate_permission/common.handle_all_urls"],
+        "target": {
+          "namespace": "android_app",
+          "package_name": "app.web.monissores.twa",
+          "sha256_cert_fingerprints": [
+            "D8:C6:B7:91:0F:DA:B0:E0:2C:6C:25:CF:35:45:D6:19:E9:72:1D:69:07:FE:AC:B6:77:E4:14:8D:1D:65:D5:FE"
+          ]
+        }
+      },
+      {
+        "relation": ["delegate_permission/common.handle_all_urls"],
+        "target": {
+          "namespace": "android_app",
+          "package_name": "app.web.monissores.twa",
+          "sha256_cert_fingerprints": [
+            "CB:22:41:E2:30:DA:5C:1E:B8:CE:4D:F1:04:22:A0:C6:41:66:0B:74:35:AF:A8:C1:31:09:4E:03:F0:DC:76:AA"
+          ]
+        }
+      }
 ]

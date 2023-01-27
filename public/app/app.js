@@ -117,6 +117,7 @@ auth.onAuthStateChanged(user => {
     editarAlunoBtn.onclick = () => {
       configurarBtnEditar(user, alunosRef);
     };
+    $('#btnDeletarConta').on('click', () => configurarBtnDeletarConta(user));
     
     $('#btnCompartilharLinkChamadaVirtual').on('click', () => compartilharLinkChamadaVirtual())
     addAlunoModalDialog.addEventListener('show.bs.modal', event => 
@@ -196,7 +197,7 @@ auth.onAuthStateChanged(user => {
     });
     
     configurarBtnDesselecionar();
-    desgrudar()
+    //desgrudar()
     console.log(removeAlunoModalDialogBtn);
     console.log(editarAlunoBtn);
     configurarSelecaoInicialDosItensListGroup();
@@ -205,8 +206,8 @@ auth.onAuthStateChanged(user => {
     buttonSubtrairFrequencia(user, alunosRef);
     configuraBtnMes(user, alunosRef);
     configurarPopState()
-    configurarTitlyMonissor()
     configurarTabsPushState()
+    configurarBtnSelecionarTudo()
 
     // Atualiza o Estado da chamada virtual
     unsubscribeEstadoCV = monitorarEstadoChamadaVirtual(user, chamadaRef);
@@ -250,6 +251,8 @@ function desgrudar(){
   var alturaCabecalho = document.getElementById("cabecalho").offsetHeight
   var divConteudo = document.getElementById('linhaAbasContent')
   divConteudo.style.marginTop = alturaCabecalho + "px";
+  console.log(alturaCabecalho)
+  console.log(divConteudo)
 }
 //////////////////////////////////////////////
 
@@ -527,8 +530,8 @@ function atualizarLayoutDialogCV(code) {
     {
       qrCode = new QRCode(document.getElementById("qrcode"), {
         text: inputLinkChamadaVirtual.value,
-        width: 128,
-        height: 128,
+        width: 192,
+        height: 192,
         colorDark : "#000000",
         colorLight : "#ffffff",
         correctLevel : QRCode.CorrectLevel.H,
@@ -637,12 +640,13 @@ function mudarEstadosDaInterfaceNaSelecao(n, index) {
     if(document.getElementById('searchbar').value != ""){
       escolherFunc()
       configurarBtnToShearch();
+      buttonsExtra[2].hidden = !ativacao;
     }else{
       navBarTitulo.innerHTML = 'Monissores';
     }
     ativacao = true;
   } else if (n == 1) {
-    navBarTitulo.innerHTML = `${n} item selecionado`;
+    navBarTitulo.innerHTML = `${n} aluno`;
     ativacao = false;
   } 
   
@@ -669,13 +673,18 @@ function mudarEstadosDaInterfaceNaSelecao(n, index) {
 
   if (n > 1) {
     buttonsExtra[1].hidden = !ativacao;
-    navBarTitulo.innerHTML = `${n} itens selecionados`;
+    navBarTitulo.innerHTML = `${n} alunos`;
+  }
+
+  if (((itensSelecionadosListGroup.length == $('.list-group-item').length / 4) &&(itensSelecionadosListGroup.length != 0)) || (document.getElementById('searchbar').value != "")){
+    buttonsExtra[2].hidden = true;
   }
 
   if (itensSelecionadosListGroup.length == 0 && history.state.id == 'selecao')
   {
       history.go(-1);
   }
+  
 }
 
 function configurarDialogPushState(id, dialog_id, url) {
@@ -683,6 +692,8 @@ function configurarDialogPushState(id, dialog_id, url) {
     {
         history.pushState({id:id, dialog_id: dialog_id}, dialog_id, `?${url}`);
     }
+    configsPadraoModalDialog.hidden = false;
+    configsDeletarContaModalDialog.hidden = true;
 }
 
 function configurarTabsPushState() {
@@ -851,6 +862,11 @@ function configurarBtnRemover(user, alunosRef) {
   mudarEstadosDaInterfaceNaSelecao(0, 0);
 }
 
+function configurarBtnDeletarConta(user) {
+  configsPadraoModalDialog.hidden = true;
+  configsDeletarContaModalDialog.hidden = false;
+}
+
 function configurarBtnDesselecionar() {
   $("#desselecionarTudoBtn").on("click", function (event) {
     event.preventDefault();
@@ -869,6 +885,21 @@ function configurarBtnDesselecionar() {
         history.go(-1);
     }
   });
+}
+
+function configurarBtnSelecionarTudo(){
+  $("#selecionarTudoBtn").on("click", function(e){
+    var id = itensSelecionadosListGroup[0].attr('id');
+    console.log(id)
+    itensSelecionadosListGroup = [];
+    itensSelecionadosListGroup.push( $(`#${id}`))
+    itensSelecionadosListGroup[0].siblings().addClass('active');
+    itensSelecionadosListGroup[0].siblings().each(function (index, element){
+      itensSelecionadosListGroup.push($(`#${element.id}`));
+      $(`#${element.id}`).find('div')[1].style.display="none";
+    })
+    mudarEstadosDaInterfaceNaSelecao(itensSelecionadosListGroup.length, getMesISLG(itensSelecionadosListGroup[0]))
+  })
 }
 
 function sanitizarInputs(nome, matricula, toast_id, mensagem) {
@@ -1234,11 +1265,6 @@ function attFrequencia(user, alunosRef, matricula, mes, valorFrec) {
     });
 }
 
-function configurarTitlyMonissor(){
-  $("#navBarTitulo").on('click', function(e){
-    e.preventDefault()
-    configurarBtnComeBack()
-    escolherFunc()
-    console.log('ta funfando')
-  })
+function obterAlunosDoMonitor(monitor) {
+    // TODO pegar do banco de dados o monitor e filtrar para pegar os alunos
 }
