@@ -206,8 +206,8 @@ auth.onAuthStateChanged(user => {
     buttonSubtrairFrequencia(user, alunosRef);
     configuraBtnMes(user, alunosRef);
     configurarPopState()
-    configurarTitlyMonissor()
     configurarTabsPushState()
+    configurarBtnSelecionarTudo()
 
     // Atualiza o Estado da chamada virtual
     unsubscribeEstadoCV = monitorarEstadoChamadaVirtual(user, chamadaRef);
@@ -251,6 +251,8 @@ function desgrudar(){
   var alturaCabecalho = document.getElementById("cabecalho").offsetHeight
   var divConteudo = document.getElementById('linhaAbasContent')
   divConteudo.style.marginTop = alturaCabecalho + "px";
+  //console.log(alturaCabecalho)
+  //console.log(divConteudo)
 }
 //////////////////////////////////////////////
 
@@ -638,6 +640,7 @@ function mudarEstadosDaInterfaceNaSelecao(n, index) {
     if(document.getElementById('searchbar').value != ""){
       escolherFunc()
       configurarBtnToShearch();
+      buttonsExtra[2].hidden = !ativacao;
     }else{
       navBarTitulo.innerHTML = 'Monissores';
     }
@@ -671,6 +674,14 @@ function mudarEstadosDaInterfaceNaSelecao(n, index) {
   if (n > 1) {
     buttonsExtra[1].hidden = !ativacao;
     navBarTitulo.innerHTML = `${n} itens selecionados`;
+  }
+
+  if (itensSelecionadosListGroup.length == $('.list-group-item').length / 4){
+    buttonsExtra[2].hidden = !ativacao;
+  }
+  
+  if(document.getElementById('searchbar').value != ""){
+    buttonsExtra[2].hidden = !ativacao;
   }
 
   if (itensSelecionadosListGroup.length == 0 && history.state.id == 'selecao')
@@ -877,6 +888,21 @@ function configurarBtnDesselecionar() {
         history.go(-1);
     }
   });
+}
+
+function configurarBtnSelecionarTudo(){
+  $("#selecionarTudoBtn").on("click", function(e){
+    var id = itensSelecionadosListGroup[0].attr('id');
+    console.log(id)
+    itensSelecionadosListGroup = [];
+    itensSelecionadosListGroup.push( $(`#${id}`))
+    itensSelecionadosListGroup[0].siblings().addClass('active');
+    itensSelecionadosListGroup[0].siblings().each(function (index, element){
+      itensSelecionadosListGroup.push($(`#${element.id}`));
+      $(`#${element.id}`).find('div')[1].style.display="none";
+    })
+    mudarEstadosDaInterfaceNaSelecao(itensSelecionadosListGroup.length, getMesISLG(itensSelecionadosListGroup[0]))
+  })
 }
 
 function sanitizarInputs(nome, matricula, toast_id, mensagem) {
@@ -1201,6 +1227,7 @@ function exibirListaDeAlunos(user, collectionRef, listGroup, frequenciaIndex) {
         escolherFunc()//exibe a lista de acordo com a barra de pesquisa
       }
     });
+    desgrudar()
   return unsubscribe;
 }
 
@@ -1241,16 +1268,6 @@ function attFrequencia(user, alunosRef, matricula, mes, valorFrec) {
       editarAlunoFrequencia(user, alunosRef, matricula, frequencia);
     });
 }
-
-function configurarTitlyMonissor(){
-  $("#navBarTitulo").on('click', function(e){
-    e.preventDefault()
-    configurarBtnComeBack()
-    escolherFunc()
-    console.log('ta funfando')
-  })
-}
-
 
 function obterAlunosDoMonitor(monitor) {
     // TODO pegar do banco de dados o monitor e filtrar para pegar os alunos
