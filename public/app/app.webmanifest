@@ -41,20 +41,19 @@
   "display_override": [
     "standalone"
   ],
-  "prefer_related_applications": true,
   "categories": [
-    "education"
+    "education",
+    "productivity",
+    "utilities"
   ],
   "related_applications": [
     {
       "platform": "play",
       "url": "https://play.google.com/store/apps/details?id=app.web.monissores.twa",
       "id": "app.web.monissores.twa"
-    }, {
-      "platform": "itunes",
-      "url": "https://itunes.apple.com/app/example-app1/id123456789"
     }
   ],
+  "prefer_related_applications": true,
   "screenshots": [
     {
       "src": "screenshots/1.png",
@@ -70,6 +69,13 @@
       "src": "screenshots/3.png",
       "sizes": "1080x1872",
       "type": "image/png"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Home",
+      "url": "/",
+      "description": "Acesse o app Monissores"
     }
   ]
 }
