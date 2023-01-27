@@ -1,3 +1,5 @@
+//import * as udb from "./utils/db.js";
+
 const deslogarDoGoogleBtn = document.getElementById('deslogarDoGoogleBtn');
 const configsBtn = document.getElementById('configsBtn');
 const addAluno = document.getElementById('addAluno');
@@ -72,12 +74,17 @@ firebase.firestore().enablePersistence()
       }
 });
 let alunosRef;
+let chamadaRef;
+let monitoresRef;
+let alunosMonitorRef;
+var alunos;
 let unsubscribeLA;
 let unsubscribeLCV;
 let unsubscribeEstadoCV;
 
 auth.onAuthStateChanged(user => {
   if (user) {
+    
     //console.log(firebase)
     // Quando o usuário Logar essa parte será executada
     secaoPrincipal.hidden = false;
@@ -88,9 +95,14 @@ auth.onAuthStateChanged(user => {
 
     alunosRef = db.collection('alunos');
     chamadaRef = db.collection('chamada');
-
-    /*setarAluno(user, alunosRef, 'Luiz Algusto', 2020123459);
-    setarAluno(user, alunosRef, 'Inácio Estácio de Sá', 2020123460);
+    monitoresRef = db.collection('monitores');
+    alunosMonitorRef = db.collection('monitores').doc(user.uid).collection('alunos');
+    
+    /*udb.criarMonitorNoBD(monitoresRef, alunosRef, user);
+    udb.exibirListaDeAlunosChamadaVirtualTeste(user, monitoresRef);
+    udb.p();*/
+    //setarAluno(user, alunosMonitorRef, 'Testoslvaldo Algusto', 20201234593, [0, 0, 0, 0]);
+    /*setarAluno(user, alunosRef, 'Inácio Estácio de Sá', 2020123460);
     setarAluno(user, alunosRef, 'Florisvalda Hortência Tulipa', 2020123463);*/
     salvarAlunoBtn.onclick = () => {
       salvarAluno(
@@ -198,8 +210,7 @@ auth.onAuthStateChanged(user => {
     
     configurarBtnDesselecionar();
     //desgrudar()
-    console.log(removeAlunoModalDialogBtn);
-    console.log(editarAlunoBtn);
+    
     configurarSelecaoInicialDosItensListGroup();
     configurarSelecaoDosItensListGroupClick();
     buttonAdicionarFrequencia(user, alunosRef);
@@ -212,10 +223,13 @@ auth.onAuthStateChanged(user => {
     // Atualiza o Estado da chamada virtual
     unsubscribeEstadoCV = monitorarEstadoChamadaVirtual(user, chamadaRef);
     // Pega os dados dos alunos cadastrados no servidor e exibe eles na tela
-    exibirListaDeAlunos(user, alunosRef, alunosLista1, 0);
-    exibirListaDeAlunos(user, alunosRef, alunosLista2, 1);
-    exibirListaDeAlunos(user, alunosRef, alunosLista3, 2);
-    unsubscribeLA = exibirListaDeAlunos(user, alunosRef, alunosLista4, 3);
+    exibirListaDeAlunos(user, monitoresRef, alunosLista1, 0);
+    exibirListaDeAlunos(user, monitoresRef, alunosLista2, 1);
+    exibirListaDeAlunos(user, monitoresRef, alunosLista3, 2);
+    unsubscribeLA = exibirListaDeAlunos(user, monitoresRef, alunosLista4, 3)
+    
+    
+
   } else {
     //  Quando o usuário estiver deslogado essa parte será executada
     secaoPrincipal.hidden = true;
@@ -255,15 +269,74 @@ function desgrudar(){
   console.log(divConteudo)
 }
 //////////////////////////////////////////////
+function setarAlunoV2(user, collectionRef, nome, matricula, frequencia, modoEdicao = false) {
+    var key = `${user.uid}.A${matricula}`;//'B0LiSdSv1MMdy0VxjdswpPkyOXH2.A2020687735';//
+    console.log(alunos[key]);
+    var alunoExiste = alunos.hasOwnProperty(key);
+    
+    if (alunoExiste === false && modoEdicao === false) {
+        alunos[key] = {
+          uid: user.uid,
+          nome: nome,
+          matricula: matricula,
+          frequencia: frequencia,
+        }
+    }
+    else if (alunoExiste === true && modoEdicao === true) {
+      alunos[key] = {
+        uid: user.uid,
+        nome: nome,
+        matricula: matricula,
+        frequencia: frequencia,
+      }
+    }
+    else {
+      console.log("Aluno já existe e não estamos em modo de edição");
+      return false;
+    }
 
-function setarAluno(user, collectionRef, nome, matricula, frequencia) {
+    atualizarAlunos(user, collectionRef, alunos, `Adicionamos ou editamos A${matricula}.`);
+    return true;
+}
+
+function atualizarAlunos(user, collectionRef, alunos, mensagem, tarefa = () => {}) {
+  collectionRef
+    .doc(`${user.uid}`)
+    .set({
+        uid: user.uid,
+        alunos: alunos
+    })
+    .then(() => {
+      console.log(mensagem);
+      tarefa();
+    })
+    .catch(error => {
+      console.log('Error ao atualizar aluno:', error);
+    });;
+}
+
+function removerAlunoV2(user, collectionRef, matricula, tarefa = () => {}) {
+    var key = `${user.uid}.A${matricula}`;//'B0LiSdSv1MMdy0VxjdswpPkyOXH2.A2020687735';//
+    console.log(alunos[key]);
+    var alunoExiste = alunos.hasOwnProperty(key);
+
+    if (alunoExiste === true) {
+        delete alunos[key];
+    }
+
+    atualizarAlunos(user, collectionRef, alunos, `Deletamos A${matricula}.`, tarefa);
+}
+
+
+/*function setarAluno(user, collectionRef, nome, matricula, frequencia) {
+  let alunoExiste = false;
   collectionRef
     .doc(`${user.uid}.A${matricula}`)
     .get({source: 'cache'})
     .then(doc => {
-      let alunoExiste = doc.exists;
+      alunoExiste = doc.exists;
 
-      if (!alunoExiste) {
+      if (alunoExiste === false) {
         collectionRef
           .doc(`${user.uid}.A${matricula}`)
           .set({
@@ -301,9 +374,9 @@ function setarAluno(user, collectionRef, nome, matricula, frequencia) {
             console.error('Error adding document: ', e);
           });
     });
-}
+}*/
 
-function removerAluno(user, collectionRef, matricula, tarefa = () => {}) {
+/*function removerAluno(user, collectionRef, matricula, tarefa = () => {}) {
   collectionRef
     .doc(`${user.uid}.A${matricula}`)
     .delete()
@@ -314,9 +387,13 @@ function removerAluno(user, collectionRef, matricula, tarefa = () => {}) {
     .catch(error => {
       console.log('Error deletting document:', error);
     });
+}*/
+// ERA V2
+function editarAlunoFrequenciaV2(user, collectionRef, matricula, frequencia) {
+    setarAlunoV2(user, collectionRef, alunos[`${user.uid}.A${matricula}`].nome, matricula, frequencia, true);
 }
 
-function editarAlunoFrequencia(user, collectionRef, matricula, frequencia) {
+/*function editarAlunoFrequencia(user, collectionRef, matricula, frequencia) {
   collectionRef
     .doc(`${user.uid}.A${matricula}`)
     .update({
@@ -329,7 +406,7 @@ function editarAlunoFrequencia(user, collectionRef, matricula, frequencia) {
       // Se der erro o documento provavelmente não existe.
       console.error('Error updating document: ', error);
     });
-}
+}*/
 
 function salvarAluno(
   user,
@@ -573,8 +650,8 @@ function atualizarLayoutDialogCV(code) {
 }
 
 function atualizarTextoBtnCV(code, tabAtual = null) {
-  console.log("A funcao TextoBTNCV foi chamada")
-  console.log(chamadaVirtualAtivadaServer)
+  /*console.log("A funcao TextoBTNCV foi chamada")
+  console.log(chamadaVirtualAtivadaServer)*/
   if (online && chamadaVirtualAtivadaServer == false) {
     $('#chamadaVirtual').removeClass("Ativada");
     $('#chamadaVirtual').html(
@@ -592,8 +669,8 @@ function atualizarTextoBtnCV(code, tabAtual = null) {
   }
   else if (online && chamadaVirtualAtivadaServer == true) {
     $('#chamadaVirtual').addClass("Ativada");
-    console.log("A chamada btn")
-    console.log($('#chamadaVirtual')[0])
+    /*console.log("A chamada btn")
+    console.log($('#chamadaVirtual')[0])*/
     $('#chamadaVirtual').html(
       `<table>
       <tr>
@@ -699,7 +776,7 @@ function configurarDialogPushState(id, dialog_id, url) {
 function configurarTabsPushState() {
   //$()'show.bs.modal'
   //tab-pane  
-  console.log("FuncFunciona")
+  //console.log("FuncFunciona")
   $('.nav').on('shown.bs.tab', function(event){
     tabAtual = $(event.target)[0];       // active tab
     var y = $(event.relatedTarget).text();  // previous tab
@@ -904,7 +981,7 @@ function configurarBtnSelecionarTudo(){
 
 function sanitizarInputs(nome, matricula, toast_id, mensagem) {
     var sucesso = true;
-    if (!/^[a-z A-Z]+$/.test(nome))
+    if (!/^[a-z A-Zà-úÀ-Úä-üÄ-Ü]+$/.test(nome))
     {
         mensagem = "O nome só pode conter letras.";
         sucesso = false;
@@ -1179,50 +1256,61 @@ function importarAlunosChamadaVirtual(user, alunosRef, chamadaRef) {
 function exibirListaDeAlunos(user, collectionRef, listGroup, frequenciaIndex) {
   let unsubscribe = collectionRef
     .where('uid', '==', user.uid)
-    .orderBy("nome", "asc")
+    //.orderBy("nome", "asc")
     .onSnapshot(querySnapshot => {
-      const items = querySnapshot.docs.map(doc => {
-        return `<a href="#" id="${doc.data().matricula}-${frequenciaIndex}"  
-        class="list-group-item list-group-item-action flex-column align-items-start">
-            <!--Dados aluno-->
-            <div style="float: left; margin-left: 10px;">
-              <span class="material-symbols-outlined">person</span>
-              <label " class= "user name ${
-                doc.data().matricula
-              }" style="vertical-align: top; max-width: 350px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${
-          doc.data().nome
-        }</label>
-              <br>
-              <span class="material-symbols-outlined">money</span>
-              <label class= "user matricula ${
-                doc.data().uid
-              }" style="vertical-align: top;">${doc.data().matricula}</label>
-            </div>
-            
-            <!--Botão-->
-            
-            <div class="btn-group" role="group" aria-label="Basic example" style="float: right; margin-right: 10px; margin-top: 10px;">
-                <button type="button" id="${
-                  doc.data().matricula
-                }-BD${frequenciaIndex}" value="${
-          doc.data().frequencia[frequenciaIndex]
-        }" class="btn btn-primary bd">-</button>
-                <button type="button" class="btn btn-primary bf">${
-                  doc.data().frequencia[frequenciaIndex]
-                }</button>
-                <button type="button" id="${
-                  doc.data().matricula
-                }-BA${frequenciaIndex}" value="${
-          doc.data().frequencia[frequenciaIndex]
-        }" class="btn btn-primary ba">+</button>
-            </div>
-          </a>`;
-      });
-      listGroup.innerHTML = items.join('');
-      //Caso barra de pesquisa esteja preechida
-      if(document.getElementById('searchbar').value != ""){
-        escolherFunc()//exibe a lista de acordo com a barra de pesquisa
-      }
+    
+      querySnapshot.forEach(doc => {
+        var alunosFiltrados = obterAlunosDoMonitor(doc.data())
+        alunos = doc.data().alunos;
+        if (frequenciaIndex == 0) {
+          //setarAlunoV2(user, alunosRef);
+          //setarAlunoV2(user, monitoresRef, "Testosvaldo", 1111111, [0, 0, 0, 0], false);
+          //removerAlunoV2(user, monitoresRef, 1111111);// rAlunoV2(user, monitoresRef, "Testosvaldo", 1111111, [0, 0, 0, 0], false);
+        }
+        const items = alunosFiltrados.map(doc => {//querySnapshot.docs.map(doc => {
+          
+          return `<a href="#" id="${doc.matricula}-${frequenciaIndex}"  
+          class="list-group-item list-group-item-action flex-column align-items-start">
+              <!--Dados aluno-->
+              <div style="float: left; margin-left: 10px;">
+                <span class="material-symbols-outlined">person</span>
+                <label " class= "user name ${
+                  doc.matricula
+                }" style="vertical-align: top; max-width: 350px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${
+            doc.nome
+          }</label>
+                <br>
+                <span class="material-symbols-outlined">money</span>
+                <label class= "user matricula ${
+                  doc.uid
+                }" style="vertical-align: top;">${doc.matricula}</label>
+              </div>
+              
+              <!--Botão-->
+              
+              <div class="btn-group" role="group" aria-label="Basic example" style="float: right; margin-right: 10px; margin-top: 10px;">
+                  <button type="button" id="${
+                    doc.matricula
+                  }-BD${frequenciaIndex}" value="${
+            doc.frequencia[frequenciaIndex]
+          }" class="btn btn-primary bd">-</button>
+                  <button type="button" class="btn btn-primary bf">${
+                    doc.frequencia[frequenciaIndex]
+                  }</button>
+                  <button type="button" id="${
+                    doc.matricula
+                  }-BA${frequenciaIndex}" value="${
+            doc.frequencia[frequenciaIndex]
+          }" class="btn btn-primary ba">+</button>
+              </div>
+            </a>`;
+        });
+        listGroup.innerHTML = items.join('');
+        //Caso barra de pesquisa esteja preechida
+        if(document.getElementById('searchbar').value != ""){
+          escolherFunc()//exibe a lista de acordo com a barra de pesquisa
+        }
+      }); 
     });
   return unsubscribe;
 }
@@ -1254,7 +1342,7 @@ function exibirListaDeAlunosChamadaVirtual(user, collectionRef) {
   return unsubscribe;
 }
 
-function attFrequencia(user, alunosRef, matricula, mes, valorFrec) {
+/*function attFrequencia(user, alunosRef, matricula, mes, valorFrec) {
   alunosRef
     .doc(`${user.uid}.A${matricula}`)
     .get({source: 'cache'})
@@ -1263,8 +1351,76 @@ function attFrequencia(user, alunosRef, matricula, mes, valorFrec) {
       frequencia[mes] = valorFrec;
       editarAlunoFrequencia(user, alunosRef, matricula, frequencia);
     });
+}*/
+
+function attFrequenciaV2(user, collectionRef, matricula, mes, valorFrec) {
+  var key = `${user.uid}.A${matricula}`;
+  alunos[key].frequencia[mes] = valorFrec;
+  editarAlunoFrequenciaV2(user, collectionRef, matricula, alunos[key].frequencia);
+  
+}
+
+function criarMonitorNoBD(monitorRef, alunosRef, user) {
+  monitorRef
+  .doc(`${user.uid}`)
+  .get()
+  .then(doc => {
+  })
+  .catch((error) => {
+    console.log("Monitor não cadastrado:", error);
+
+    alunosRef.where("uid", "==", user.uid)
+    .get()
+    .then((querySnapshot) => {
+      var alunos = {};
+      querySnapshot.forEach((doc) => {
+          alunos[doc.id] = doc.data();
+      });
+
+      monitorRef
+      .doc(`${user.uid}`)
+      .set({
+          uid: user.uid,
+          alunos: alunos
+      });
+    });
+  });
 }
 
 function obterAlunosDoMonitor(monitor) {
-    // TODO pegar do banco de dados o monitor e filtrar para pegar os alunos
+  //return monitor.alunos;
+  //return Object.values(monitor.alunos);
+  // Ordena a lista por nome
+  
+  return ordenarAlunos(Object.values(monitor.alunos));
+}
+
+function ordenarAlunos(alunos) {
+  var byName = alunos.slice(0);
+  byName.sort(function(a,b) {
+	var x = a.nome.toLowerCase();
+	var y = b.nome.toLowerCase();
+	return x < y ? -1 : x > y ? 1 : 0;
+});
+  return byName;
+}
+
+function exibirListaDeAlunosChamadaVirtualTeste(user, collectionRef) {
+  let unsubscribe = db.collection('alunos')
+    .where('uid', '==', user.uid)
+    .onSnapshot(querySnapshot => {
+        console.log(querySnapshot);
+          console.log("aaaaaaaaaaaaaaaaaaaaa")
+        querySnapshot.docs.forEach(doc => {
+          console.log(doc.data());
+          console.log("aaaaaaaaaaaaaaaaaaaaa")
+          obterAlunosDoMonitor(doc.data());
+        });
+      /*const items = querySnapshot.docs.map(doc => {
+          
+      });*/
+
+      });
+      console.log('bbbbbbbbbbbbb');
+  unsubscribe && unsubscribe();
 }

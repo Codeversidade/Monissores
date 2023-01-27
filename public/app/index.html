@@ -36,8 +36,8 @@
 
   <script>
     if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register("sw.js") // Cria o Service Worker do PWA
-        console.log("instalado")
+        /*navigator.serviceWorker.register("sw.js") // Cria o Service Worker do PWA
+        console.log("instalado")*/
     }
   </script>
 </head>
@@ -864,6 +864,6 @@
     
   </script>
   <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
-  <script src="app.js" defer></script>
+  <script type="module" src="app.js" defer></script>
 
 </html>
