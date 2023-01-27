@@ -646,7 +646,7 @@ function mudarEstadosDaInterfaceNaSelecao(n, index) {
     }
     ativacao = true;
   } else if (n == 1) {
-    navBarTitulo.innerHTML = `${n} item selecionado`;
+    navBarTitulo.innerHTML = `${n} aluno`;
     ativacao = false;
   } 
   
@@ -673,7 +673,7 @@ function mudarEstadosDaInterfaceNaSelecao(n, index) {
 
   if (n > 1) {
     buttonsExtra[1].hidden = !ativacao;
-    navBarTitulo.innerHTML = `${n} itens selecionados`;
+    navBarTitulo.innerHTML = `${n} alunos`;
   }
 
   if (((itensSelecionadosListGroup.length == $('.list-group-item').length / 4) &&(itensSelecionadosListGroup.length != 0)) || (document.getElementById('searchbar').value != "")){
