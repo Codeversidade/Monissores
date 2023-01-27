@@ -676,12 +676,8 @@ function mudarEstadosDaInterfaceNaSelecao(n, index) {
     navBarTitulo.innerHTML = `${n} itens selecionados`;
   }
 
-  if ((itensSelecionadosListGroup.length == $('.list-group-item').length / 4)&&(itensSelecionadosListGroup.length != 0)){
-    buttonsExtra[2].hidden = !ativacao;
-  }
-  
-  if(document.getElementById('searchbar').value != ""){
-    buttonsExtra[2].hidden = !ativacao;
+  if (((itensSelecionadosListGroup.length == $('.list-group-item').length / 4) &&(itensSelecionadosListGroup.length != 0)) || (document.getElementById('searchbar').value != "")){
+    buttonsExtra[2].hidden = true;
   }
 
   if (itensSelecionadosListGroup.length == 0 && history.state.id == 'selecao')
