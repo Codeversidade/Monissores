@@ -676,15 +676,13 @@ function mudarEstadosDaInterfaceNaSelecao(n, index) {
     navBarTitulo.innerHTML = `${n} itens selecionados`;
   }
 
-  if (itensSelecionadosListGroup.length == $('.list-group-item').length / 4){
+  if ((itensSelecionadosListGroup.length == $('.list-group-item').length / 4)&&(itensSelecionadosListGroup.length != 0)){
     buttonsExtra[2].hidden = !ativacao;
   }
   
   if(document.getElementById('searchbar').value != ""){
     buttonsExtra[2].hidden = !ativacao;
   }
-
-  telaLimpa()
 
   if (itensSelecionadosListGroup.length == 0 && history.state.id == 'selecao')
   {
@@ -1230,23 +1228,7 @@ function exibirListaDeAlunos(user, collectionRef, listGroup, frequenciaIndex) {
         escolherFunc()//exibe a lista de acordo com a barra de pesquisa
       }
     });
-    telaLimpa()
   return unsubscribe;
-}
-
-function telaLimpa(){
-  /*console.log($('.list-group-item'))
-  if($('.list-group-item').length == 0){
-    var buttonsPadrão = document.querySelectorAll('.buttonsPadrão');
-    var buttonsExtra = document.querySelectorAll('.buttonsExtra');
-
-    for (b = 0; b < buttonsPadrão.length; b++) {
-      buttonsPadrão[b].hidden = true;
-    }
-    for (b = 0; b < buttonsExtra.length; b++) {
-      buttonsExtra[b].hidden = true;
-    }
-  }*/
 }
 
 function monitorarEstadoChamadaVirtual(user, collectionRef) {
