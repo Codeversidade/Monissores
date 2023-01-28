@@ -213,9 +213,9 @@ auth.onAuthStateChanged(user => {
     
     configurarSelecaoInicialDosItensListGroup();
     configurarSelecaoDosItensListGroupClick();
-    buttonAdicionarFrequencia(user, alunosRef);
-    buttonSubtrairFrequencia(user, alunosRef);
-    configuraBtnMes(user, alunosRef);
+    buttonAdicionarFrequencia(user, monitoresRef);
+    buttonSubtrairFrequencia(user, monitoresRef);
+    configuraBtnMes(user, monitoresRef);
     configurarPopState()
     configurarTabsPushState()
     configurarBtnSelecionarTudo()
@@ -270,8 +270,63 @@ function desgrudar(){
 }
 //////////////////////////////////////////////
 // ERA V2
-function setarAluno(user, collectionRef, nome, matricula, frequencia, modoEdicao = false) {
-    var key = `${user.uid}.A${matricula}`;//'B0LiSdSv1MMdy0VxjdswpPkyOXH2.A2020687735';//
+
+function gerarAluno(nome, matricula, frequencia) {
+    return {
+      nome: nome,
+      matricula: matricula,
+      frequencia: frequencia
+    };
+}
+
+function setarAluno(user, collectionRef, alunos_novos, modoEdicao = false, matricula_nova = null, tarefa = () => {}) {
+
+    let key;
+    let alunoExiste;
+
+    if (Array.isArray(alunos_novos) === false) {
+      alunos_novos = [alunos_novos];
+    }
+    alunos_novos.forEach(aluno => {
+        key = `${user.uid}.A${aluno.matricula}`;
+        alunoExiste = alunos.hasOwnProperty(key);
+
+        if ((alunoExiste === false && modoEdicao === false) || (alunos_novos.length > 1)) {
+          alunos[key] = {
+            uid: user.uid,
+            nome: aluno.nome,
+            matricula: aluno.matricula,
+            frequencia: aluno.frequencia,
+          }
+        }
+        else if (alunoExiste === true && modoEdicao === true && matricula_nova === null) {
+          alunos[key] = {
+            uid: user.uid,
+            nome: aluno.nome,
+            matricula: aluno.matricula,
+            frequencia: aluno.frequencia,
+          }
+        }
+        else if (modoEdicao === true && matricula_nova !== null) {
+            var new_key = `${user.uid}.A${matricula_nova}`;
+            delete alunos[key];
+            alunos[new_key] = {
+              uid: user.uid,
+              nome: aluno.nome,
+              matricula: matricula_nova,
+              frequencia: aluno.frequencia,
+            }
+        }
+        else {
+          console.log("Aluno já existe e não estamos em modo de edição");
+          return false;
+        }
+    });
+
+
+
+
+    /*var key = `${user.uid}.A${matricula}`;//'B0LiSdSv1MMdy0VxjdswpPkyOXH2.A2020687735';//
     console.log(alunos[key]);
     var alunoExiste = alunos.hasOwnProperty(key);
     
@@ -283,7 +338,7 @@ function setarAluno(user, collectionRef, nome, matricula, frequencia, modoEdicao
           frequencia: frequencia,
         }
     }
-    else if (alunoExiste === true && modoEdicao === true) {
+    else if (alunoExiste === true && modoEdicao === true && matricula_nova === null) {
       alunos[key] = {
         uid: user.uid,
         nome: nome,
@@ -291,12 +346,22 @@ function setarAluno(user, collectionRef, nome, matricula, frequencia, modoEdicao
         frequencia: frequencia,
       }
     }
+    else if (modoEdicao === true && matricula_nova !== null) {
+        var new_key = `${user.uid}.A${matricula_nova}`;
+        delete alunos[key];
+        alunos[new_key] = {
+          uid: user.uid,
+          nome: nome,
+          matricula: matricula_nova,
+          frequencia: frequencia,
+        }
+    }
     else {
       console.log("Aluno já existe e não estamos em modo de edição");
       return false;
-    }
+    }*/
 
-    atualizarAlunos(user, collectionRef, alunos, `Adicionamos ou editamos A${matricula}.`);
+    atualizarAlunos(user, collectionRef, alunos, `Adicionamos ou editamos aluno(s).`, tarefa);
     return true;
 }
 
@@ -309,7 +374,6 @@ function atualizarAlunos(user, collectionRef, alunosNovos, mensagem, tarefa = ()
     })
     .then(() => {
       console.log(mensagem);
-      console.log(alunosNovos);
       tarefa();
     })
     .catch(error => {
@@ -317,16 +381,26 @@ function atualizarAlunos(user, collectionRef, alunosNovos, mensagem, tarefa = ()
     });
 }
 // ERA V2
-function removerAluno(user, collectionRef, matricula, tarefa = () => {}) {
-    var key = `${user.uid}.A${matricula}`;//'B0LiSdSv1MMdy0VxjdswpPkyOXH2.A2020687735';//
+function removerAluno(user, collectionRef, matriculas, tarefa = () => {}) {
+    let key;
+    if (Array.isArray(matriculas) === false) {
+      matriculas = [matriculas];
+    }
+    matriculas.forEach(matricula => {
+        key = `${user.uid}.A${matricula}`;
+        if (alunos.hasOwnProperty(key) === true) {
+            delete alunos[key];
+        }
+    });
+    /*var key = `${user.uid}.A${matricula}`;//'B0LiSdSv1MMdy0VxjdswpPkyOXH2.A2020687735';//
     //console.log(alunos[key]);
     var alunoExiste = alunos.hasOwnProperty(key);
 
     if (alunoExiste === true) {
         delete alunos[key];
-    }
+    }*/
 
-    atualizarAlunos(user, collectionRef, alunos, `Deletamos A${matricula}.`, tarefa);
+    atualizarAlunos(user, collectionRef, alunos, `Deletamos A${matriculas}.`, tarefa);
 }
 
 
@@ -378,7 +452,7 @@ function removerAluno(user, collectionRef, matricula, tarefa = () => {}) {
     });
 }*/
 
-/*function removerAluno(user, collectionRef, matricula, tarefa = () => {}) {
+function removerAlunoChamadaVirtual(user, collectionRef, matricula, tarefa = () => {}) {
   collectionRef
     .doc(`${user.uid}.A${matricula}`)
     .delete()
@@ -389,10 +463,12 @@ function removerAluno(user, collectionRef, matricula, tarefa = () => {}) {
     .catch(error => {
       console.log('Error deletting document:', error);
     });
-}*/
+}
+
 // ERA V2
 function editarAlunoFrequencia(user, collectionRef, matricula, frequencia) {
-    setarAluno(user, collectionRef, alunos[`${user.uid}.A${matricula}`].nome, matricula, frequencia, true);
+    var aluno = gerarAluno(alunos[`${user.uid}.A${matricula}`].nome, matricula, frequencia,)
+    setarAluno(user, collectionRef, aluno,  true);
 }
 
 /*function editarAlunoFrequencia(user, collectionRef, matricula, frequencia) {
@@ -423,12 +499,11 @@ function salvarAluno(
   var valido = sanitizarInputs(nome, matricula_nova, 'toastAdicionarAluno', "Novo aluno cadastrado.")
   if (valido)
   {
+    var aluno = gerarAluno(nameInput.value, parseInt(matriculaInput.value), frequencia);
     setarAluno(
       user,
       collectionRef,
-      nameInput.value,
-      parseInt(matriculaInput.value),
-      frequencia
+      aluno
     );
     nameInput.value = '';
     matriculaInput.value = '';
@@ -532,24 +607,24 @@ function configurarSelecaoDosItensListGroupClick() {
   });
 }
 
-function buttonAdicionarFrequencia(user, alunosRef) {
+function buttonAdicionarFrequencia(user, collectionRef) {
   $('.list-group').on('click', '.ba', function (event) {
     event.preventDefault();
     var matricula = parseInt(`${$(this)[0].id}`.slice(0));
     var mes = parseInt(`${$(this)[0].id}`.slice(-1));
     var valorFrec = parseInt(`${$(this)[0].value}`);
-    attFrequencia(user, alunosRef, matricula, mes, parseInt(valorFrec + 1));
+    attFrequencia(user, collectionRef, matricula, mes, parseInt(valorFrec + 1));
   });
 }
 
-function buttonSubtrairFrequencia(user, alunosRef) {
+function buttonSubtrairFrequencia(user, collectionRef) {
   $('.list-group').on('click', '.bd', function (event) {
     event.preventDefault();
     var matricula = parseInt(`${$(this)[0].id}`.slice(0));
     var mes = parseInt(`${$(this)[0].id}`.slice(-1));
     var valorFrec = parseInt(`${$(this)[0].value}`);
     if (valorFrec > 0) {
-      attFrequencia(user, monitoresRef, matricula, mes, parseInt(valorFrec - 1));
+      attFrequencia(user, collectionRef, matricula, mes, parseInt(valorFrec - 1));
     }
   });
 }
@@ -926,17 +1001,26 @@ function closeAllDialogs() {
 }
 
 
-function configurarBtnRemover(user, alunosRef) {
+function configurarBtnRemover(user, collectionRef) {
+    var matriculas = [];  
   itensSelecionadosListGroup.forEach(i => {
-    
-    removerAluno(user, alunosRef, getMatriculaISLG(i), () => {
+    matriculas.push(getMatriculaISLG(i));
+    /*removerAluno(user, alunosRef, getMatriculaISLG(i), () => {
       //$("#desselecionarTudoBtn").trigger("click");
       //go(-1)
       //history.replaceState({id:"pesquisa"}, "pesquisa", "?pesquisa")
       //history.pushState({id:"pesquisa"}, "pesquisa", "?pesquisa")
       //go(-1)
       $("#desselecionarTudoBtn").trigger("click");
-    });
+    });*/
+  });
+  removerAluno(user, collectionRef, matriculas, () => {
+    //$("#desselecionarTudoBtn").trigger("click");
+    //go(-1)
+    //history.replaceState({id:"pesquisa"}, "pesquisa", "?pesquisa")
+    //history.pushState({id:"pesquisa"}, "pesquisa", "?pesquisa")
+    //go(-1)
+    $("#desselecionarTudoBtn").trigger("click");
   });
   itensSelecionadosListGroup = [];
   mudarEstadosDaInterfaceNaSelecao(0, 0);
@@ -1001,7 +1085,26 @@ function sanitizarInputs(nome, matricula, toast_id, mensagem) {
     return sucesso;
 }
 
+
 function configurarBtnEditar(user, collectionRef) {
+  var matricula_velha = getMatriculaISLG(itensSelecionadosListGroup[0]);
+  var matricula_nova = parseInt(matriculaEditarAlunoInput.value);
+  var nome = nomeEditarAlunoInput.value;
+  var valido = sanitizarInputs(nome, matricula_nova, 'toastEditarAluno', "Cadastro editado.");
+
+  if (valido === true)
+  {
+    console.log("O doc existe");
+    console.log(alunos)
+    var aluno = gerarAluno(nome, matricula_velha, alunos[`${user.uid}.A${matricula_velha}`].frequencia);
+    setarAluno(user, collectionRef, aluno, true, matricula_nova, () => {
+      $("#desselecionarTudoBtn").trigger("click");
+    });
+  }
+}
+
+
+/*function configurarBtnEditarV2(user, collectionRef) {
   var matricula_velha = getMatriculaISLG(itensSelecionadosListGroup[0]);
   var matricula_nova = parseInt(matriculaEditarAlunoInput.value)
   var nome = nomeEditarAlunoInput.value;
@@ -1049,7 +1152,7 @@ function configurarBtnEditar(user, collectionRef) {
       mudarEstadosDaInterfaceNaSelecao(0, 0);
     });
   }
-}
+}*/
 //Facilitando botão de Pesquisa
 ////////////////////////////////////////
 function configurarBtnToShearch(){
@@ -1134,6 +1237,24 @@ function configuraBtnMes(user, collectionRef){
 }
 
 function configurarBtnRelatorio(user, collectionRef, frequenciaIndex){
+    let unsubscribe = collectionRef
+    .where('uid', '==', user.uid)
+    .onSnapshot({ includeMetadataChanges: true }, querySnapshot => {
+      querySnapshot.forEach(doc => {
+        var alunosFiltrados = obterAlunosDoMonitor(doc.data())
+        alunos = doc.data().alunos;
+
+        const items = alunosFiltrados.map(doc => {
+          var freq = doc.frequencia[frequenciaIndex];
+          return `${doc.nome}/${doc.matricula}/${freq} ${(freq == 1) ? 'vez': 'vezes'};<br>`;
+        });
+        listaAlunosRelatorio.innerHTML = items.join('');
+      });
+    });
+    return unsubscribe;
+}
+
+/*function configurarBtnRelatorio(user, collectionRef, frequenciaIndex){
   let unsubscribe = collectionRef
     .where('uid', '==', user.uid)
     .orderBy("nome", "asc")
@@ -1145,7 +1266,7 @@ function configurarBtnRelatorio(user, collectionRef, frequenciaIndex){
       listaAlunosRelatorio.innerHTML = items.join('');
       //console.log(listaAlunosRelatorio.innerHTML)
     });
-}
+}*/
 
 function copyButton(){
   //console.log($("#listaAlunosRelatorio").text());
@@ -1202,7 +1323,7 @@ function configurarSwitchAtivacaoChamadaVirtual(user, collectionRef) {
             `'Chamada fechada é hora de importar os alunos e mudar o estado da interface.'`
           );
           //1atualizarLayoutDialogCV(user.uid);
-          importarAlunosChamadaVirtual(user, alunosRef, chamadaRef);
+          importarAlunosChamadaVirtual(user, monitoresRef, chamadaRef);
           // TODO usar a função editar para editar a chamada só que sem o problema de deletar o aluno para adicionar de novo, provavelmente tme que usar o merge
         })
         .catch(e => {
@@ -1232,7 +1353,39 @@ function configurarSwitchAtivacaoChamadaVirtual(user, collectionRef) {
   });
 }
 
-function importarAlunosChamadaVirtual(user, alunosRef, chamadaRef) {
+function importarAlunosChamadaVirtual(user, collectionRef, chamadaRef) {
+  let aluno = {};
+  var listaAlunos = [];
+  let alunoExiste;
+  let frequencia = [0, 0, 0, 0];
+  if (listaAlunosChamadaVirtual.length > 0) {
+    listaAlunosChamadaVirtual.forEach(element => {
+        alunoExiste = alunos.hasOwnProperty(`${user.uid}.A${element.matricula}`);
+        
+        if (alunoExiste === true)
+        {
+          frequencia = alunos[`${user.uid}.A${element.matricula}`].frequencia;
+        }
+
+        frequencia[getMesTabAtual(tabAtual)] = frequencia[getMesTabAtual(tabAtual)] + 1;
+
+        aluno = {
+          nome: alunoExiste ? alunos[`${user.uid}.A${element.matricula}`].nome : element.nome,
+          matricula: element.matricula,
+          frequencia: frequencia
+        };
+      listaAlunos.push(aluno);
+      removerAlunoChamadaVirtual(user, chamadaRef, element.matricula);
+    });
+
+    listaAlunosChamadaVirtual = [];
+    console.log("Tod mandando isso");
+    console.log(listaAlunos);
+    setarAluno(user, collectionRef, listaAlunos);
+  }
+}
+
+function importarAlunosChamadaVirtualV2(user, alunosRef, chamadaRef) {
   listaAlunosChamadaVirtual.forEach(element => {
     alunosRef
       .doc(`${user.uid}.A${element.matricula}`)
@@ -1247,11 +1400,11 @@ function importarAlunosChamadaVirtual(user, alunosRef, chamadaRef) {
           // The document probably doesn't exist.
           var frequencia = [0, 0, 0, 0];
           frequencia[mesChamadaVirtualServer] = 1;
-          setarAluno(user, alunosRef, element.nome, element.matricula, frequencia)
+          setarAluno(user, alunosRef, gerarAluno(element.nome, element.matricula, frequencia));//element.nome, element.matricula, frequencia)
           console.error("O aluno n existia, adicionamos. Error updating document: ", error);
       });
 
-      removerAluno(user, chamadaRef, element.matricula)
+      removerAlunoChamadaVirtual(user, chamadaRef, element.matricula)
   });
   listaAlunosChamadaVirtual = [];
 }
@@ -1332,11 +1485,16 @@ function monitorarEstadoChamadaVirtual(user, collectionRef) {
 }
 
 function exibirListaDeAlunosChamadaVirtual(user, collectionRef) {
+  listaAlunosChamadaVirtual = [];
   let unsubscribe = collectionRef
     .where('code', '==', user.uid)
     .onSnapshot(querySnapshot => {
       const items = querySnapshot.docs.map(doc => {
-        listaAlunosChamadaVirtual.push(doc.data()) 
+        // TODO Falta resolver o bug das duplicatas
+        if (listaAlunosChamadaVirtual.indexOf(doc.data())==-1)
+        {
+            listaAlunosChamadaVirtual.push(doc.data());
+        }
         return `<li>${doc.data().nome} \(${doc.data().matricula}\)</li>`;
       });
       totalAlunosChamadaVirtual.innerHTML = querySnapshot.docs.length;
@@ -1360,7 +1518,6 @@ function attFrequencia(user, collectionRef, matricula, mes, valorFrec) {
   var key = `${user.uid}.A${matricula}`;
   alunos[key].frequencia[mes] = valorFrec;
   editarAlunoFrequencia(user, collectionRef, matricula, alunos[key].frequencia);
-  
 }
 
 function criarMonitorNoBD(monitorRef, alunosRef, user) {
@@ -1406,24 +1563,4 @@ function ordenarAlunos(alunos) {
 	return x < y ? -1 : x > y ? 1 : 0;
 });
   return byName;
-}
-
-function exibirListaDeAlunosChamadaVirtualTeste(user, collectionRef) {
-  let unsubscribe = db.collection('alunos')
-    .where('uid', '==', user.uid)
-    .onSnapshot(querySnapshot => {
-        console.log(querySnapshot);
-          console.log("aaaaaaaaaaaaaaaaaaaaa")
-        querySnapshot.docs.forEach(doc => {
-          console.log(doc.data());
-          console.log("aaaaaaaaaaaaaaaaaaaaa")
-          obterAlunosDoMonitor(doc.data());
-        });
-      /*const items = querySnapshot.docs.map(doc => {
-          
-      });*/
-
-      });
-      console.log('bbbbbbbbbbbbb');
-  unsubscribe && unsubscribe();
 }
