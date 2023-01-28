@@ -676,7 +676,7 @@ function atualizarLayoutDialogCV(code) {
     secaoChamadaAtivada.hidden = false;
     secaoChamadaDesativada.hidden = true;
     secaoChamadaOffline.hidden = true;
-    
+
     inputLinkChamadaVirtual.value = (window.location.hostname == 'localhost') ? `http://localhost:5005/?code=${code}` : `http://monissores-chamada.web.app/?code=${code}`
     //new QRCode(document.getElementById("qrcode"), inputLinkChamadaVirtual.value);
     
@@ -791,6 +791,7 @@ function mudarEstadosDaInterfaceNaSelecao(n, index) {
 
   if (n == 0) {
     //Caso barra de pesquisa esteja preechida
+    ativacao = true;
     if(document.getElementById('searchbar').value != ""){
       escolherFunc()
       configurarBtnToShearch();
@@ -798,7 +799,6 @@ function mudarEstadosDaInterfaceNaSelecao(n, index) {
     }else{
       navBarTitulo.innerHTML = 'Monissores';
     }
-    ativacao = true;
   } else if (n == 1) {
     navBarTitulo.innerHTML = `${n} aluno`;
     ativacao = false;
@@ -1278,6 +1278,7 @@ function copyButton(){
 
 function configurarSwitchAtivacaoChamadaVirtual(user, collectionRef) {
   $('#ativarCVSwitch').change(function (event) {
+    event.stopImmediatePropagation();
     console.log("Switcheeeee")
     chamadaVirtualAtivadaClient = $(this).is(':checked');
     mesChamadaVirtual = getMesTabAtual(tabAtual);
@@ -1357,9 +1358,10 @@ function importarAlunosChamadaVirtual(user, collectionRef, chamadaRef) {
   let aluno = {};
   var listaAlunos = [];
   let alunoExiste;
-  let frequencia = [0, 0, 0, 0];
+  
   if (listaAlunosChamadaVirtual.length > 0) {
     listaAlunosChamadaVirtual.forEach(element => {
+        let frequencia = [0, 0, 0, 0];
         alunoExiste = alunos.hasOwnProperty(`${user.uid}.A${element.matricula}`);
         
         if (alunoExiste === true)
@@ -1378,10 +1380,9 @@ function importarAlunosChamadaVirtual(user, collectionRef, chamadaRef) {
       removerAlunoChamadaVirtual(user, chamadaRef, element.matricula);
     });
 
-    listaAlunosChamadaVirtual = [];
-    console.log("Tod mandando isso");
-    console.log(listaAlunos);
+    listaAlunosChamadaVirtual = [];    
     setarAluno(user, collectionRef, listaAlunos);
+    listaAlunos = [];
   }
 }
 
@@ -1491,7 +1492,7 @@ function exibirListaDeAlunosChamadaVirtual(user, collectionRef) {
     .onSnapshot(querySnapshot => {
       const items = querySnapshot.docs.map(doc => {
         // TODO Falta resolver o bug das duplicatas
-        if (listaAlunosChamadaVirtual.indexOf(doc.data())==-1)
+        if (contemAluno(doc.data(), listaAlunosChamadaVirtual) === false)
         {
             listaAlunosChamadaVirtual.push(doc.data());
         }
@@ -1501,6 +1502,18 @@ function exibirListaDeAlunosChamadaVirtual(user, collectionRef) {
       alunosListaChamadaVirtual.innerHTML = items.join('');
     });
   return unsubscribe;
+}
+
+
+function contemAluno(obj, list) {
+  var i;
+  for (i = 0; i < list.length; i++) {
+      if (list[i].matricula === obj.matricula) {
+          return true;
+      }
+  }
+
+  return false;
 }
 
 /*function attFrequencia(user, alunosRef, matricula, mes, valorFrec) {
