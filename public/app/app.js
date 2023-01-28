@@ -98,8 +98,8 @@ auth.onAuthStateChanged(user => {
     monitoresRef = db.collection('monitores');
     alunosMonitorRef = db.collection('monitores').doc(user.uid).collection('alunos');
     
-    /*udb.criarMonitorNoBD(monitoresRef, alunosRef, user);
-    udb.exibirListaDeAlunosChamadaVirtualTeste(user, monitoresRef);
+    criarMonitorNoBD(monitoresRef, alunosRef, user);
+    /*udb.exibirListaDeAlunosChamadaVirtualTeste(user, monitoresRef);
     udb.p();*/
     //setarAluno(user, alunosMonitorRef, 'Testoslvaldo Algusto', 20201234593, [0, 0, 0, 0]);
     /*setarAluno(user, alunosRef, 'Inácio Estácio de Sá', 2020123460);
@@ -1383,7 +1383,11 @@ function importarAlunosChamadaVirtual(user, collectionRef, chamadaRef) {
     listaAlunosChamadaVirtual = [];    
     setarAluno(user, collectionRef, listaAlunos);
     listaAlunos = [];
+    
+    const toast = new bootstrap.Toast(document.getElementById("toastChamadaVirtualFechada"));
+    toast.show();
   }
+
 }
 
 function importarAlunosChamadaVirtualV2(user, alunosRef, chamadaRef) {
