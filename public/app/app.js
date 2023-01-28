@@ -107,7 +107,7 @@ auth.onAuthStateChanged(user => {
     salvarAlunoBtn.onclick = () => {
       salvarAluno(
         user,
-        alunosRef,
+        monitoresRef,
         nomeAdicionarAlunoInput,
         matriculaAdicionarAlunoInput,
         [0, 0, 0, 0]
@@ -124,10 +124,10 @@ auth.onAuthStateChanged(user => {
       [0, 0, 0, 0]
     );*/
     removeAlunoModalDialogBtn.onclick = () => {
-      configurarBtnRemover(user, alunosRef);
+      configurarBtnRemover(user, monitoresRef);
     };
     editarAlunoBtn.onclick = () => {
-      configurarBtnEditar(user, alunosRef);
+      configurarBtnEditar(user, monitoresRef);
     };
     $('#btnDeletarConta').on('click', () => configurarBtnDeletarConta(user));
     
@@ -265,11 +265,12 @@ function desgrudar(){
   var alturaCabecalho = document.getElementById("cabecalho").offsetHeight
   var divConteudo = document.getElementById('linhaAbasContent')
   divConteudo.style.marginTop = alturaCabecalho + "px";
-  console.log(alturaCabecalho)
-  console.log(divConteudo)
+  /*console.log(alturaCabecalho)
+  console.log(divConteudo)*/
 }
 //////////////////////////////////////////////
-function setarAlunoV2(user, collectionRef, nome, matricula, frequencia, modoEdicao = false) {
+// ERA V2
+function setarAluno(user, collectionRef, nome, matricula, frequencia, modoEdicao = false) {
     var key = `${user.uid}.A${matricula}`;//'B0LiSdSv1MMdy0VxjdswpPkyOXH2.A2020687735';//
     console.log(alunos[key]);
     var alunoExiste = alunos.hasOwnProperty(key);
@@ -299,25 +300,26 @@ function setarAlunoV2(user, collectionRef, nome, matricula, frequencia, modoEdic
     return true;
 }
 
-function atualizarAlunos(user, collectionRef, alunos, mensagem, tarefa = () => {}) {
+function atualizarAlunos(user, collectionRef, alunosNovos, mensagem, tarefa = () => {}) {
   collectionRef
     .doc(`${user.uid}`)
     .set({
         uid: user.uid,
-        alunos: alunos
+        alunos: alunosNovos
     })
     .then(() => {
       console.log(mensagem);
+      console.log(alunosNovos);
       tarefa();
     })
     .catch(error => {
       console.log('Error ao atualizar aluno:', error);
-    });;
+    });
 }
-
-function removerAlunoV2(user, collectionRef, matricula, tarefa = () => {}) {
+// ERA V2
+function removerAluno(user, collectionRef, matricula, tarefa = () => {}) {
     var key = `${user.uid}.A${matricula}`;//'B0LiSdSv1MMdy0VxjdswpPkyOXH2.A2020687735';//
-    console.log(alunos[key]);
+    //console.log(alunos[key]);
     var alunoExiste = alunos.hasOwnProperty(key);
 
     if (alunoExiste === true) {
@@ -389,8 +391,8 @@ function removerAlunoV2(user, collectionRef, matricula, tarefa = () => {}) {
     });
 }*/
 // ERA V2
-function editarAlunoFrequenciaV2(user, collectionRef, matricula, frequencia) {
-    setarAlunoV2(user, collectionRef, alunos[`${user.uid}.A${matricula}`].nome, matricula, frequencia, true);
+function editarAlunoFrequencia(user, collectionRef, matricula, frequencia) {
+    setarAluno(user, collectionRef, alunos[`${user.uid}.A${matricula}`].nome, matricula, frequencia, true);
 }
 
 /*function editarAlunoFrequencia(user, collectionRef, matricula, frequencia) {
@@ -547,7 +549,7 @@ function buttonSubtrairFrequencia(user, alunosRef) {
     var mes = parseInt(`${$(this)[0].id}`.slice(-1));
     var valorFrec = parseInt(`${$(this)[0].value}`);
     if (valorFrec > 0) {
-      attFrequencia(user, alunosRef, matricula, mes, parseInt(valorFrec - 1));
+      attFrequencia(user, monitoresRef, matricula, mes, parseInt(valorFrec - 1));
     }
   });
 }
@@ -926,6 +928,7 @@ function closeAllDialogs() {
 
 function configurarBtnRemover(user, alunosRef) {
   itensSelecionadosListGroup.forEach(i => {
+    
     removerAluno(user, alunosRef, getMatriculaISLG(i), () => {
       //$("#desselecionarTudoBtn").trigger("click");
       //go(-1)
@@ -1257,15 +1260,15 @@ function exibirListaDeAlunos(user, collectionRef, listGroup, frequenciaIndex) {
   let unsubscribe = collectionRef
     .where('uid', '==', user.uid)
     //.orderBy("nome", "asc")
-    .onSnapshot(querySnapshot => {
+    .onSnapshot({ includeMetadataChanges: true }, querySnapshot => {
     
       querySnapshot.forEach(doc => {
         var alunosFiltrados = obterAlunosDoMonitor(doc.data())
         alunos = doc.data().alunos;
         if (frequenciaIndex == 0) {
           //setarAlunoV2(user, alunosRef);
-          //setarAlunoV2(user, monitoresRef, "Testosvaldo", 1111111, [0, 0, 0, 0], false);
-          //removerAlunoV2(user, monitoresRef, 1111111);// rAlunoV2(user, monitoresRef, "Testosvaldo", 1111111, [0, 0, 0, 0], false);
+          //setarAluno(user, monitoresRef, "Testosvaldo", 1111111, [0, 0, 0, 0], false);
+          //removerAluno(user, monitoresRef, 1111111);// rAlunoV2(user, monitoresRef, "Testosvaldo", 1111111, [0, 0, 0, 0], false);
         }
         const items = alunosFiltrados.map(doc => {//querySnapshot.docs.map(doc => {
           
@@ -1353,10 +1356,10 @@ function exibirListaDeAlunosChamadaVirtual(user, collectionRef) {
     });
 }*/
 
-function attFrequenciaV2(user, collectionRef, matricula, mes, valorFrec) {
+function attFrequencia(user, collectionRef, matricula, mes, valorFrec) {
   var key = `${user.uid}.A${matricula}`;
   alunos[key].frequencia[mes] = valorFrec;
-  editarAlunoFrequenciaV2(user, collectionRef, matricula, alunos[key].frequencia);
+  editarAlunoFrequencia(user, collectionRef, matricula, alunos[key].frequencia);
   
 }
 
