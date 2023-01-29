@@ -283,6 +283,7 @@ function setarAluno(user, collectionRef, alunos_novos, modoEdicao = false, matri
 
     let key;
     let alunoExiste;
+    let sucesso = true;
 
     if (Array.isArray(alunos_novos) === false) {
       alunos_novos = [alunos_novos];
@@ -308,18 +309,18 @@ function setarAluno(user, collectionRef, alunos_novos, modoEdicao = false, matri
           }
         }
         else if (modoEdicao === true && matricula_nova !== null) {
-            var new_key = `${user.uid}.A${matricula_nova}`;
-            delete alunos[key];
-            alunos[new_key] = {
-              uid: user.uid,
-              nome: aluno.nome,
-              matricula: matricula_nova,
-              frequencia: aluno.frequencia,
-            }
+          var new_key = `${user.uid}.A${matricula_nova}`;
+          delete alunos[key];
+          alunos[new_key] = {
+            uid: user.uid,
+            nome: aluno.nome,
+            matricula: matricula_nova,
+            frequencia: aluno.frequencia,
+          }
         }
         else {
           console.log("Aluno já existe e não estamos em modo de edição");
-          return false;
+          sucesso = false;
         }
     });
 
@@ -361,8 +362,10 @@ function setarAluno(user, collectionRef, alunos_novos, modoEdicao = false, matri
       return false;
     }*/
 
-    atualizarAlunos(user, collectionRef, alunos, `Adicionamos ou editamos aluno(s).`, tarefa);
-    return true;
+    if (sucesso === true) {
+        atualizarAlunos(user, collectionRef, alunos, `Adicionamos ou editamos aluno(s).`, tarefa);
+    }
+    return sucesso;
 }
 
 function atualizarAlunos(user, collectionRef, alunosNovos, mensagem, tarefa = () => {}) {
@@ -500,14 +503,24 @@ function salvarAluno(
   if (valido)
   {
     var aluno = gerarAluno(nameInput.value, parseInt(matriculaInput.value), frequencia);
-    setarAluno(
+    var result = setarAluno(
       user,
       collectionRef,
       aluno
     );
-    nameInput.value = '';
-    matriculaInput.value = '';
+    
+    if (result === false) {
+      console.log('Aluno já existe.');
+      $(`#toastAdicionarAlunoText`).html('⚠ Esse aluno já foi cadastrado.');
+      const toast = new bootstrap.Toast(document.getElementById('toastAdicionarAluno'));
+      toast.show();
+    }
+    else{
+      nameInput.value = '';
+      matriculaInput.value = '';
+    }
   }
+  
 }
 
 
@@ -1078,9 +1091,9 @@ function sanitizarInputs(nome, matricula, toast_id, mensagem) {
         mensagem = "A matrícula informada é inválida";
         sucesso = false;
     }
-    $(`#${toast_id}Text`).html(mensagem)
-    const toast = new bootstrap.Toast(document.getElementById(toast_id))
-    toast.show()
+    $(`#${toast_id}Text`).html(mensagem);
+    const toast = new bootstrap.Toast(document.getElementById(toast_id));
+    toast.show();
 
     return sucesso;
 }
