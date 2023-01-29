@@ -223,10 +223,10 @@ auth.onAuthStateChanged(user => {
     // Atualiza o Estado da chamada virtual
     unsubscribeEstadoCV = monitorarEstadoChamadaVirtual(user, chamadaRef);
     // Pega os dados dos alunos cadastrados no servidor e exibe eles na tela
-    exibirListaDeAlunos(user, monitoresRef, alunosLista1, 0);
+    /*exibirListaDeAlunos(user, monitoresRef, alunosLista1, 0);
     exibirListaDeAlunos(user, monitoresRef, alunosLista2, 1);
-    exibirListaDeAlunos(user, monitoresRef, alunosLista3, 2);
-    unsubscribeLA = exibirListaDeAlunos(user, monitoresRef, alunosLista4, 3)
+    exibirListaDeAlunos(user, monitoresRef, alunosLista3, 2);*/
+    unsubscribeLA = exibirListaDeAlunos(user, monitoresRef, [alunosLista1, alunosLista2, alunosLista3, alunosLista4], 4);
     
     
 
@@ -1414,7 +1414,7 @@ function importarAlunosChamadaVirtualV2(user, alunosRef, chamadaRef) {
   listaAlunosChamadaVirtual = [];
 }
 
-function exibirListaDeAlunos(user, collectionRef, listGroup, frequenciaIndex) {
+function exibirListaDeAlunos(user, collectionRef, listGroups, meses) {
   let unsubscribe = collectionRef
     .where('uid', '==', user.uid)
     //.orderBy("nome", "asc")
@@ -1423,50 +1423,51 @@ function exibirListaDeAlunos(user, collectionRef, listGroup, frequenciaIndex) {
       querySnapshot.forEach(doc => {
         var alunosFiltrados = obterAlunosDoMonitor(doc.data())
         alunos = doc.data().alunos;
-        if (frequenciaIndex == 0) {
-          //setarAlunoV2(user, alunosRef);
-          //setarAluno(user, monitoresRef, "Testosvaldo", 1111111, [0, 0, 0, 0], false);
-          //removerAluno(user, monitoresRef, 1111111);// rAlunoV2(user, monitoresRef, "Testosvaldo", 1111111, [0, 0, 0, 0], false);
+        
+
+        for (let frequenciaIndex = 0; frequenciaIndex < meses; frequenciaIndex++) {      
+        
+          const items = alunosFiltrados.map(doc => {//querySnapshot.docs.map(doc => {
+            
+            return `<a href="#" id="${doc.matricula}-${frequenciaIndex}"  
+            class="list-group-item list-group-item-action flex-column align-items-start">
+                <!--Dados aluno-->
+                <div style="float: left; margin-left: 10px;">
+                  <span class="material-symbols-outlined">person</span>
+                  <label " class= "user name ${
+                    doc.matricula
+                  }" style="vertical-align: top; max-width: 350px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${
+              doc.nome
+            }</label>
+                  <br>
+                  <span class="material-symbols-outlined">money</span>
+                  <label class= "user matricula ${
+                    doc.uid
+                  }" style="vertical-align: top;">${doc.matricula}</label>
+                </div>
+                
+                <!--Botão-->
+                
+                <div class="btn-group" role="group" aria-label="Basic example" style="float: right; margin-right: 10px; margin-top: 10px;">
+                    <button type="button" id="${
+                      doc.matricula
+                    }-BD${frequenciaIndex}" value="${
+              doc.frequencia[frequenciaIndex]
+            }" class="btn btn-primary bd">-</button>
+                    <button type="button" class="btn btn-primary bf">${
+                      doc.frequencia[frequenciaIndex]
+                    }</button>
+                    <button type="button" id="${
+                      doc.matricula
+                    }-BA${frequenciaIndex}" value="${
+              doc.frequencia[frequenciaIndex]
+            }" class="btn btn-primary ba">+</button>
+                </div>
+              </a>`;
+          });
+          listGroups[frequenciaIndex].innerHTML = items.join('');
         }
-        const items = alunosFiltrados.map(doc => {//querySnapshot.docs.map(doc => {
-          
-          return `<a href="#" id="${doc.matricula}-${frequenciaIndex}"  
-          class="list-group-item list-group-item-action flex-column align-items-start">
-              <!--Dados aluno-->
-              <div style="float: left; margin-left: 10px;">
-                <span class="material-symbols-outlined">person</span>
-                <label " class= "user name ${
-                  doc.matricula
-                }" style="vertical-align: top; max-width: 350px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${
-            doc.nome
-          }</label>
-                <br>
-                <span class="material-symbols-outlined">money</span>
-                <label class= "user matricula ${
-                  doc.uid
-                }" style="vertical-align: top;">${doc.matricula}</label>
-              </div>
-              
-              <!--Botão-->
-              
-              <div class="btn-group" role="group" aria-label="Basic example" style="float: right; margin-right: 10px; margin-top: 10px;">
-                  <button type="button" id="${
-                    doc.matricula
-                  }-BD${frequenciaIndex}" value="${
-            doc.frequencia[frequenciaIndex]
-          }" class="btn btn-primary bd">-</button>
-                  <button type="button" class="btn btn-primary bf">${
-                    doc.frequencia[frequenciaIndex]
-                  }</button>
-                  <button type="button" id="${
-                    doc.matricula
-                  }-BA${frequenciaIndex}" value="${
-            doc.frequencia[frequenciaIndex]
-          }" class="btn btn-primary ba">+</button>
-              </div>
-            </a>`;
-        });
-        listGroup.innerHTML = items.join('');
+
         //Caso barra de pesquisa esteja preechida
         if(document.getElementById('searchbar').value != ""){
           escolherFunc()//exibe a lista de acordo com a barra de pesquisa
