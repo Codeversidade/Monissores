@@ -904,15 +904,29 @@ function configurarBtnSelecionarTudo(){
 
 function sanitizarInputs(nome, matricula, toast_id, mensagem) {
     var sucesso = true;
-    if (!/^[a-z A-Z]+$/.test(nome))
+
+    if(nome != ""&&matricula != "")
     {
-        mensagem = "O nome só pode conter letras.";
-        sucesso = false;
+      if (!/^[a-z A-Z]+$/.test(nome))
+      {
+          mensagem = "O nome só pode conter letras.";
+          sucesso = false;
+      }
+      else if (!($.isNumeric(matricula)))
+      {
+          mensagem = "A matrícula informada é inválida";
+          sucesso = false;
+      } 
+      else if ((matricula < 2008100000))
+      {
+          mensagem = "A matrícula informada é inválida";
+          sucesso = false;
+      }
     }
-    else if (matricula < 2008100000)
+    else
     {
-        mensagem = "A matrícula informada é inválida";
-        sucesso = false;
+      mensagem = "Campo/s Obrigatório/s"
+      sucesso = false;
     }
     $(`#${toast_id}Text`).html(mensagem)
     const toast = new bootstrap.Toast(document.getElementById(toast_id))
