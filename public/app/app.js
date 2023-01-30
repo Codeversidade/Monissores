@@ -1083,12 +1083,17 @@ function sanitizarInputs(nome, matricula, toast_id, mensagem) {
     var sucesso = true;
     if (!/^[a-z A-Zà-úÀ-Úä-üÄ-Ü]+$/.test(nome))
     {
-        mensagem = "O nome só pode conter letras.";
+        mensagem = "⚠ O nome só pode conter letras.";
         sucesso = false;
     }
-    else if ((!/^[0-9]+$/.test(matricula)) || (matricula < 2008100000))
+    else if (!/^[0-9]+$/.test(matricula))
     {
-        mensagem = "A matrícula informada é inválida";
+        mensagem = "⚠ A matrícula só pode conter números.";
+        sucesso = false;
+    }
+    else if (matricula < 2008100000)
+    {
+        mensagem = "⚠ A matrícula informada é inválida.";
         sucesso = false;
     }
     $(`#${toast_id}Text`).html(mensagem);
