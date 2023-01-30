@@ -1086,7 +1086,7 @@ function sanitizarInputs(nome, matricula, toast_id, mensagem) {
         mensagem = "O nome só pode conter letras.";
         sucesso = false;
     }
-    else if (matricula < 2008100000)
+    else if ((!/^[0-9]+$/.test(matricula)) || (matricula < 2008100000))
     {
         mensagem = "A matrícula informada é inválida";
         sucesso = false;
