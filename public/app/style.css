@@ -63,6 +63,10 @@ input#searchbar:focus {
     outline: none;
 }
 
+.form-control {
+    text-transform: capitalize;
+}
+
 div#barraDePesquisa {
     background-color: white;
     height: 30px;

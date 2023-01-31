@@ -36,8 +36,8 @@
 
   <script>
     if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register("sw.js") // Cria o Service Worker do PWA
-        console.log("instalado")
+        navigator.serviceWorker.register("sw.js"); // Cria o Service Worker do PWA
+        console.log("Service Worker Instalado.");
     }
   </script>
 </head>
@@ -766,8 +766,19 @@
             <section id="secaoChamadaOffline">
               <p style="text-align: justify; text-indent: 10px;">Por favor, conecte-se com a internet para utilizar a Chamada Virtual.</p>
             </section>
+            
           </div>
-
+          <!--Rodapé da Caixa de Diálogo-->
+          <div class="modal-footer">
+            <div id="toastChamadaVirtualFechada" class="toast align-items-center text-bg-primary border-0" role="alert" aria-live="assertive" aria-atomic="true">
+              <div class="d-flex">
+                <div class="toast-body" >
+                  A Chamada Virtual foi fechada, os alunos que preencheram a chamada foram importados com sucesso e suas frequências foram atualizadas.
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+              </div>
+            </div>
+          </div>
           
         </div>
       </div>
@@ -863,7 +874,7 @@
 
     
   </script>
-  <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+  <script src="qrcode.min.js"></script>
   <script src="app.js" defer></script>
 
 </html>
