@@ -1398,8 +1398,8 @@ function importarAlunosChamadaVirtual(user, collectionRef, chamadaRef) {
       removerAlunoChamadaVirtual(user, chamadaRef, element.matricula);
     });
 
-    listaAlunosChamadaVirtual = [];    
-    setarAluno(user, collectionRef, listaAlunos);
+    listaAlunosChamadaVirtual = [];
+    setarAluno(user, collectionRef, listaAlunos, modoEdicao = true);
     listaAlunos = [];
     
     const toast = new bootstrap.Toast(document.getElementById("toastChamadaVirtualFechada"));
