@@ -24,7 +24,9 @@
 O App Monissores é um Progressive Web App (PWA) feito em HTML, CSS e JavaScript utilizando as tecnologias em banco de dados do Firebase.
 
 ## Instalação / Uso
-Para utilizar o app Monissores, é só acessar o site [monissores.web.app](https://monissores.web.app).
+<a href='https://play.google.com/store/apps/details?id=app.web.monissores.twa&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Disponível no Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/pt-br_badge_web_generic.png' height="80"/></a>
+
+Você também pode acessar o site [monissores.web.app](https://monissores.web.app).
 
 ## Autores
 

@@ -111,3 +111,7 @@ div#barraDePesquisa {
     --bs-nav-pills-link-active-color: #fff;
     --bs-nav-pills-link-active-bg: #3b3bfb;
 }
+
+.form-control {
+    text-transform: capitalize;
+}

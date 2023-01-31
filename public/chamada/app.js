@@ -51,10 +51,14 @@ function checarInputs() {
     
     if (nomeInput.value == '' || matriculaInput.value == '')
     {
-        window.alert('O nome e o número de matrícula devem ser preenchidos.')
+        window.alert('O nome e o número de matrícula devem ser preenchidos.');
     }
     else if (parseInt(matriculaInput.value) < 2008100000) {
-        window.alert('O número de matrícula informado é inválido.')
+        window.alert('O número de matrícula informado é inválido.');
+    }
+    else if (!/^[0-9]+$/.test(matriculaInput.value))
+    {
+        window.alert('O número de matrícula só pode conter números.');
     }
     else
     {
