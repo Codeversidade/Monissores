@@ -475,9 +475,12 @@
   
               <button id="btnDeletarConta" class="btn btn-danger"  style="margin: 5px; border: none;"> <div>Quero Deletar minha conta</div><span class="material-symbols-outlined">delete_forever</span></button>
               <br>
-              <a href="https://github.com/iCarlosCode/Monissores/blob/main/PRIVACY-POLICY.md" target="_blank" style="margin: 5px;">Política de Privacidade</a>
+              <a href="https://github.com/Codeversidade/Monissores/blob/main/PRIVACY-POLICY.md" target="_blank" style="margin: 5px;">Política de Privacidade</a>
               
-              <a href="https://github.com/iCarlosCode/Monissores/blob/main/TERMS-OF-SERVICE.md" target="_blank">Termos de Uso</a>
+              <a href="https://github.com/Codeversidade/Monissores/blob/main/TERMS-OF-SERVICE.md" target="_blank">Termos de Uso</a>
+              <br>
+
+              <a href="https://github.com/Codeversidade/Monissores" target="_blank">Sobre</a>
               <br>
               <!--ul id="alunosLista"></ul-->
             </section>
@@ -499,7 +502,7 @@
               Voltar
             </button>
 
-            <button type="button" class="btn btn-primary">Salvar</button>
+            <button type="button" class="btn btn-primary" hidden="true">Salvar</button>
           </div>
         </div>
       </div>
@@ -622,7 +625,6 @@
               type="button"
               id="editarAlunoBtn"
               class="btn btn-primary"
-              data-bs-dismiss="modal"
               >
               Salvar
             </button>
@@ -860,11 +862,9 @@
         // tosUrl and privacyPolicyUrl accept either url string or a callback
         // function.
         // Terms of service url/callback.
-        tosUrl: '<your-tos-url>',
+        tosUrl: 'https://github.com/Codeversidade/Monissores/blob/main/TERMS-OF-SERVICE.md',
         // Privacy policy url/callback.
-        privacyPolicyUrl: function() {
-          window.location.assign('<your-privacy-policy-url>');
-        }
+        privacyPolicyUrl: 'https://github.com/Codeversidade/Monissores/blob/main/PRIVACY-POLICY.md'
       };
 
     var ui = new firebaseui.auth.AuthUI(firebase.auth());

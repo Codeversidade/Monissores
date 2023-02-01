@@ -90,7 +90,7 @@ auth.onAuthStateChanged(user => {
     secaoPrincipal.hidden = false;
     secaoLogin.hidden = true;
     secaoInicial.hidden = true;
-    userDetails.innerHTML = `<h3>${user.displayName}!</h3> <p>User ID: ${user.uid}</p>`;
+    userDetails.innerHTML = `<h3>${user.displayName}!</h3> <p>Logado como ${user.email}</p>`;
     
 
     alunosRef = db.collection('alunos');
@@ -1108,7 +1108,7 @@ function configurarBtnEditar(user, collectionRef) {
   var matricula_velha = getMatriculaISLG(itensSelecionadosListGroup[0]);
   var matricula_nova = parseInt(matriculaEditarAlunoInput.value);
   var nome = nomeEditarAlunoInput.value;
-  var valido = sanitizarInputs(nome, matricula_nova, 'toastEditarAluno', "Cadastro editado.");
+  var valido = sanitizarInputs(nome, matriculaEditarAlunoInput.value, 'toastEditarAluno', "Cadastro editado.");
 
   if (valido === true)
   {
@@ -1118,6 +1118,7 @@ function configurarBtnEditar(user, collectionRef) {
     setarAluno(user, collectionRef, aluno, true, matricula_nova, () => {
       $("#desselecionarTudoBtn").trigger("click");
     });
+    
   }
 }
 
