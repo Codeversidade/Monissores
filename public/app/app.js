@@ -279,7 +279,7 @@ function gerarAluno(nome, matricula, frequencia) {
     };
 }
 
-function setarAluno(user, collectionRef, alunos_novos, modoEdicao = false, matricula_nova = null, tarefa = () => {}) {
+function setarAluno(user, collectionRef, alunos_novos, modoEdicao = false, matricula_nova = null, tarefa = () => {}, modoChamada = false) {
 
     let key;
     let alunoExiste;
@@ -291,8 +291,15 @@ function setarAluno(user, collectionRef, alunos_novos, modoEdicao = false, matri
     alunos_novos.forEach(aluno => {
         key = `${user.uid}.A${aluno.matricula}`;
         alunoExiste = alunos.hasOwnProperty(key);
-
-        if ((alunoExiste === false && modoEdicao === false) || (alunos_novos.length > 1)) {
+        if (alunoExiste === false && modoEdicao === false) {
+          alunos[key] = {
+            uid: user.uid,
+            nome: aluno.nome,
+            matricula: aluno.matricula,
+            frequencia: aluno.frequencia,
+          }
+        }
+        else if (modoChamada === true) {
           alunos[key] = {
             uid: user.uid,
             nome: aluno.nome,
@@ -1400,7 +1407,7 @@ function importarAlunosChamadaVirtual(user, collectionRef, chamadaRef) {
     });
 
     listaAlunosChamadaVirtual = [];
-    setarAluno(user, collectionRef, listaAlunos, modoEdicao = true);
+    setarAluno(user, collectionRef, listaAlunos, false, null, () => {}, true);
     listaAlunos = [];
     
     const toast = new bootstrap.Toast(document.getElementById("toastChamadaVirtualFechada"));
