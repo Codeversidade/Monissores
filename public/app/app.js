@@ -131,6 +131,11 @@ auth.onAuthStateChanged(user => {
     };
     $('#btnDeletarConta').on('click', () => configurarBtnDeletarConta(user));
     
+    importarAlunosCVBtn.onclick = () => {
+        importarAlunosCVBtn.hidden = true;
+        $('#ativarCVSwitch').trigger('click');
+    }
+
     $('#btnCompartilharLinkChamadaVirtual').on('click', () => compartilharLinkChamadaVirtual())
     addAlunoModalDialog.addEventListener('show.bs.modal', event => 
         configurarDialogPushState("dialog", "addAlunoModalDialog", "adicionar")
@@ -205,6 +210,7 @@ auth.onAuthStateChanged(user => {
       {
           history.go(-1)
       }
+      atualizarTextoBtnCV(user.uid, tabAtual);
       unsubscribeLCV && unsubscribeLCV();
     });
     
@@ -719,6 +725,7 @@ function atualizarLayoutDialogCV(code) {
     secaoChamadaDesativada.hidden = false;
     secaoChamadaOffline.hidden = true;
   }
+  
   /*divSwitchAtivarChamada.innerHTML = 
   `<table style="width: -webkit-fill-available;">
       <tr>
@@ -744,6 +751,8 @@ function atualizarLayoutDialogCV(code) {
       </tr>
     </table>`
     ativarCVSwitch()*/
+
+
 }
 
 function atualizarTextoBtnCV(code, tabAtual = null) {
@@ -1531,7 +1540,17 @@ function exibirListaDeAlunosChamadaVirtual(user, collectionRef) {
       });
       totalAlunosChamadaVirtual.innerHTML = querySnapshot.docs.length;
       alunosListaChamadaVirtual.innerHTML = items.join('');
+      if (querySnapshot.docs.length > 0)
+      {
+          importarAlunosCVBtn.hidden = false;
+      }
+      else
+      {
+        importarAlunosCVBtn.hidden = true;
+      }
     });
+
+    
   return unsubscribe;
 }
 
