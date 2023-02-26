@@ -35,7 +35,22 @@ const matriculaAdicionarAlunoInput = document.getElementById(
 const relatorioBtn = document.getElementById("relatorioBtn");
 const faixaBtn = document.getElementById("faixaBtn");
 
-const auth = firebase.auth();
+// Gambiarra para poder testar no localhost
+const auth = firebase.auth();  
+
+const paramsString = window.location.search;
+const searchParams = new URLSearchParams(paramsString);
+if (searchParams.get('mode') == 'dev') {
+  /*auth.signInAnonymously()
+  .then(() => {
+    console.log("Logado Anonimamente")
+  })
+  .catch((error) => {
+    var errorCode = error.code;
+    var errorMessage = error.message;
+  });*/
+  auth.signInAnonymously()
+}
 
 var itensSelecionadosListGroup = [];
 var listaAlunosChamadaVirtual = [];
