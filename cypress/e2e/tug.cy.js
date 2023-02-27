@@ -2,7 +2,7 @@
 
 const { slowCypressDown } = require('cypress-slow-down');
 
-slowCypressDown(1000);
+slowCypressDown(700);
 
 describe('Teste de Uso Geral', () => {
   beforeEach(() => {
