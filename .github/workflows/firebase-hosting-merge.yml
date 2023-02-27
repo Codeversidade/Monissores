@@ -39,6 +39,7 @@ jobs:
           node-version: 18.12.1
       - run: node -v
 
+
       - name: Cypress run
         uses: cypress-io/github-action@v2
         with:
