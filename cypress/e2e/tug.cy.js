@@ -87,8 +87,10 @@ describe('Teste de Uso Geral', () => {
       .then(sometext => {
         cy.log('Les go to:' + sometext);
         cy.visit(sometext);
+        cy.origin('https://monissores-chamada.web.app', () => {
+          cy.get('#enviarChamadaBtn').should('be.visible');
+        });
       });
-    cy.get('#enviarChamadaBtn').should('be.visible');
   });
 
   it('1 Preenchimento da Chamada Virtual', () => {
@@ -126,7 +128,7 @@ describe('Teste de Uso Geral', () => {
       .then(sometext => {
         cy.log('Les go to:' + sometext);
         cy.visit(sometext);
-        cy.origin(sometext, () => {
+        cy.origin('https://monissores-chamada.web.app', () => {
           cy.get('#enviarChamadaBtn').should('be.visible');
   
           cy.get('#nomeChamadaInput').type('Alana');
@@ -149,7 +151,7 @@ describe('Teste de Uso Geral', () => {
       .then(sometext => {
         cy.log('Les go to:' + sometext);
         cy.visit(sometext);
-        cy.origin(sometext, () => {
+        cy.origin('https://monissores-chamada.web.app', () => {
           cy.get('#enviarChamadaBtn').should('be.visible');
       
           cy.get('#nomeChamadaInput').type('Alex');
@@ -220,8 +222,10 @@ describe('Teste de Uso Geral', () => {
       .then(sometext => {
         cy.log('Les go to:' + sometext);
         cy.visit(sometext);
+        cy.origin('https://monissores-chamada.web.app', () => {
+          cy.get('#enviarChamadaBtn').should('be.visible');
+        });
       });
-    cy.get('#enviarChamadaBtn').should('be.visible');
   });
 
   it('4 Preenchimento da Chamada Virtual', () => {
@@ -234,7 +238,7 @@ describe('Teste de Uso Geral', () => {
       .then(sometext => {
         cy.log('Les go to:' + sometext);
         cy.visit(sometext);
-        cy.origin(sometext, () => {
+        cy.origin('https://monissores-chamada.web.app', () => {
           cy.get('#enviarChamadaBtn').should('be.visible');
       
           cy.get('#nomeChamadaInput').type('Aluno Teste com Nome Errado');
@@ -257,7 +261,7 @@ describe('Teste de Uso Geral', () => {
       .then(sometext => {
         cy.log('Les go to:' + sometext);
         cy.visit(sometext);
-        cy.origin(sometext, () => {
+        cy.origin('https://monissores-chamada.web.app', () => {
           cy.get('#enviarChamadaBtn').should('be.visible');
       
           cy.get('#nomeChamadaInput').type('Alana');
@@ -280,7 +284,7 @@ describe('Teste de Uso Geral', () => {
       .then(sometext => {
         cy.log('Les go to:' + sometext);
         cy.visit(sometext);
-        cy.origin(sometext, () => {
+        cy.origin('https://monissores-chamada.web.app', () => {
           cy.get('#enviarChamadaBtn').should('be.visible');
       
           cy.get('#nomeChamadaInput').type('Alex');
@@ -303,7 +307,7 @@ describe('Teste de Uso Geral', () => {
       .then(sometext => {
         cy.log('Les go to:' + sometext);
         cy.visit(sometext);
-        cy.origin(sometext, () => {
+        cy.origin('https://monissores-chamada.web.app', () => {
           cy.get('#enviarChamadaBtn').should('be.visible');
       
           cy.get('#nomeChamadaInput').type('Alisson');
