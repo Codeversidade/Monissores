@@ -103,16 +103,18 @@ describe('Teste de Uso Geral', () => {
       .then(sometext => {
         cy.log('Les go to:' + sometext);
         cy.visit(sometext);
-      });
-    cy.get('#enviarChamadaBtn').should('be.visible');
+        cy.origin(sometext, () => {
+            cy.get('#enviarChamadaBtn').should('be.visible');
 
-    cy.get('#nomeChamadaInput').type('Aluno Teste');
-    cy.get('#matriculaChamadaInput').type('2008111111');
-    cy.get('#enviarChamadaBtn').click();
-    cy.get('#secaoChamadaPreenchida > p > strong')
-      .contains('Pronto')
-      .should('be.visible');
-  });
+            cy.get('#nomeChamadaInput').type('Aluno Teste');
+            cy.get('#matriculaChamadaInput').type('2008111111');
+            cy.get('#enviarChamadaBtn').click();
+            cy.get('#secaoChamadaPreenchida > p > strong')
+              .contains('Pronto')
+              .should('be.visible');
+          });
+        });
+      });  
 
   it('2 Preenchimento da Chamada Virtual', () => {
     cy.get('#chamadaVirtual > table > tbody > :nth-child(2) > td').contains(
@@ -124,15 +126,17 @@ describe('Teste de Uso Geral', () => {
       .then(sometext => {
         cy.log('Les go to:' + sometext);
         cy.visit(sometext);
-      });
-    cy.get('#enviarChamadaBtn').should('be.visible');
-
-    cy.get('#nomeChamadaInput').type('Alana');
-    cy.get('#matriculaChamadaInput').type('2008222222');
-    cy.get('#enviarChamadaBtn').click();
-    cy.get('#secaoChamadaPreenchida > p > strong')
-      .contains('Pronto')
-      .should('be.visible');
+        cy.origin(sometext, () => {
+          cy.get('#enviarChamadaBtn').should('be.visible');
+  
+          cy.get('#nomeChamadaInput').type('Alana');
+          cy.get('#matriculaChamadaInput').type('2008222222');
+          cy.get('#enviarChamadaBtn').click();
+          cy.get('#secaoChamadaPreenchida > p > strong')
+            .contains('Pronto')
+            .should('be.visible');
+          });
+        });
   });
 
   it('3 Preenchimento da Chamada Virtual', () => {
@@ -145,15 +149,17 @@ describe('Teste de Uso Geral', () => {
       .then(sometext => {
         cy.log('Les go to:' + sometext);
         cy.visit(sometext);
+        cy.origin(sometext, () => {
+          cy.get('#enviarChamadaBtn').should('be.visible');
+      
+          cy.get('#nomeChamadaInput').type('Alex');
+          cy.get('#matriculaChamadaInput').type('2008333333');
+          cy.get('#enviarChamadaBtn').click();
+          cy.get('#secaoChamadaPreenchida > p > strong')
+            .contains('Pronto')
+            .should('be.visible');
+        });
       });
-    cy.get('#enviarChamadaBtn').should('be.visible');
-
-    cy.get('#nomeChamadaInput').type('Alex');
-    cy.get('#matriculaChamadaInput').type('2008333333');
-    cy.get('#enviarChamadaBtn').click();
-    cy.get('#secaoChamadaPreenchida > p > strong')
-      .contains('Pronto')
-      .should('be.visible');
   });
 
   it('Checar se os 3 Alunos foram cadastrados na Chamada Virtual', () => {
@@ -228,15 +234,17 @@ describe('Teste de Uso Geral', () => {
       .then(sometext => {
         cy.log('Les go to:' + sometext);
         cy.visit(sometext);
+        cy.origin(sometext, () => {
+          cy.get('#enviarChamadaBtn').should('be.visible');
+      
+          cy.get('#nomeChamadaInput').type('Aluno Teste com Nome Errado');
+          cy.get('#matriculaChamadaInput').type('2008111111');
+          cy.get('#enviarChamadaBtn').click();
+          cy.get('#secaoChamadaPreenchida > p > strong')
+            .contains('Pronto')
+            .should('be.visible');
+        });
       });
-    cy.get('#enviarChamadaBtn').should('be.visible');
-
-    cy.get('#nomeChamadaInput').type('Aluno Teste com Nome Errado');
-    cy.get('#matriculaChamadaInput').type('2008111111');
-    cy.get('#enviarChamadaBtn').click();
-    cy.get('#secaoChamadaPreenchida > p > strong')
-      .contains('Pronto')
-      .should('be.visible');
   });
 
   it('5 Preenchimento da Chamada Virtual', () => {
@@ -249,15 +257,17 @@ describe('Teste de Uso Geral', () => {
       .then(sometext => {
         cy.log('Les go to:' + sometext);
         cy.visit(sometext);
+        cy.origin(sometext, () => {
+          cy.get('#enviarChamadaBtn').should('be.visible');
+      
+          cy.get('#nomeChamadaInput').type('Alana');
+          cy.get('#matriculaChamadaInput').type('2008222222');
+          cy.get('#enviarChamadaBtn').click();
+          cy.get('#secaoChamadaPreenchida > p > strong')
+            .contains('Pronto')
+            .should('be.visible');
+        });
       });
-    cy.get('#enviarChamadaBtn').should('be.visible');
-
-    cy.get('#nomeChamadaInput').type('Alana');
-    cy.get('#matriculaChamadaInput').type('2008222222');
-    cy.get('#enviarChamadaBtn').click();
-    cy.get('#secaoChamadaPreenchida > p > strong')
-      .contains('Pronto')
-      .should('be.visible');
   });
 
   it('6 Preenchimento da Chamada Virtual', () => {
@@ -270,15 +280,17 @@ describe('Teste de Uso Geral', () => {
       .then(sometext => {
         cy.log('Les go to:' + sometext);
         cy.visit(sometext);
+        cy.origin(sometext, () => {
+          cy.get('#enviarChamadaBtn').should('be.visible');
+      
+          cy.get('#nomeChamadaInput').type('Alex');
+          cy.get('#matriculaChamadaInput').type('2008333333');
+          cy.get('#enviarChamadaBtn').click();
+          cy.get('#secaoChamadaPreenchida > p > strong')
+            .contains('Pronto')
+            .should('be.visible');
+        });
       });
-    cy.get('#enviarChamadaBtn').should('be.visible');
-
-    cy.get('#nomeChamadaInput').type('Alex');
-    cy.get('#matriculaChamadaInput').type('2008333333');
-    cy.get('#enviarChamadaBtn').click();
-    cy.get('#secaoChamadaPreenchida > p > strong')
-      .contains('Pronto')
-      .should('be.visible');
   });
 
   it('7 Preenchimento da Chamada Virtual', () => {
@@ -291,15 +303,17 @@ describe('Teste de Uso Geral', () => {
       .then(sometext => {
         cy.log('Les go to:' + sometext);
         cy.visit(sometext);
+        cy.origin(sometext, () => {
+          cy.get('#enviarChamadaBtn').should('be.visible');
+      
+          cy.get('#nomeChamadaInput').type('Alisson');
+          cy.get('#matriculaChamadaInput').type('2008444444');
+          cy.get('#enviarChamadaBtn').click();
+          cy.get('#secaoChamadaPreenchida > p > strong')
+            .contains('Pronto')
+            .should('be.visible');
+        });
       });
-    cy.get('#enviarChamadaBtn').should('be.visible');
-
-    cy.get('#nomeChamadaInput').type('Alisson');
-    cy.get('#matriculaChamadaInput').type('2008444444');
-    cy.get('#enviarChamadaBtn').click();
-    cy.get('#secaoChamadaPreenchida > p > strong')
-      .contains('Pronto')
-      .should('be.visible');
   });
 
   it('Checar se os 4 Alunos foram cadastrados na Chamada Virtual', () => {
