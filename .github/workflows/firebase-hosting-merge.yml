@@ -7,8 +7,10 @@ name: Deploy to Firebase Hosting on merge
     branches:
       - e2e-tests
 jobs:
-  build_and_deploy:
+  build_and_preview:
     runs-on: ubuntu-latest
+    outputs:
+      details_url: ${{ steps.deploy_firebase_hosting_channel.outputs.details_url}}
     steps:
       - uses: actions/checkout@v2
       - uses: FirebaseExtended/action-hosting-deploy@v0
@@ -17,3 +19,18 @@ jobs:
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_MONISSORES }}'
           channelId: test
           projectId: monissores
+
+  cypress-run:
+    name: Cypress run
+    runs-on: ubuntu-22.04
+    needs: build_and_preview
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Cypress run
+        uses: cypress-io/github-action@v5
+        with:
+          browser: chrome
+          config: pageLoadTimeout=100000,baseUrl=${{needs.build_and_preview.outputs.details_url}}
+      - run: echo Cypress E2E Tests are done
