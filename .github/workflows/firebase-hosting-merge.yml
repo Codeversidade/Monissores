@@ -7,28 +7,28 @@ name: E2E Test + Deploy to Firebase Hosting
     branches:
       - main
 jobs:
-  build_and_preview:
-    runs-on: ubuntu-latest
-
-    outputs:
-      details_url: ${{ steps.deploy_firebase_hosting_channel.outputs.details_url}}
-
-    steps:
-      - uses: actions/checkout@v2
-      - name: Deploy to Firebase Hosting Channel
-        id: deploy_firebase_hosting_channel
-        uses: FirebaseExtended/action-hosting-deploy@v0
-        with:
-          repoToken: '${{ secrets.GITHUB_TOKEN }}'
-          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_MONISSORES }}'
-          channelId: test
-          projectId: monissores
-      - run: echo ${{steps.deploy_firebase_hosting_channel.outputs.details_url}}
+#  build_and_preview:
+#    runs-on: ubuntu-latest
+#
+#    outputs:
+#      details_url: ${{ steps.deploy_firebase_hosting_channel.outputs.details_url}}
+#
+#    steps:
+#      - uses: actions/checkout@v2
+#      - name: Deploy to Firebase Hosting Channel
+#        id: deploy_firebase_hosting_channel
+#        uses: FirebaseExtended/action-hosting-deploy@v0
+#        with:
+#          repoToken: '${{ secrets.GITHUB_TOKEN }}'
+#          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_MONISSORES }}'
+#          channelId: test
+#          projectId: monissores
+#      - run: echo ${{steps.deploy_firebase_hosting_channel.outputs.details_url}}
 
   cypress-run:
     name: Cypress run
     runs-on: ubuntu-22.04
-    needs: build_and_preview
+    #needs: build_and_preview
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -36,7 +36,9 @@ jobs:
       - name: Cypress run
         uses: cypress-io/github-action@v5
         with:
-          config: pageLoadTimeout=100000,baseUrl=${{needs.build_and_preview.outputs.details_url}}
+          node-version: 18.12.1
+          config: pageLoadTimeout=100000,baseUrl=${{https://monissores--test-yhg54oj2.web.app}}
+          #needs.build_and_preview.outputs.details_url}}
       - run: echo Cypress E2E Tests are done
 
       # after the test run completes
