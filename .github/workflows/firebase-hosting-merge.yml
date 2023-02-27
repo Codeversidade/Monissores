@@ -33,10 +33,15 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
+      - name: Setup Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: 18.12.1
+      - run: node -v
+
       - name: Cypress run
         uses: cypress-io/github-action@v5
         with:
-          node-version: 18.12.1
           config: pageLoadTimeout=100000,baseUrl=https://monissores--test-yhg54oj2.web.app
           #needs.build_and_preview.outputs.details_url}}
       - run: echo Cypress E2E Tests are done
