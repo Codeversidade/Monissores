@@ -8,59 +8,6 @@ describe('Teste de Uso Geral', () => {
   beforeEach(() => {
     cy.visit('/?mode=dev');
   });
-  // TODO Adicionar os 2 alunos, cadastrar ✅3 alunos na CV e checar, cadastrar os 3 alunos na CV e checar depois deletar tudo.
-  /*it('Adicionar Aluno', () => {
-    //cy.get('.firebaseui-idp-button').click()
-    cy.get('#addAluno').click();
-    // dummy input to "warm up" Cypress
-    cy.get('#nomeAdicionarAlunoInput').type('Aluno Teste');
-    cy.get('#nomeAdicionarAlunoInput').clear().type('Aluno Teste');
-    cy.get('#matriculaAdicionarAlunoInput').type('2008111111');
-    cy.get('#salvarAlunoNovoBtn').click();
-    cy.get(
-      '#addAlunoModalDialog > .modal-dialog > .modal-content > .modal-header > .btn-close'
-    ).click();
-
-    // Checa se o aluno foi adicionado na interface
-    cy.contains('Aluno Teste').should('be.visible');
-    cy.contains('2008111111').should('be.visible');
-
-    cy.get('#\\32 008111111-0 > .btn-group > .bf').contains('0');
-  });
-
-  it('Alterar Frequência', () => {
-    // Checa se o aluno foi adicionado na interface
-    cy.contains('Aluno Teste').should('be.visible');
-    cy.contains('2008111111').should('be.visible');
-
-    cy.get('#\\32 008111111-0 > .btn-group > .bf').contains('0');
-
-    // Aumenta a Frequência
-    cy.get('#\\32 008111111-BA0').click();
-    cy.get('#\\32 008111111-BA0').click();
-    cy.get('#\\32 008111111-0 > .btn-group > .bf').contains('2');
-
-    // Diminui a Frequência
-    cy.get('#\\32 008111111-BD0').click();
-    cy.get('#\\32 008111111-BD0').click();
-    cy.get('#\\32 008111111-0 > .btn-group > .bf').contains('0');
-  });
-
-  it('Deletar Aluno', () => {
-    cy.wait(500);
-    //cy.get('.firebaseui-idp-button').click()
-    cy.get('#\\32 008111111-0').rightclick();
-    cy.get('#navBarTitulo').contains('1 aluno');
-
-    // Checa se o aluno foi adicionado na interface
-    cy.contains('Aluno Teste').should('be.visible');
-    cy.contains('2008111111').should('be.visible');
-
-    cy.get('#\\32 008111111-0 > .btn-group > .bf').contains('0');
-
-    cy.get('#removeBtn > .material-symbols-outlined').click();
-    cy.get('#removeAlunoModalDialogBtn').click();
-  });*/
 
   it('1 Adicionar Aluno', () => {
     //cy.get('.firebaseui-idp-button').click()
@@ -80,7 +27,7 @@ describe('Teste de Uso Geral', () => {
     cy.get('#\\32 008111111-0 > .btn-group > .bf').contains('0');
   });
 
-  /*it('2 Adicionar Aluno', () => {
+  it('2 Adicionar Aluno', () => {
     //cy.get('.firebaseui-idp-button').click()
     cy.get('#addAluno').click();
     // dummy input to "warm up" Cypress
@@ -225,7 +172,6 @@ describe('Teste de Uso Geral', () => {
       'Ativada'
     );
     cy.get('#chamadaVirtual').click();
-    //cy.get('#ativarCVSwitch').click();
     cy.get('#importarAlunosCVBtn').click();
     cy.get('#toastChamadaVirtualFechada > .d-flex > .toast-body').should(
       'be.visible'
@@ -254,8 +200,6 @@ describe('Teste de Uso Geral', () => {
     cy.get('#\\32 008222222-BA0').click();
     cy.get('#\\32 008222222-0 > .btn-group > .bf').contains('4');
   });
-
-  //✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅
 
   it('2 Abrir Chamada Virtual', () => {
     cy.get('#chamadaVirtual > table > tbody > :nth-child(2) > td').contains(
@@ -513,5 +457,5 @@ describe('Teste de Uso Geral', () => {
     cy.get('#\\32 008222222-0').should('not.exist');
     cy.get('#\\32 008333333-0').should('not.exist');
     cy.get('#\\32 008444444-0').should('not.exist');
-  });*/
+  });
 });
