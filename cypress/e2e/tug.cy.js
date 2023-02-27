@@ -103,7 +103,7 @@ describe('Teste de Uso Geral', () => {
       .then(sometext => {
         cy.log('Les go to:' + sometext);
         cy.visit(sometext);
-        cy.origin(sometext, () => {
+        cy.origin('https://monissores-chamada.web.app', () => {
             cy.get('#enviarChamadaBtn').should('be.visible');
 
             cy.get('#nomeChamadaInput').type('Aluno Teste');
