@@ -10,17 +10,15 @@ jobs:
   build_and_preview:
     runs-on: ubuntu-latest
     outputs:
-      details_url: ${{ steps.deploy_firebase_hosting_channel.outputs.details_url}}
+      details_url: ${{ steps.outputs.details_url}}
     steps:
       - uses: actions/checkout@v2
-        id: deploy_firebase_hosting_channel
-        uses: FirebaseExtended/action-hosting-deploy@v0
+      - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_MONISSORES }}'
           channelId: test
           projectId: monissores
-    - run: echo The testing link is ${{steps.deploy_firebase_hosting_channel.outputs.details_url}}
 
   cypress-run:
     name: Cypress run
