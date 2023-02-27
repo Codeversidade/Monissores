@@ -40,7 +40,7 @@ jobs:
       - run: node -v
 
       - name: Cypress run
-        uses: cypress-io/github-action@v5
+        uses: cypress-io/github-action@v2
         with:
           config: pageLoadTimeout=100000,baseUrl=https://monissores--test-yhg54oj2.web.app
           #needs.build_and_preview.outputs.details_url}}
