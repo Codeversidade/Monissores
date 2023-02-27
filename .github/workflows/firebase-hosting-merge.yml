@@ -36,8 +36,6 @@ jobs:
       - name: Cypress run
         uses: cypress-io/github-action@v5
         with:
-          browser: chrome
-          headed: true
           config: pageLoadTimeout=100000,baseUrl=${{needs.build_and_preview.outputs.details_url}}
       - run: echo Cypress E2E Tests are done
 
