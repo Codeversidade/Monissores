@@ -16,7 +16,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - name: Deploy to Firebase Hosting Channel For Cypress Test
+      - name: Deploy to Firebase Hosting Channel
         id: deploy_firebase_hosting_channel
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
@@ -24,7 +24,7 @@ jobs:
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_APRENDENDOFB_4DDFD }}'
           channelId: test
           projectId: aprendendofb-4ddfd
-      - run: echo The testing link is ${{steps.deploy_firebase_hosting_channel.outputs.details_url}}
+      - run: echo BBB ${{steps.deploy_firebase_hosting_channel.outputs.details_url}}
 
   cypress-run:
     name: Cypress run
