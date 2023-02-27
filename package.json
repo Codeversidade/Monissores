@@ -1,6 +1,7 @@
 {
   "devDependencies": {
     "cypress": "^12.5.1",
-    "cypress-slow-down": "^1.2.1"
+    "cypress-slow-down": "^1.2.1",
+    "firebase-tools": "^11.24.0"
   }
 }
