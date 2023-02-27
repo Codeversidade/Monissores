@@ -92,6 +92,8 @@ describe('Teste de Uso Geral', () => {
   });
 
   it('1 Preenchimento da Chamada Virtual', () => {
+    cy.wait(500);
+
     cy.get('#chamadaVirtual > table > tbody > :nth-child(2) > td').contains(
       'Ativada'
     );
@@ -438,9 +440,15 @@ describe('Teste de Uso Geral', () => {
     cy.get('#removeBtn > .material-symbols-outlined').click();
     cy.get('#removeAlunoModalDialogBtn').click();
     cy.get('#\\32 008111111-0').should('not.exist');
+    cy.get('#\\32 008222222-0').should('be.visible');
+    cy.get('#\\32 008333333-0').should('be.visible');
+    cy.get('#\\32 008444444-0').should('be.visible');
   });
 
   it('2/3/4 Deletar Alunos', () => {
+    cy.get('#\\32 008222222-0').should('be.visible');
+    cy.get('#\\32 008333333-0').should('be.visible');
+    cy.get('#\\32 008444444-0').should('be.visible');
     cy.get('#\\32 008111111-0').should('not.exist');
 
     // Deleta Alana, Alex e Alisson
