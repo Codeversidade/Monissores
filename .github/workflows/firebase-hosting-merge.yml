@@ -23,7 +23,7 @@ jobs:
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_MONISSORES }}'
           channelId: test
           projectId: monissores
-      - run: echo BBB ${{steps.deploy_firebase_hosting_channel.outputs.details_url}}
+      - run: echo ${{steps.deploy_firebase_hosting_channel.outputs.details_url}}
 
   cypress-run:
     name: Cypress run
@@ -39,3 +39,15 @@ jobs:
           browser: chrome
           config: pageLoadTimeout=100000,baseUrl=${{needs.build_and_preview.outputs.details_url}}
       - run: echo Cypress E2E Tests are done
+
+  build_and_deploy:
+    runs-on: ubuntu-latest
+    needs: cypress-run
+    steps:
+      - uses: actions/checkout@v2
+      - uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: '${{ secrets.GITHUB_TOKEN }}'
+          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_MONISSORES }}'
+          channelId: live
+          projectId: monissores
