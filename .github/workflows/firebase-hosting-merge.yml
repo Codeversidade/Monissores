@@ -13,7 +13,6 @@ jobs:
       details_url: ${{ steps.deploy_firebase_hosting_channel.outputs.details_url}}
     steps:
       - uses: actions/checkout@v2
-      - name: Deploy to Firebase Hosting Channel
         id: deploy_firebase_hosting_channel
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
