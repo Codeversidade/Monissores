@@ -87,7 +87,7 @@ describe('Teste de Uso Geral', () => {
       .then(sometext => {
         cy.log('Les go to:' + sometext);
         cy.visit(sometext);
-        cy.origin('https://monissores-chamada.web.app', () => {
+        cy.origin(sometext.slice(0, text.indexOf('?')), () => {
           cy.get('#enviarChamadaBtn').should('be.visible');
         });
       });
@@ -105,7 +105,7 @@ describe('Teste de Uso Geral', () => {
       .then(sometext => {
         cy.log('Les go to:' + sometext);
         cy.visit(sometext);
-        cy.origin('https://monissores-chamada.web.app', () => {
+        cy.origin(sometext.slice(0, text.indexOf('?')), () => {
             cy.get('#enviarChamadaBtn').should('be.visible');
 
             cy.get('#nomeChamadaInput').type('Aluno Teste');
@@ -128,7 +128,7 @@ describe('Teste de Uso Geral', () => {
       .then(sometext => {
         cy.log('Les go to:' + sometext);
         cy.visit(sometext);
-        cy.origin('https://monissores-chamada.web.app', () => {
+        cy.origin(sometext.slice(0, text.indexOf('?')), () => {
           cy.get('#enviarChamadaBtn').should('be.visible');
   
           cy.get('#nomeChamadaInput').type('Alana');
@@ -151,7 +151,7 @@ describe('Teste de Uso Geral', () => {
       .then(sometext => {
         cy.log('Les go to:' + sometext);
         cy.visit(sometext);
-        cy.origin('https://monissores-chamada.web.app', () => {
+        cy.origin(sometext.slice(0, text.indexOf('?')), () => {
           cy.get('#enviarChamadaBtn').should('be.visible');
       
           cy.get('#nomeChamadaInput').type('Alex');
@@ -222,7 +222,7 @@ describe('Teste de Uso Geral', () => {
       .then(sometext => {
         cy.log('Les go to:' + sometext);
         cy.visit(sometext);
-        cy.origin('https://monissores-chamada.web.app', () => {
+        cy.origin(sometext.slice(0, text.indexOf('?')), () => {
           cy.get('#enviarChamadaBtn').should('be.visible');
         });
       });
@@ -238,7 +238,7 @@ describe('Teste de Uso Geral', () => {
       .then(sometext => {
         cy.log('Les go to:' + sometext);
         cy.visit(sometext);
-        cy.origin('https://monissores-chamada.web.app', () => {
+        cy.origin(sometext.slice(0, text.indexOf('?')), () => {
           cy.get('#enviarChamadaBtn').should('be.visible');
       
           cy.get('#nomeChamadaInput').type('Aluno Teste com Nome Errado');
@@ -261,7 +261,7 @@ describe('Teste de Uso Geral', () => {
       .then(sometext => {
         cy.log('Les go to:' + sometext);
         cy.visit(sometext);
-        cy.origin('https://monissores-chamada.web.app', () => {
+        cy.origin(sometext.slice(0, text.indexOf('?')), () => {
           cy.get('#enviarChamadaBtn').should('be.visible');
       
           cy.get('#nomeChamadaInput').type('Alana');
@@ -284,7 +284,7 @@ describe('Teste de Uso Geral', () => {
       .then(sometext => {
         cy.log('Les go to:' + sometext);
         cy.visit(sometext);
-        cy.origin('https://monissores-chamada.web.app', () => {
+        cy.origin(sometext.slice(0, text.indexOf('?')), () => {
           cy.get('#enviarChamadaBtn').should('be.visible');
       
           cy.get('#nomeChamadaInput').type('Alex');
@@ -307,7 +307,7 @@ describe('Teste de Uso Geral', () => {
       .then(sometext => {
         cy.log('Les go to:' + sometext);
         cy.visit(sometext);
-        cy.origin('https://monissores-chamada.web.app', () => {
+        cy.origin(sometext.slice(0, text.indexOf('?')), () => {
           cy.get('#enviarChamadaBtn').should('be.visible');
       
           cy.get('#nomeChamadaInput').type('Alisson');
@@ -408,7 +408,7 @@ describe('Teste de Uso Geral', () => {
     cy.get(
       '#editAlunoModalDialog > .modal-dialog > .modal-content > .modal-header > .btn-close'
     ).click();
-    cy.get('#desselecionarTudoBtn > .material-symbols-outlined').click();
+    //cy.get('#desselecionarTudoBtn > .material-symbols-outlined').click();
     cy.contains('Aluno Teste com Nome Errado');
   });
 
@@ -425,7 +425,7 @@ describe('Teste de Uso Geral', () => {
     cy.get(
       '#editAlunoModalDialog > .modal-dialog > .modal-content > .modal-header > .btn-close'
     ).click();
-    cy.get('#desselecionarTudoBtn > .material-symbols-outlined').click();
+    //cy.get('#desselecionarTudoBtn > .material-symbols-outlined').click();
     cy.contains('Aluno Teste');
     cy.contains('2009111111');
   });
