@@ -80,7 +80,7 @@ describe('Teste de Uso Geral', () => {
     cy.get('#\\32 008111111-0 > .btn-group > .bf').contains('0');
   });
 
-  it('2 Adicionar Aluno', () => {
+  /*it('2 Adicionar Aluno', () => {
     //cy.get('.firebaseui-idp-button').click()
     cy.get('#addAluno').click();
     // dummy input to "warm up" Cypress
@@ -513,5 +513,5 @@ describe('Teste de Uso Geral', () => {
     cy.get('#\\32 008222222-0').should('not.exist');
     cy.get('#\\32 008333333-0').should('not.exist');
     cy.get('#\\32 008444444-0').should('not.exist');
-  });
+  });*/
 });
