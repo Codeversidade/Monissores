@@ -111,6 +111,7 @@ describe('Teste de Uso Geral', () => {
             cy.get('#nomeChamadaInput').type('Aluno Teste');
             cy.get('#matriculaChamadaInput').type('2008111111');
             cy.get('#enviarChamadaBtn').click();
+            cy.wait(1000);
             cy.get('#secaoChamadaPreenchida > p > strong')
               .contains('Pronto')
               .should('be.visible');
@@ -134,6 +135,7 @@ describe('Teste de Uso Geral', () => {
           cy.get('#nomeChamadaInput').type('Alana');
           cy.get('#matriculaChamadaInput').type('2008222222');
           cy.get('#enviarChamadaBtn').click();
+          cy.wait(1000);
           cy.get('#secaoChamadaPreenchida > p > strong')
             .contains('Pronto')
             .should('be.visible');
@@ -157,6 +159,7 @@ describe('Teste de Uso Geral', () => {
           cy.get('#nomeChamadaInput').type('Alex');
           cy.get('#matriculaChamadaInput').type('2008333333');
           cy.get('#enviarChamadaBtn').click();
+          cy.wait(1000);
           cy.get('#secaoChamadaPreenchida > p > strong')
             .contains('Pronto')
             .should('be.visible');
@@ -244,6 +247,7 @@ describe('Teste de Uso Geral', () => {
           cy.get('#nomeChamadaInput').type('Aluno Teste com Nome Errado');
           cy.get('#matriculaChamadaInput').type('2008111111');
           cy.get('#enviarChamadaBtn').click();
+          cy.wait(1000);
           cy.get('#secaoChamadaPreenchida > p > strong')
             .contains('Pronto')
             .should('be.visible');
@@ -267,6 +271,7 @@ describe('Teste de Uso Geral', () => {
           cy.get('#nomeChamadaInput').type('Alana');
           cy.get('#matriculaChamadaInput').type('2008222222');
           cy.get('#enviarChamadaBtn').click();
+          cy.wait(1000);
           cy.get('#secaoChamadaPreenchida > p > strong')
             .contains('Pronto')
             .should('be.visible');
@@ -290,6 +295,7 @@ describe('Teste de Uso Geral', () => {
           cy.get('#nomeChamadaInput').type('Alex');
           cy.get('#matriculaChamadaInput').type('2008333333');
           cy.get('#enviarChamadaBtn').click();
+          cy.wait(1000);
           cy.get('#secaoChamadaPreenchida > p > strong')
             .contains('Pronto')
             .should('be.visible');
@@ -313,6 +319,7 @@ describe('Teste de Uso Geral', () => {
           cy.get('#nomeChamadaInput').type('Alisson');
           cy.get('#matriculaChamadaInput').type('2008444444');
           cy.get('#enviarChamadaBtn').click();
+          cy.wait(1000);
           cy.get('#secaoChamadaPreenchida > p > strong')
             .contains('Pronto')
             .should('be.visible');
