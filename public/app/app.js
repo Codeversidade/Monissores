@@ -18,25 +18,25 @@ const nomeAdicionarAlunoInput = document.getElementById(
 );
 const matriculaAdicionarAlunoInput = document.getElementById(
   'matriculaAdicionarAlunoInput'
-  );
-  const alunosLista1 = document.getElementById('alunosLista1');
-  const groupListMes = document.querySelectorAll('.list-group');
-  const searchbarDiv= document.getElementById('searchbar-div');
-  
-  var searchbarCliques = 0;
-  
-  const nomeApp = document.getElementById("navBarTitulo");
-  const cabecalhoInterno1 = document.getElementById("cabecalhoInterno1");
-  const barraDePesquisa = document.getElementById("barraDePesquisa");
-  const pesquisarBtn = document.getElementById("pesquisarBtn");
-  const searchbarBtnComeBack = document.getElementById("searchbarBtnComeBack");
-  barraDePesquisa.style.cssText = "display: none;";
-  
-const relatorioBtn = document.getElementById("relatorioBtn");
-const faixaBtn = document.getElementById("faixaBtn");
+);
+const alunosLista1 = document.getElementById('alunosLista1');
+const groupListMes = document.querySelectorAll('.list-group');
+const searchbarDiv = document.getElementById('searchbar-div');
+
+var searchbarCliques = 0;
+
+const nomeApp = document.getElementById('navBarTitulo');
+const cabecalhoInterno1 = document.getElementById('cabecalhoInterno1');
+const barraDePesquisa = document.getElementById('barraDePesquisa');
+const pesquisarBtn = document.getElementById('pesquisarBtn');
+const searchbarBtnComeBack = document.getElementById('searchbarBtnComeBack');
+barraDePesquisa.style.cssText = 'display: none;';
+
+const relatorioBtn = document.getElementById('relatorioBtn');
+const faixaBtn = document.getElementById('faixaBtn');
 
 // Gambiarra para poder testar no localhost
-const auth = firebase.auth();  
+const auth = firebase.auth();
 
 const paramsString = window.location.search;
 const searchParams = new URLSearchParams(paramsString);
@@ -49,7 +49,7 @@ if (searchParams.get('mode') == 'dev') {
     var errorCode = error.code;
     var errorMessage = error.message;
   });*/
-  auth.signInAnonymously()
+  auth.signInAnonymously();
 }
 
 var itensSelecionadosListGroup = [];
@@ -62,32 +62,33 @@ var chamadaVirtualAtivada;
 var chamadaVirtualAtivadaServer = false;
 var chamadaVirtualAtivadaClient;
 var qrCode;
-var tabAtual = $("#mes-1-tab")[0];
+var tabAtual = $('#mes-1-tab')[0];
 var online = navigator.onLine;
 
 deslogarDoGoogleBtn.onclick = () => {
   auth.signOut();
   unsubscribeLA && unsubscribeLA();
   unsubscribeEstadoCV && unsubscribeEstadoCV();
-
 };
 
 const db = firebase.firestore(); //Teste
 
 //firebase.enableIndexDbPersistence(db);
 
-firebase.firestore().enablePersistence()
-.catch((err) => {
-  if (err.code == 'failed-precondition') {
-    // Multiple tabs open, persistence can only be enabled
-    // in one tab at a a time.
-        // ...
+firebase
+  .firestore()
+  .enablePersistence()
+  .catch(err => {
+    if (err.code == 'failed-precondition') {
+      // Multiple tabs open, persistence can only be enabled
+      // in one tab at a a time.
+      // ...
     } else if (err.code == 'unimplemented') {
-        // The current browser does not support all of the
-        // features required to enable persistence
-        // ...
-      }
-});
+      // The current browser does not support all of the
+      // features required to enable persistence
+      // ...
+    }
+  });
 let alunosRef;
 let chamadaRef;
 let monitoresRef;
@@ -99,20 +100,21 @@ let unsubscribeEstadoCV;
 
 auth.onAuthStateChanged(user => {
   if (user) {
-    
     //console.log(firebase)
     // Quando o usuário Logar essa parte será executada
     secaoPrincipal.hidden = false;
     secaoLogin.hidden = true;
     secaoInicial.hidden = true;
     userDetails.innerHTML = `<h3>${user.displayName}!</h3> <p>Logado como ${user.email}</p>`;
-    
 
     alunosRef = db.collection('alunos');
     chamadaRef = db.collection('chamada');
     monitoresRef = db.collection('monitores');
-    alunosMonitorRef = db.collection('monitores').doc(user.uid).collection('alunos');
-    
+    alunosMonitorRef = db
+      .collection('monitores')
+      .doc(user.uid)
+      .collection('alunos');
+
     criarMonitorNoBD(monitoresRef, alunosRef, user);
     /*udb.exibirListaDeAlunosChamadaVirtualTeste(user, monitoresRef);
     udb.p();*/
@@ -145,45 +147,57 @@ auth.onAuthStateChanged(user => {
       configurarBtnEditar(user, monitoresRef);
     };
     $('#btnDeletarConta').on('click', () => configurarBtnDeletarConta(user));
-    
-    importarAlunosCVBtn.onclick = () => {
-        importarAlunosCVBtn.hidden = true;
-        $('#ativarCVSwitch').trigger('click');
-    }
 
-    $('#btnCompartilharLinkChamadaVirtual').on('click', () => compartilharLinkChamadaVirtual())
-    addAlunoModalDialog.addEventListener('show.bs.modal', event => 
-        configurarDialogPushState("dialog", "addAlunoModalDialog", "adicionar")
+    importarAlunosCVBtn.onclick = () => {
+      importarAlunosCVBtn.hidden = true;
+      $('#ativarCVSwitch').trigger('click');
+    };
+
+    $('#btnCompartilharLinkChamadaVirtual').on('click', () =>
+      compartilharLinkChamadaVirtual()
     );
-    relatorioModalDialog.addEventListener('show.bs.modal', event => 
-        configurarDialogPushState("dialog", "relatorioModalDialog", "relatorio")
+    addAlunoModalDialog.addEventListener('show.bs.modal', event =>
+      configurarDialogPushState('dialog', 'addAlunoModalDialog', 'adicionar')
     );
-    configsModalDialog.addEventListener('show.bs.modal', event => 
-        configurarDialogPushState("dialog", "configsModalDialog", "configs")
+    relatorioModalDialog.addEventListener('show.bs.modal', event =>
+      configurarDialogPushState('dialog', 'relatorioModalDialog', 'relatorio')
     );
-    
+    configsModalDialog.addEventListener('show.bs.modal', event =>
+      configurarDialogPushState('dialog', 'configsModalDialog', 'configs')
+    );
+
     removeAlunoModalDialog.addEventListener('show.bs.modal', event => {
-        configurarDialogPushState("dialog", "removeAlunoModalDialog", "remover", "selecao");
+      configurarDialogPushState(
+        'dialog',
+        'removeAlunoModalDialog',
+        'remover',
+        'selecao'
+      );
     });
-  
+
     editAlunoModalDialog.addEventListener('show.bs.modal', event => {
-      configurarDialogPushState("dialog", "editAlunoModalDialog", "editar", "selecao")
-      nomeEditarAlunoInput.value = getNameISLG(itensSelecionadosListGroup[0]);
-      matriculaEditarAlunoInput.value = getMatriculaISLG(
+      configurarDialogPushState(
+        'dialog',
+        'editAlunoModalDialog',
+        'editar',
+        'selecao'
+      );
+      nomeEditarAlunoInput.value = getNomeISLG(itensSelecionadosListGroup[0]);
+      matriculaEditarAlunoInput.value = getCpfISLG(
         itensSelecionadosListGroup[0]
       );
     });
 
     chamadaVirtualModalDialog.addEventListener('show.bs.modal', event => {
       atualizarLayoutDialogCV(user.uid);
-      configurarSwitchAtivacaoChamadaVirtual(user, chamadaRef)
+      configurarSwitchAtivacaoChamadaVirtual(user, chamadaRef);
       chamadaRef
         .doc(`${user.uid}`)
-        .get({source: 'cache'})
+        .get({ source: 'cache' })
         .then(doc => {
           //chamadaVirtualAtivadaServer = doc.data().chamadaAtiva;
           //1atualizarLayoutDialogCV(user.uid)
-          configurarSwitchAtivacaoChamadaVirtual(user, chamadaRef)
+          configurarSwitchAtivacaoChamadaVirtual(user, chamadaRef);
           //Se estiver ativada no servidor ativa no cliente
           if (chamadaVirtualAtivadaServer) {
             //$('#ativarCVSwitch').trigger('click');
@@ -191,15 +205,16 @@ auth.onAuthStateChanged(user => {
               user,
               chamadaRef
             );
-          } 
-        })  
-        .catch((error) => {
-            chamadaRef
-            .doc(`${user.uid}`)
-            .set({
-              chamadaAtiva: false,
-            });
-            console.error("É a primeira vez da pessoa na feature, criamos o doc.: ", error);
+          }
+        })
+        .catch(error => {
+          chamadaRef.doc(`${user.uid}`).set({
+            chamadaAtiva: false,
+          });
+          console.error(
+            'É a primeira vez da pessoa na feature, criamos o doc.: ',
+            error
+          );
         });
     });
     var dialogs = [
@@ -207,7 +222,8 @@ auth.onAuthStateChanged(user => {
       editAlunoModalDialog,
       addAlunoModalDialog,
       relatorioModalDialog,
-      configsModalDialog];
+      configsModalDialog,
+    ];
     configurarDialogPopState(dialogs);
     window.addEventListener('online', () => {
       online = true;
@@ -216,30 +232,29 @@ auth.onAuthStateChanged(user => {
       //atualizarLayoutDialogCV(user.uid);
     });
     window.addEventListener('offline', () => {
-        online = false;
-        atualizarTextoBtnCV(user.uid, tabAtual);
-        //atualizarLayoutDialogCV(user.uid);
+      online = false;
+      atualizarTextoBtnCV(user.uid, tabAtual);
+      //atualizarLayoutDialogCV(user.uid);
     });
     chamadaVirtualModalDialog.addEventListener('hide.bs.modal', event => {
-      if (history.state.id == 'dialog')
-      {
-          history.go(-1)
+      if (history.state.id == 'dialog') {
+        history.go(-1);
       }
       atualizarTextoBtnCV(user.uid, tabAtual);
       unsubscribeLCV && unsubscribeLCV();
     });
-    
+
     configurarBtnDesselecionar();
     //desgrudar()
-    
+
     configurarSelecaoInicialDosItensListGroup();
     configurarSelecaoDosItensListGroupClick();
     buttonAdicionarFrequencia(user, monitoresRef);
     buttonSubtrairFrequencia(user, monitoresRef);
     configuraBtnMes(user, monitoresRef);
-    configurarPopState()
-    configurarTabsPushState()
-    configurarBtnSelecionarTudo()
+    configurarPopState();
+    configurarTabsPushState();
+    configurarBtnSelecionarTudo();
 
     // Atualiza o Estado da chamada virtual
     unsubscribeEstadoCV = monitorarEstadoChamadaVirtual(user, chamadaRef);
@@ -247,10 +262,12 @@ auth.onAuthStateChanged(user => {
     /*exibirListaDeAlunos(user, monitoresRef, alunosLista1, 0);
     exibirListaDeAlunos(user, monitoresRef, alunosLista2, 1);
     exibirListaDeAlunos(user, monitoresRef, alunosLista3, 2);*/
-    unsubscribeLA = exibirListaDeAlunos(user, monitoresRef, [alunosLista1, alunosLista2, alunosLista3, alunosLista4], 4);
-    
-    
-
+    unsubscribeLA = exibirListaDeAlunos(
+      user,
+      monitoresRef,
+      [alunosLista1, alunosLista2, alunosLista3, alunosLista4],
+      4
+    );
   } else {
     //  Quando o usuário estiver deslogado essa parte será executada
     secaoPrincipal.hidden = true;
@@ -278,14 +295,13 @@ firebaseRef.child('.info/connected').on('value', function(connectedSnap) {
   }
 });*/
 
-
 ///////////////////////////////////////////
 //Impedindo que a lista de alunos fique debaixo do cabeçalho lá no html
-window.addEventListener('resize',desgrudar);
-function desgrudar(){
-  var alturaCabecalho = document.getElementById("cabecalho").offsetHeight
-  var divConteudo = document.getElementById('linhaAbasContent')
-  divConteudo.style.marginTop = alturaCabecalho + "px";
+window.addEventListener('resize', desgrudar);
+function desgrudar() {
+  var alturaCabecalho = document.getElementById('cabecalho').offsetHeight;
+  var divConteudo = document.getElementById('linhaAbasContent');
+  divConteudo.style.marginTop = alturaCabecalho + 'px';
   /*console.log(alturaCabecalho)
   console.log(divConteudo)*/
 }
@@ -293,69 +309,73 @@ function desgrudar(){
 // ERA V2
 
 function gerarAluno(nome, matricula, frequencia) {
-    return {
-      nome: nome,
-      matricula: matricula,
-      frequencia: frequencia
-    };
+  return {
+    nome: nome,
+    matricula: matricula,
+    frequencia: frequencia,
+  };
 }
 
-function setarAluno(user, collectionRef, alunos_novos, modoEdicao = false, matricula_nova = null, tarefa = () => {}, modoChamada = false) {
+function setarAluno(
+  user,
+  collectionRef,
+  alunos_novos,
+  modoEdicao = false,
+  matricula_nova = null,
+  tarefa = () => {},
+  modoChamada = false
+) {
+  let key;
+  let alunoExiste;
+  let sucesso = true;
 
-    let key;
-    let alunoExiste;
-    let sucesso = true;
-
-    if (Array.isArray(alunos_novos) === false) {
-      alunos_novos = [alunos_novos];
+  if (Array.isArray(alunos_novos) === false) {
+    alunos_novos = [alunos_novos];
+  }
+  alunos_novos.forEach(aluno => {
+    key = `${user.uid}.A${aluno.matricula}`;
+    alunoExiste = alunos.hasOwnProperty(key);
+    if (alunoExiste === false && modoEdicao === false) {
+      alunos[key] = {
+        uid: user.uid,
+        nome: aluno.nome,
+        matricula: aluno.matricula,
+        frequencia: aluno.frequencia,
+      };
+    } else if (modoChamada === true) {
+      alunos[key] = {
+        uid: user.uid,
+        nome: aluno.nome,
+        matricula: aluno.matricula,
+        frequencia: aluno.frequencia,
+      };
+    } else if (
+      alunoExiste === true &&
+      modoEdicao === true &&
+      matricula_nova === null
+    ) {
+      alunos[key] = {
+        uid: user.uid,
+        nome: aluno.nome,
+        matricula: aluno.matricula,
+        frequencia: aluno.frequencia,
+      };
+    } else if (modoEdicao === true && matricula_nova !== null) {
+      var new_key = `${user.uid}.A${matricula_nova}`;
+      delete alunos[key];
+      alunos[new_key] = {
+        uid: user.uid,
+        nome: aluno.nome,
+        matricula: matricula_nova,
+        frequencia: aluno.frequencia,
+      };
+    } else {
+      console.log('Aluno já existe e não estamos em modo de edição');
+      sucesso = false;
     }
-    alunos_novos.forEach(aluno => {
-        key = `${user.uid}.A${aluno.matricula}`;
-        alunoExiste = alunos.hasOwnProperty(key);
-        if (alunoExiste === false && modoEdicao === false) {
-          alunos[key] = {
-            uid: user.uid,
-            nome: aluno.nome,
-            matricula: aluno.matricula,
-            frequencia: aluno.frequencia,
-          }
-        }
-        else if (modoChamada === true) {
-          alunos[key] = {
-            uid: user.uid,
-            nome: aluno.nome,
-            matricula: aluno.matricula,
-            frequencia: aluno.frequencia,
-          }
-        }
-        else if (alunoExiste === true && modoEdicao === true && matricula_nova === null) {
-          alunos[key] = {
-            uid: user.uid,
-            nome: aluno.nome,
-            matricula: aluno.matricula,
-            frequencia: aluno.frequencia,
-          }
-        }
-        else if (modoEdicao === true && matricula_nova !== null) {
-          var new_key = `${user.uid}.A${matricula_nova}`;
-          delete alunos[key];
-          alunos[new_key] = {
-            uid: user.uid,
-            nome: aluno.nome,
-            matricula: matricula_nova,
-            frequencia: aluno.frequencia,
-          }
-        }
-        else {
-          console.log("Aluno já existe e não estamos em modo de edição");
-          sucesso = false;
-        }
-    });
+  });
 
-
-
-
-    /*var key = `${user.uid}.A${matricula}`;//'B0LiSdSv1MMdy0VxjdswpPkyOXH2.A2020687735';//
+  /*var key = `${user.uid}.A${matricula}`;//'B0LiSdSv1MMdy0VxjdswpPkyOXH2.A2020687735';//
     console.log(alunos[key]);
     var alunoExiste = alunos.hasOwnProperty(key);
     
@@ -390,18 +410,30 @@ function setarAluno(user, collectionRef, alunos_novos, modoEdicao = false, matri
       return false;
     }*/
 
-    if (sucesso === true) {
-        atualizarAlunos(user, collectionRef, alunos, `Adicionamos ou editamos aluno(s).`, tarefa);
-    }
-    return sucesso;
+  if (sucesso === true) {
+    atualizarAlunos(
+      user,
+      collectionRef,
+      alunos,
+      `Adicionamos ou editamos aluno(s).`,
+      tarefa
+    );
+  }
+  return sucesso;
 }
 
-function atualizarAlunos(user, collectionRef, alunosNovos, mensagem, tarefa = () => {}) {
+function atualizarAlunos(
+  user,
+  collectionRef,
+  alunosNovos,
+  mensagem,
+  tarefa = () => {}
+) {
   collectionRef
     .doc(`${user.uid}`)
     .set({
-        uid: user.uid,
-        alunos: alunosNovos
+      uid: user.uid,
+      alunos: alunosNovos,
     })
     .then(() => {
       console.log(mensagem);
@@ -413,17 +445,17 @@ function atualizarAlunos(user, collectionRef, alunosNovos, mensagem, tarefa = ()
 }
 // ERA V2
 function removerAluno(user, collectionRef, matriculas, tarefa = () => {}) {
-    let key;
-    if (Array.isArray(matriculas) === false) {
-      matriculas = [matriculas];
+  let key;
+  if (Array.isArray(matriculas) === false) {
+    matriculas = [matriculas];
+  }
+  matriculas.forEach(matricula => {
+    key = `${user.uid}.A${matricula}`;
+    if (alunos.hasOwnProperty(key) === true) {
+      delete alunos[key];
     }
-    matriculas.forEach(matricula => {
-        key = `${user.uid}.A${matricula}`;
-        if (alunos.hasOwnProperty(key) === true) {
-            delete alunos[key];
-        }
-    });
-    /*var key = `${user.uid}.A${matricula}`;//'B0LiSdSv1MMdy0VxjdswpPkyOXH2.A2020687735';//
+  });
+  /*var key = `${user.uid}.A${matricula}`;//'B0LiSdSv1MMdy0VxjdswpPkyOXH2.A2020687735';//
     //console.log(alunos[key]);
     var alunoExiste = alunos.hasOwnProperty(key);
 
@@ -431,9 +463,14 @@ function removerAluno(user, collectionRef, matriculas, tarefa = () => {}) {
         delete alunos[key];
     }*/
 
-    atualizarAlunos(user, collectionRef, alunos, `Deletamos A${matriculas}.`, tarefa);
+  atualizarAlunos(
+    user,
+    collectionRef,
+    alunos,
+    `Deletamos A${matriculas}.`,
+    tarefa
+  );
 }
-
 
 /*function setarAluno(user, collectionRef, nome, matricula, frequencia) {
   let alunoExiste = false;
@@ -483,7 +520,12 @@ function removerAluno(user, collectionRef, matriculas, tarefa = () => {}) {
     });
 }*/
 
-function removerAlunoChamadaVirtual(user, collectionRef, matricula, tarefa = () => {}) {
+function removerAlunoChamadaVirtual(
+  user,
+  collectionRef,
+  matricula,
+  tarefa = () => {}
+) {
   collectionRef
     .doc(`${user.uid}.A${matricula}`)
     .delete()
@@ -498,8 +540,12 @@ function removerAlunoChamadaVirtual(user, collectionRef, matricula, tarefa = () 
 
 // ERA V2
 function editarAlunoFrequencia(user, collectionRef, matricula, frequencia) {
-    var aluno = gerarAluno(alunos[`${user.uid}.A${matricula}`].nome, matricula, frequencia,)
-    setarAluno(user, collectionRef, aluno,  true);
+  var aluno = gerarAluno(
+    alunos[`${user.uid}.A${matricula}`].nome,
+    matricula,
+    frequencia
+  );
+  setarAluno(user, collectionRef, aluno, true);
 }
 
 /*function editarAlunoFrequencia(user, collectionRef, matricula, frequencia) {
@@ -524,39 +570,41 @@ function salvarAluno(
   matriculaInput,
   frequencia
 ) {
-
-  var matricula_nova = matriculaInput.value; 
+  var matricula_nova = matriculaInput.value;
   var nome = nomeAdicionarAlunoInput.value;
-  var valido = sanitizarInputs(nome, matricula_nova, 'toastAdicionarAluno', "Novo aluno cadastrado.")
-  if (valido)
-  {
-    var aluno = gerarAluno(nameInput.value, parseInt(matriculaInput.value), frequencia);
-    var result = setarAluno(
-      user,
-      collectionRef,
-      aluno
+  var valido = sanitizarInputs(
+    nome,
+    matricula_nova,
+    'toastAdicionarAluno',
+    'Novo aluno cadastrado.'
+  );
+  if (valido) {
+    var aluno = gerarAluno(
+      nameInput.value,
+      parseInt(matriculaInput.value),
+      frequencia
     );
-    
+    var result = setarAluno(user, collectionRef, aluno);
+
     if (result === false) {
       console.log('Aluno já existe.');
       $(`#toastAdicionarAlunoText`).html('⚠ Esse aluno já foi cadastrado.');
-      const toast = new bootstrap.Toast(document.getElementById('toastAdicionarAluno'));
+      const toast = new bootstrap.Toast(
+        document.getElementById('toastAdicionarAluno')
+      );
       toast.show();
-    }
-    else{
+    } else {
       nameInput.value = '';
       matriculaInput.value = '';
     }
   }
-  
 }
 
-
-function getNameISLG(i) {
+function getNomeISLG(i) {
   return i.find('label')[0].innerHTML;
 }
 
-function getMatriculaISLG(i) {
+function getCpfISLG(i) {
   return parseInt(i.find('label')[1].innerHTML);
 }
 
@@ -565,9 +613,8 @@ function getMesISLG(i) {
 }
 
 function getMesTabAtual(tab_atual) {
-  return parseInt(tab_atual.id.slice(4, 5)) -1;
+  return parseInt(tab_atual.id.slice(4, 5)) - 1;
 }
-
 
 function getDivBunttonsFrequenciaISLG(i) {
   return i.find('div')[1];
@@ -575,7 +622,7 @@ function getDivBunttonsFrequenciaISLG(i) {
 
 function removerItemSelecionado(value, index, arr) {
   // If the value at the current array index matches the specified value (2)
-  if (getMatriculaISLG(value) === getMatriculaISLG(ultimoItemClicado)) {
+  if (getCpfISLG(value) === getCpfISLG(ultimoItemClicado)) {
     // Removes the value from the original array
     arr.splice(index, 1);
     return true;
@@ -593,18 +640,24 @@ function configurarSelecaoInicialDosItensListGroup() {
     if (this.classList.contains('active')) {
       $(this).removeClass('active');
       itensSelecionadosListGroup.filter(removerItemSelecionado);
-      $(this).find('div')[1].style.display=null;
+      $(this).find('div')[1].style.display = null;
     } else {
       $(this).addClass('active'); //.siblings().removeClass('active');
       itensSelecionadosListGroup.push($(this));
-      $(this).find('div')[1].style.display="none";
-      
-      if (itensSelecionadosListGroup.length == 1 && (history.state.id == null || history.state.id == 'tabs'))
-      {   
-          console.log("O estado é")
-          console.log(history.state)
-          history.pushState({id:"selecao", lgi_id: $(this).attr('id')}, "selecao", "?selecao")
-          console.log("PUSH de Seleção")
+      $(this).find('div')[1].style.display = 'none';
+
+      if (
+        itensSelecionadosListGroup.length == 1 &&
+        (history.state.id == null || history.state.id == 'tabs')
+      ) {
+        console.log('O estado é');
+        console.log(history.state);
+        history.pushState(
+          { id: 'selecao', lgi_id: $(this).attr('id') },
+          'selecao',
+          '?selecao'
+        );
+        console.log('PUSH de Seleção');
       }
     }
 
@@ -614,7 +667,7 @@ function configurarSelecaoInicialDosItensListGroup() {
       console.log(getMesISLG(itensSelecionadosListGroup[0]));
     }*/
     //configurarBtnComeBack()
-    returnBackPagDesign()
+    returnBackPagDesign();
     mudarEstadosDaInterfaceNaSelecao(itensSelecionadosListGroup.length, mes);
   });
 }
@@ -629,12 +682,11 @@ function configurarSelecaoDosItensListGroupClick() {
     if (this.classList.contains('active')) {
       $(this).removeClass('active');
       itensSelecionadosListGroup.filter(removerItemSelecionado);
-      $(this).find('div')[1].style.display=null;
+      $(this).find('div')[1].style.display = null;
     } else if (itensSelecionadosListGroup.length != 0) {
-
       $(this).addClass('active'); //.siblings().removeClass('active');
       itensSelecionadosListGroup.push($(this));
-      $(this).find('div')[1].style.display="none";
+      $(this).find('div')[1].style.display = 'none';
     }
 
     /*if (itensSelecionadosListGroup.length != 0) {
@@ -643,7 +695,7 @@ function configurarSelecaoDosItensListGroupClick() {
       console.log(getMesISLG(itensSelecionadosListGroup[0]));
     }*/
     //configurarBtnComeBack()
-    returnBackPagDesign()
+    returnBackPagDesign();
     mudarEstadosDaInterfaceNaSelecao(itensSelecionadosListGroup.length, mes);
   });
 }
@@ -665,82 +717,82 @@ function buttonSubtrairFrequencia(user, collectionRef) {
     var mes = parseInt(`${$(this)[0].id}`.slice(-1));
     var valorFrec = parseInt(`${$(this)[0].value}`);
     if (valorFrec > 0) {
-      attFrequencia(user, collectionRef, matricula, mes, parseInt(valorFrec - 1));
+      attFrequencia(
+        user,
+        collectionRef,
+        matricula,
+        mes,
+        parseInt(valorFrec - 1)
+      );
     }
   });
 }
 
 function compartilharLinkChamadaVirtual() {
-    if (navigator.canShare) {
-        navigator.share(
-          {
-              title: 'Link Chamada Virtual',
-              text: `Responda a chamada virtual.\n${inputLinkChamadaVirtual.value}`
-          }
-        )
-    }
+  if (navigator.canShare) {
+    navigator.share({
+      title: 'Link Chamada Virtual',
+      text: `Responda a chamada virtual.\n${inputLinkChamadaVirtual.value}`,
+    });
+  }
 }
 
 function atualizarLayoutDialogCV(code) {
-
-  console.log("Eu sou a func q dá problema")
+  console.log('Eu sou a func q dá problema');
   //var ativar = (chamadaVirtualAtivadaServer) ? 'checked':'';
 
-  if (chamadaVirtualAtivadaServer == true)
-  {
-      $('#ativarCVSwitch').prop('checked', true);
+  if (chamadaVirtualAtivadaServer == true) {
+    $('#ativarCVSwitch').prop('checked', true);
+  } else {
+    $('#ativarCVSwitch').prop('checked', false);
   }
-  else
-  {
-      $('#ativarCVSwitch').prop('checked', false);
-  }
-  if (online == true)
-  {
+  if (online == true) {
     $('#ativarCVSwitch').prop('disabled', false);
-  }
-  else
-  {
-      $('#ativarCVSwitch').prop('disabled', true);
+  } else {
+    $('#ativarCVSwitch').prop('disabled', true);
   }
 
-  if (online == false)
-  {
-    $('#chamadaVirtualDialogTitle').html(`Chamada Virtual do ${tabAtual.innerHTML}`);
+  if (online == false) {
+    $('#chamadaVirtualDialogTitle').html(
+      `Chamada Virtual do ${tabAtual.innerHTML}`
+    );
     secaoChamadaAtivada.hidden = true;
     secaoChamadaDesativada.hidden = true;
     secaoChamadaOffline.hidden = false;
-  }
-  else if (chamadaVirtualAtivadaServer == true)
-  {
+  } else if (chamadaVirtualAtivadaServer == true) {
     //$('#ativarCVSwitch').addClass('checked');
-    $('#chamadaVirtualDialogTitle').html(`Chamada Virtual do ${mesChamadaVirtualServer + 1}º Mês`);
+    $('#chamadaVirtualDialogTitle').html(
+      `Chamada Virtual do ${mesChamadaVirtualServer + 1}º Mês`
+    );
     secaoChamadaAtivada.hidden = false;
     secaoChamadaDesativada.hidden = true;
     secaoChamadaOffline.hidden = true;
 
-    inputLinkChamadaVirtual.value = (window.location.hostname == 'localhost') ? `http://localhost:5005/?code=${code}` : `http://monissores-chamada.web.app/?code=${code}`
+    inputLinkChamadaVirtual.value =
+      window.location.hostname == 'localhost'
+        ? `http://localhost:5005/?code=${code}`
+        : `http://monissores-chamada.web.app/?code=${code}`;
     //new QRCode(document.getElementById("qrcode"), inputLinkChamadaVirtual.value);
-    
-    if (qrCode == null)
-    {
-      qrCode = new QRCode(document.getElementById("qrcode"), {
+
+    if (qrCode == null) {
+      qrCode = new QRCode(document.getElementById('qrcode'), {
         text: inputLinkChamadaVirtual.value,
         width: 192,
         height: 192,
-        colorDark : "#000000",
-        colorLight : "#ffffff",
-        correctLevel : QRCode.CorrectLevel.H,
+        colorDark: '#000000',
+        colorLight: '#ffffff',
+        correctLevel: QRCode.CorrectLevel.H,
       });
     }
-  }
-  else
-  {
-    $('#chamadaVirtualDialogTitle').html(`Chamada Virtual do ${tabAtual.innerHTML}`);
+  } else {
+    $('#chamadaVirtualDialogTitle').html(
+      `Chamada Virtual do ${tabAtual.innerHTML}`
+    );
     secaoChamadaAtivada.hidden = true;
     secaoChamadaDesativada.hidden = false;
     secaoChamadaOffline.hidden = true;
   }
-  
+
   /*divSwitchAtivarChamada.innerHTML = 
   `<table style="width: -webkit-fill-available;">
       <tr>
@@ -766,15 +818,13 @@ function atualizarLayoutDialogCV(code) {
       </tr>
     </table>`
     ativarCVSwitch()*/
-
-
 }
 
 function atualizarTextoBtnCV(code, tabAtual = null) {
   /*console.log("A funcao TextoBTNCV foi chamada")
   console.log(chamadaVirtualAtivadaServer)*/
   if (online && chamadaVirtualAtivadaServer == false) {
-    $('#chamadaVirtual').removeClass("Ativada");
+    $('#chamadaVirtual').removeClass('Ativada');
     $('#chamadaVirtual').html(
       `<table>
       <tr>
@@ -785,27 +835,29 @@ function atualizarTextoBtnCV(code, tabAtual = null) {
       <td >Estado: Desativada</td>
       </tr>
       </table>`
-      );
-      $('#chamadaVirtualMesText').html(tabAtual == null ? "1º Mês" : tabAtual.innerHTML);
-  }
-  else if (online && chamadaVirtualAtivadaServer == true) {
-    $('#chamadaVirtual').addClass("Ativada");
+    );
+    $('#chamadaVirtualMesText').html(
+      tabAtual == null ? '1º Mês' : tabAtual.innerHTML
+    );
+  } else if (online && chamadaVirtualAtivadaServer == true) {
+    $('#chamadaVirtual').addClass('Ativada');
     /*console.log("A chamada btn")
     console.log($('#chamadaVirtual')[0])*/
     $('#chamadaVirtual').html(
       `<table>
       <tr>
           <th rowspan="2"><span class="material-symbols-outlined">link</span></th>
-          <td><strong>Chamada Virtual do </strong><strong id="chamadaVirtualMesText">${mesChamadaVirtualServer+1}º Mês</strong></td>
+          <td><strong>Chamada Virtual do </strong><strong id="chamadaVirtualMesText">${
+            mesChamadaVirtualServer + 1
+          }º Mês</strong></td>
         </tr>
         <tr>
           <td >Estado: Ativada</td>
         </tr>
         </table>`
-      );
-    }
-  else {
-    $('#chamadaVirtual').removeClass("Ativada");
+    );
+  } else {
+    $('#chamadaVirtual').removeClass('Ativada');
     $('#chamadaVirtual').html(
       `<table>
       <tr>
@@ -816,13 +868,11 @@ function atualizarTextoBtnCV(code, tabAtual = null) {
       <td >Conecte-se com a internet para habilitar a Chamada Virtual</td>
       </tr>
       </table>`
-      );
-      
-    }
-    if (code)
-    {
-        atualizarLayoutDialogCV(code);
-    }
+    );
+  }
+  if (code) {
+    atualizarLayoutDialogCV(code);
+  }
 }
 
 function mudarEstadosDaInterfaceNaSelecao(n, index) {
@@ -836,21 +886,21 @@ function mudarEstadosDaInterfaceNaSelecao(n, index) {
   if (n == 0) {
     //Caso barra de pesquisa esteja preechida
     ativacao = true;
-    if(document.getElementById('searchbar').value != ""){
-      escolherFunc()
+    if (document.getElementById('searchbar').value != '') {
+      escolherFunc();
       configurarBtnToShearch();
       buttonsExtra[2].hidden = !ativacao;
-    }else{
+    } else {
       navBarTitulo.innerHTML = 'Monissores';
     }
   } else if (n == 1) {
     navBarTitulo.innerHTML = `${n} aluno`;
     ativacao = false;
-  } 
-  
+  }
+
   //mostra de volta a parte de frequencia
   //for(i = 0; i <= n; i++){getDivISLG(itensSelecionadosListGroup[i+1]).style.display=null}
-  
+
   for (b = 0; b < buttonsPadrão.length; b++) {
     buttonsPadrão[b].hidden = !ativacao;
   }
@@ -874,47 +924,54 @@ function mudarEstadosDaInterfaceNaSelecao(n, index) {
     navBarTitulo.innerHTML = `${n} alunos`;
   }
 
-  if (((itensSelecionadosListGroup.length == $('.list-group-item').length / 4) &&(itensSelecionadosListGroup.length != 0)) || (document.getElementById('searchbar').value != "")){
+  if (
+    (itensSelecionadosListGroup.length == $('.list-group-item').length / 4 &&
+      itensSelecionadosListGroup.length != 0) ||
+    document.getElementById('searchbar').value != ''
+  ) {
     buttonsExtra[2].hidden = true;
   }
 
-  if (itensSelecionadosListGroup.length == 0 && history.state.id == 'selecao')
-  {
-      history.go(-1);
+  if (itensSelecionadosListGroup.length == 0 && history.state.id == 'selecao') {
+    history.go(-1);
   }
-  
 }
 
 function configurarDialogPushState(id, dialog_id, url) {
-    if ((history.state.id == null || history.state.id == 'tabs' || history.state.id == 'selecao'))
-    {
-        history.pushState({id:id, dialog_id: dialog_id}, dialog_id, `?${url}`);
-    }
-    configsPadraoModalDialog.hidden = false;
-    configsDeletarContaModalDialog.hidden = true;
+  if (
+    history.state.id == null ||
+    history.state.id == 'tabs' ||
+    history.state.id == 'selecao'
+  ) {
+    history.pushState({ id: id, dialog_id: dialog_id }, dialog_id, `?${url}`);
+  }
+  configsPadraoModalDialog.hidden = false;
+  configsDeletarContaModalDialog.hidden = true;
 }
 
 function configurarTabsPushState() {
   //$()'show.bs.modal'
-  //tab-pane  
+  //tab-pane
   //console.log("FuncFunciona")
-  $('.nav').on('shown.bs.tab', function(event){
-    tabAtual = $(event.target)[0];       // active tab
-    var y = $(event.relatedTarget).text();  // previous tab
-    console.log(tabAtual.id)
-    
+  $('.nav').on('shown.bs.tab', function (event) {
+    tabAtual = $(event.target)[0]; // active tab
+    var y = $(event.relatedTarget).text(); // previous tab
+    console.log(tabAtual.id);
+
     // Mudar texto do btn chamada virtual
     // Criar um pushState
-    console.log(history.length)
+    console.log(history.length);
     //if (history.state.id == null && tabAtual.id)
-    if (history.state.tab_id != tabAtual.id)
-    {
-      if (!(history.state.id == null && tabAtual.id == "mes-1-tab"))
-      {
-        history.pushState({id:"tabs", tab_id: tabAtual.id}, tabAtual.innerHTML, `?${tabAtual.id}`);
+    if (history.state.tab_id != tabAtual.id) {
+      if (!(history.state.id == null && tabAtual.id == 'mes-1-tab')) {
+        history.pushState(
+          { id: 'tabs', tab_id: tabAtual.id },
+          tabAtual.innerHTML,
+          `?${tabAtual.id}`
+        );
       }
     }
-    
+
     atualizarTextoBtnCV(null, tabAtual);
   });
   /*if (history.state.id == state)
@@ -925,130 +982,109 @@ function configurarTabsPushState() {
 
 function configurarDialogPopState(dialogs) {
   dialogs.forEach(dialog => {
-        dialog.addEventListener('hide.bs.modal', event => {
-            if (dialog.id == 'removeAlunoModalDialog' && history.state.id == 'dialog')
-            {
-                history.go(-1);
-            }
-            else if (history.state.id == 'dialog')
-            {
-                history.go(-1)
-            }
-            
-      });
+    dialog.addEventListener('hide.bs.modal', event => {
+      if (
+        dialog.id == 'removeAlunoModalDialog' &&
+        history.state.id == 'dialog'
+      ) {
+        history.go(-1);
+      } else if (history.state.id == 'dialog') {
+        history.go(-1);
+      }
+    });
   });
-  
 }
 
 function configurarPopState() {
-    history.replaceState({id: null}, "Default state", "./");
-    window.addEventListener('popstate', e => {
-        if (e.state.id == null)
-        {
-            console.log(" VOlttei pro inicio")
-            history.replaceState({id: null}, "Default state", "./");
-            configurarBtnComeBack()
-            if (itensSelecionadosListGroup.length > 0)
-                $("#desselecionarTudoBtn").trigger("click");
-            closeAllDialogs()
-            $(`#mes-1-tab`).trigger("click");
-
-        }
-        else if (e.state.id == 'pesquisa')
-        {
-            console.log("Quando clica pra frente " + e.state.id)
-            startSearchByID()
-            
-        }
-        else if (e.state.id == 'selecao')
-        {   
-            console.log("Quando clica pra frente na selecao" + e.state.id)
-            closeAllDialogs()
-            startSelectionByID(e.state);
-        }
-        else if (e.state.id == 'dialog')
-        {   
-            console.log("Quando clica pra frente na selecao" + e.state.id);
-            openDialogByID(e.state);
-        }
-        else if (e.state.id == 'tabs')
-        {   
-            console.log("Voltou uma aba aeum" + e.state.id);
-            closeAllDialogs();
-            configurarBtnComeBack();
-            if (itensSelecionadosListGroup.length > 0)
-            {
-                $("#desselecionarTudoBtn").trigger("click");
-
-            }
-                console.log("É pra desselecionar")
-            openTabByID(e.state);
-        }
-        else
-        {
-            console.log("Clicou no botão de voltar")
-            console.log(e.state)
-            console.log(e.state.id == 'tabs')
-            //startSearchByID(e.state.id)
-            /*configurarBtnComeBack(e.state.id);
+  history.replaceState({ id: null }, 'Default state', './');
+  window.addEventListener('popstate', e => {
+    if (e.state.id == null) {
+      console.log(' VOlttei pro inicio');
+      history.replaceState({ id: null }, 'Default state', './');
+      configurarBtnComeBack();
+      if (itensSelecionadosListGroup.length > 0)
+        $('#desselecionarTudoBtn').trigger('click');
+      closeAllDialogs();
+      $(`#mes-1-tab`).trigger('click');
+    } else if (e.state.id == 'pesquisa') {
+      console.log('Quando clica pra frente ' + e.state.id);
+      startSearchByID();
+    } else if (e.state.id == 'selecao') {
+      console.log('Quando clica pra frente na selecao' + e.state.id);
+      closeAllDialogs();
+      startSelectionByID(e.state);
+    } else if (e.state.id == 'dialog') {
+      console.log('Quando clica pra frente na selecao' + e.state.id);
+      openDialogByID(e.state);
+    } else if (e.state.id == 'tabs') {
+      console.log('Voltou uma aba aeum' + e.state.id);
+      closeAllDialogs();
+      configurarBtnComeBack();
+      if (itensSelecionadosListGroup.length > 0) {
+        $('#desselecionarTudoBtn').trigger('click');
+      }
+      console.log('É pra desselecionar');
+      openTabByID(e.state);
+    } else {
+      console.log('Clicou no botão de voltar');
+      console.log(e.state);
+      console.log(e.state.id == 'tabs');
+      //startSearchByID(e.state.id)
+      /*configurarBtnComeBack(e.state.id);
             configurarBtnDesselecionar(e.state.id);*/
-        }
-    });
-
-    
+    }
+  });
 }
 
 function startSearchByID() {
-    configurarBtnToShearch();
+  configurarBtnToShearch();
 }
 
 function startSelectionByID(state) {
-    if (itensSelecionadosListGroup.length == 0)
-    {
-        console.log("O item selecionado foi")
-        console.log($(`#${state.lgi_id}`)[0])
+  if (itensSelecionadosListGroup.length == 0) {
+    console.log('O item selecionado foi');
+    console.log($(`#${state.lgi_id}`)[0]);
 
-        $(`#${state.lgi_id}`).trigger("contextmenu");
+    $(`#${state.lgi_id}`).trigger('contextmenu');
 
-        if ($(`#${state.lgi_id}`)[0] == null)
-        {
-          
-          console.log("EBA")
-          selecionarPrimeiroItemDaTabAtual()
-        }
+    if ($(`#${state.lgi_id}`)[0] == null) {
+      console.log('EBA');
+      selecionarPrimeiroItemDaTabAtual();
     }
+  }
 }
 
 function openDialogByID(state) {
-    //$(`#${state.btn_id}`).trigger("click");
-    // Aqui eu tem que mostrar a tela inicial tab 0
-    $(`#${state.dialog_id}`).modal('show');
+  //$(`#${state.btn_id}`).trigger("click");
+  // Aqui eu tem que mostrar a tela inicial tab 0
+  $(`#${state.dialog_id}`).modal('show');
 }
 
 function openTabByID(state) {
-  console.log("Bora abrir a aba")
-    //$(`#${state.btn_id}`).trigger("click");
-    $(`#${state.tab_id}`).trigger("click");
+  console.log('Bora abrir a aba');
+  //$(`#${state.btn_id}`).trigger("click");
+  $(`#${state.tab_id}`).trigger('click');
 }
 
 function closeAllDialogs() {
-    var dialogs = ["chamadaVirtualModalDialog",
-    "removeAlunoModalDialog",
-    "editAlunoModalDialog",
-    "addAlunoModalDialog",
-    "relatorioModalDialog",
-    "configsModalDialog"]
+  var dialogs = [
+    'chamadaVirtualModalDialog',
+    'removeAlunoModalDialog',
+    'editAlunoModalDialog',
+    'addAlunoModalDialog',
+    'relatorioModalDialog',
+    'configsModalDialog',
+  ];
 
-    dialogs.forEach(element => {
-        $(`#${element}`).modal('hide');
-    });
+  dialogs.forEach(element => {
+    $(`#${element}`).modal('hide');
+  });
 }
 
-
 function configurarBtnRemover(user, collectionRef) {
-    var matriculas = [];  
+  var matriculas = [];
   itensSelecionadosListGroup.forEach(i => {
-    matriculas.push(getMatriculaISLG(i));
+    matriculas.push(getCpfISLG(i));
     /*removerAluno(user, alunosRef, getMatriculaISLG(i), () => {
       //$("#desselecionarTudoBtn").trigger("click");
       //go(-1)
@@ -1064,7 +1100,7 @@ function configurarBtnRemover(user, collectionRef) {
     //history.replaceState({id:"pesquisa"}, "pesquisa", "?pesquisa")
     //history.pushState({id:"pesquisa"}, "pesquisa", "?pesquisa")
     //go(-1)
-    $("#desselecionarTudoBtn").trigger("click");
+    $('#desselecionarTudoBtn').trigger('click');
   });
   itensSelecionadosListGroup = [];
   mudarEstadosDaInterfaceNaSelecao(0, 0);
@@ -1076,83 +1112,87 @@ function configurarBtnDeletarConta(user) {
 }
 
 function configurarBtnDesselecionar() {
-  $("#desselecionarTudoBtn").on("click", function (event) {
+  $('#desselecionarTudoBtn').on('click', function (event) {
     event.preventDefault();
     ultimoItemClicado.siblings().removeClass('active');
     ultimoItemClicado.removeClass('active');
     mudarEstadosDaInterfaceNaSelecao(0, getMesISLG(ultimoItemClicado));
     //Exibi novamente inteface da frequencia do items selecionados
-    for(i = 0; i < itensSelecionadosListGroup.length; i++){
-      getDivBunttonsFrequenciaISLG(itensSelecionadosListGroup[i]).style.display=null
+    for (i = 0; i < itensSelecionadosListGroup.length; i++) {
+      getDivBunttonsFrequenciaISLG(
+        itensSelecionadosListGroup[i]
+      ).style.display = null;
     }
     itensSelecionadosListGroup = [];
     escolherFunc();
 
-    if (history.state.id == 'selecao')
-    {
-        history.go(-1);
+    if (history.state.id == 'selecao') {
+      history.go(-1);
     }
   });
 }
 
-function configurarBtnSelecionarTudo(){
-  $("#selecionarTudoBtn").on("click", function(e){
+function configurarBtnSelecionarTudo() {
+  $('#selecionarTudoBtn').on('click', function (e) {
     var id = itensSelecionadosListGroup[0].attr('id');
-    console.log(id)
+    console.log(id);
     itensSelecionadosListGroup = [];
-    itensSelecionadosListGroup.push( $(`#${id}`))
+    itensSelecionadosListGroup.push($(`#${id}`));
     itensSelecionadosListGroup[0].siblings().addClass('active');
-    itensSelecionadosListGroup[0].siblings().each(function (index, element){
+    itensSelecionadosListGroup[0].siblings().each(function (index, element) {
       itensSelecionadosListGroup.push($(`#${element.id}`));
-      $(`#${element.id}`).find('div')[1].style.display="none";
-    })
-    mudarEstadosDaInterfaceNaSelecao(itensSelecionadosListGroup.length, getMesISLG(itensSelecionadosListGroup[0]))
-  })
+      $(`#${element.id}`).find('div')[1].style.display = 'none';
+    });
+    mudarEstadosDaInterfaceNaSelecao(
+      itensSelecionadosListGroup.length,
+      getMesISLG(itensSelecionadosListGroup[0])
+    );
+  });
 }
 
 function sanitizarInputs(nome, matricula, toast_id, mensagem) {
-    var sucesso = true;
-    if (!/^[a-z A-Zà-úÀ-Úä-üÄ-Ü]+$/.test(nome))
-    {
-        mensagem = "⚠ O nome só pode conter letras.";
-        sucesso = false;
-    }
-    else if (!/^[0-9]+$/.test(matricula))
-    {
-        mensagem = "⚠ A matrícula só pode conter números.";
-        sucesso = false;
-    }
-    else if (matricula < 2008100000)
-    {
-        mensagem = "⚠ A matrícula informada é inválida.";
-        sucesso = false;
-    }
-    $(`#${toast_id}Text`).html(mensagem);
-    const toast = new bootstrap.Toast(document.getElementById(toast_id));
-    toast.show();
+  var sucesso = true;
+  if (!/^[a-z A-Zà-úÀ-Úä-üÄ-Ü]+$/.test(nome)) {
+    mensagem = '⚠ O nome só pode conter letras.';
+    sucesso = false;
+  } else if (!/^[0-9]+$/.test(matricula)) {
+    mensagem = '⚠ A matrícula só pode conter números.';
+    sucesso = false;
+  } else if (matricula < 2008100000) {
+    mensagem = '⚠ A matrícula informada é inválida.';
+    sucesso = false;
+  }
+  $(`#${toast_id}Text`).html(mensagem);
+  const toast = new bootstrap.Toast(document.getElementById(toast_id));
+  toast.show();
 
-    return sucesso;
+  return sucesso;
 }
-
 
 function configurarBtnEditar(user, collectionRef) {
-  var matricula_velha = getMatriculaISLG(itensSelecionadosListGroup[0]);
+  var matricula_velha = getCpfISLG(itensSelecionadosListGroup[0]);
   var matricula_nova = parseInt(matriculaEditarAlunoInput.value);
   var nome = nomeEditarAlunoInput.value;
-  var valido = sanitizarInputs(nome, matriculaEditarAlunoInput.value, 'toastEditarAluno', "Cadastro editado.");
+  var valido = sanitizarInputs(
+    nome,
+    matriculaEditarAlunoInput.value,
+    'toastEditarAluno',
+    'Cadastro editado.'
+  );
 
-  if (valido === true)
-  {
-    console.log("O doc existe");
-    console.log(alunos)
-    var aluno = gerarAluno(nome, matricula_velha, alunos[`${user.uid}.A${matricula_velha}`].frequencia);
+  if (valido === true) {
+    console.log('O doc existe');
+    console.log(alunos);
+    var aluno = gerarAluno(
+      nome,
+      matricula_velha,
+      alunos[`${user.uid}.A${matricula_velha}`].frequencia
+    );
     setarAluno(user, collectionRef, aluno, true, matricula_nova, () => {
-      $("#desselecionarTudoBtn").trigger("click");
+      $('#desselecionarTudoBtn').trigger('click');
     });
-    
   }
 }
-
 
 /*function configurarBtnEditarV2(user, collectionRef) {
   var matricula_velha = getMatriculaISLG(itensSelecionadosListGroup[0]);
@@ -1205,103 +1245,107 @@ function configurarBtnEditar(user, collectionRef) {
 }*/
 //Facilitando botão de Pesquisa
 ////////////////////////////////////////
-function configurarBtnToShearch(){
-  cabecalhoInterno1.style.cssText = "display: none;";
-  barraDePesquisa.style.cssText = "display: block;";
-  document.getElementById("searchbar").focus();
+function configurarBtnToShearch() {
+  cabecalhoInterno1.style.cssText = 'display: none;';
+  barraDePesquisa.style.cssText = 'display: block;';
+  document.getElementById('searchbar').focus();
   //console.log("teste")
 
-  if ((history.state.id == null || history.state.id == 'tabs'))
-  {
-      history.pushState({id:"pesquisa"}, "pesquisa", "?pesquisa")
-      console.log("PUSH de Pesquisar")
+  if (history.state.id == null || history.state.id == 'tabs') {
+    history.pushState({ id: 'pesquisa' }, 'pesquisa', '?pesquisa');
+    console.log('PUSH de Pesquisar');
   }
-  desgrudar()
+  desgrudar();
 }
 
-function configurarBtnComeBack(){
-  cabecalhoInterno1.style.cssText = "display: flex;";
-  barraDePesquisa.style.cssText = "display: none;"
+function configurarBtnComeBack() {
+  cabecalhoInterno1.style.cssText = 'display: flex;';
+  barraDePesquisa.style.cssText = 'display: none;';
   document.getElementById('searchbar').value = null;
   mudarEstadosDaInterfaceNaSelecao(0, 0);
-  escolherFunc()
+  escolherFunc();
 
-  if (history.state.id == 'pesquisa')
-  {
-      history.go(-1);
+  if (history.state.id == 'pesquisa') {
+    history.go(-1);
   }
-  desgrudar()
+  desgrudar();
 }
 
-function returnBackPagDesign(){
-  cabecalhoInterno1.style.cssText = "display: flex;";
-  barraDePesquisa.style.cssText = "display: none;"
+function returnBackPagDesign() {
+  cabecalhoInterno1.style.cssText = 'display: flex;';
+  barraDePesquisa.style.cssText = 'display: none;';
 }
 
 ////////////////////////////////////////////////
 
-function escolherFunc(){
+function escolherFunc() {
   let groupList = $('.list-group-item');
   var groupListNames = [];
   var groupListMatriculas = [];
   let input = document.getElementById('searchbar').value.toLowerCase();
-  
-  $('.list-group-item').each(function(){
-    groupListNames.push($(this).find('label')[0].innerHTML)
-    groupListMatriculas.push($(this).find('label')[1].innerHTML)
-  })
 
-  if(!isNaN(input)){
-    for(i = 0; i < groupList.length; i++){
-      if(!((String)(groupListMatriculas[i]).toLowerCase().includes(input))){
-        groupList[i].style.display="none";
-      }else{
-        groupList[i].style.display="list-item"
+  $('.list-group-item').each(function () {
+    groupListNames.push($(this).find('label')[0].innerHTML);
+    groupListMatriculas.push($(this).find('label')[1].innerHTML);
+  });
+
+  if (!isNaN(input)) {
+    for (i = 0; i < groupList.length; i++) {
+      if (!String(groupListMatriculas[i]).toLowerCase().includes(input)) {
+        groupList[i].style.display = 'none';
+      } else {
+        groupList[i].style.display = 'list-item';
       }
-    }  
-  }else{
-    for(i = 0; i < groupList.length; i++){
-      if(!(groupListNames[i].toLowerCase().includes(input))){
-        groupList[i].style.display="none";
-      }else{
-        groupList[i].style.display="list-item";
+    }
+  } else {
+    for (i = 0; i < groupList.length; i++) {
+      if (!groupListNames[i].toLowerCase().includes(input)) {
+        groupList[i].style.display = 'none';
+      } else {
+        groupList[i].style.display = 'list-item';
       }
     }
   }
 }
 
 function selecionarPrimeiroItemDaTabAtual() {
-      var primeiroItem = $('.list-group-item')[0].id;
-      var matricula = parseInt(primeiroItem.slice(0, primeiroItem.indexOf("-")));
-      var mes = (tabAtual.id == null) ? 0 : getMesTabAtual(tabAtual);
-      console.log(mes)
-      $(`#${matricula}-${mes}`).trigger("contextmenu");
+  var primeiroItem = $('.list-group-item')[0].id;
+  var matricula = parseInt(primeiroItem.slice(0, primeiroItem.indexOf('-')));
+  var mes = tabAtual.id == null ? 0 : getMesTabAtual(tabAtual);
+  console.log(mes);
+  $(`#${matricula}-${mes}`).trigger('contextmenu');
 }
 
-function configuraBtnMes(user, collectionRef){
+function configuraBtnMes(user, collectionRef) {
   $('.dropdown').on('click', '.dropdown-item', function (event) {
     event.preventDefault();
-    configurarBtnRelatorio(user, collectionRef, (parseInt($(this).html().slice(-1)) - 1))
+    configurarBtnRelatorio(
+      user,
+      collectionRef,
+      parseInt($(this).html().slice(-1)) - 1
+    );
     //console.log(parseInt($(this).html().slice(-1)));
-  })
+  });
 }
 
-function configurarBtnRelatorio(user, collectionRef, frequenciaIndex){
-    let unsubscribe = collectionRef
+function configurarBtnRelatorio(user, collectionRef, frequenciaIndex) {
+  let unsubscribe = collectionRef
     .where('uid', '==', user.uid)
     .onSnapshot({ includeMetadataChanges: true }, querySnapshot => {
       querySnapshot.forEach(doc => {
-        var alunosFiltrados = obterAlunosDoMonitor(doc.data())
+        var alunosFiltrados = obterAlunosDoMonitor(doc.data());
         alunos = doc.data().alunos;
 
-        const items = alunosFiltrados.map(doc => {
+        const items = alunosFiltrados.filter(doc => {return doc.frequencia[frequenciaIndex] > 0}).map(doc => {
           var freq = doc.frequencia[frequenciaIndex];
-          return `${doc.nome}/${doc.matricula}/${freq} ${(freq == 1) ? 'vez': 'vezes'};<br>`;
+          return `${doc.nome}/${doc.matricula}/${freq} ${
+            freq == 1 ? 'vez' : 'vezes'
+          };<br>`;
         });
         listaAlunosRelatorio.innerHTML = items.join('');
       });
     });
-    return unsubscribe;
+  return unsubscribe;
 }
 
 /*function configurarBtnRelatorio(user, collectionRef, frequenciaIndex){
@@ -1318,26 +1362,28 @@ function configurarBtnRelatorio(user, collectionRef, frequenciaIndex){
     });
 }*/
 
-function copyButton(){
+function copyButton() {
   //console.log($("#listaAlunosRelatorio").text());
-  navigator.clipboard.writeText($("#listaAlunosRelatorio").text())
-  
-  const toast = new bootstrap.Toast(document.getElementById('toastRelatorioCopiado'))
-  toast.show()
+  navigator.clipboard.writeText($('#listaAlunosRelatorio').text());
+
+  const toast = new bootstrap.Toast(
+    document.getElementById('toastRelatorioCopiado')
+  );
+  toast.show();
 }
 
 function configurarSwitchAtivacaoChamadaVirtual(user, collectionRef) {
   $('#ativarCVSwitch').change(function (event) {
     event.stopImmediatePropagation();
-    console.log("Switcheeeee")
+    console.log('Switcheeeee');
     chamadaVirtualAtivadaClient = $(this).is(':checked');
     mesChamadaVirtual = getMesTabAtual(tabAtual);
-    console.log("Client: " + chamadaVirtualAtivadaClient)
-    console.log("Server: " + chamadaVirtualAtivadaServer)
+    console.log('Client: ' + chamadaVirtualAtivadaClient);
+    console.log('Server: ' + chamadaVirtualAtivadaServer);
     //console.log("Event" + event.type)
-    
+
     //chamadaVirtualAtivadaServer //doc.data().chamadaAtiva;
-        
+
     if (
       chamadaVirtualAtivadaClient == true &&
       chamadaVirtualAtivadaServer == false
@@ -1351,10 +1397,7 @@ function configurarSwitchAtivacaoChamadaVirtual(user, collectionRef) {
         })
         .then(() => {
           //1atualizarLayoutDialogCV(user.uid)
-          unsubscribeLCV = exibirListaDeAlunosChamadaVirtual(
-            user,
-            chamadaRef
-          );
+          unsubscribeLCV = exibirListaDeAlunosChamadaVirtual(user, chamadaRef);
         })
         .catch(e => {
           console.error('Error adding document: ', e);
@@ -1408,24 +1451,26 @@ function importarAlunosChamadaVirtual(user, collectionRef, chamadaRef) {
   let aluno = {};
   var listaAlunos = [];
   let alunoExiste;
-  
+
   if (listaAlunosChamadaVirtual.length > 0) {
     listaAlunosChamadaVirtual.forEach(element => {
-        let frequencia = [0, 0, 0, 0];
-        alunoExiste = alunos.hasOwnProperty(`${user.uid}.A${element.matricula}`);
-        
-        if (alunoExiste === true)
-        {
-          frequencia = alunos[`${user.uid}.A${element.matricula}`].frequencia;
-        }
+      let frequencia = [0, 0, 0, 0];
+      alunoExiste = alunos.hasOwnProperty(`${user.uid}.A${element.matricula}`);
 
-        frequencia[getMesTabAtual(tabAtual)] = frequencia[getMesTabAtual(tabAtual)] + 1;
+      if (alunoExiste === true) {
+        frequencia = alunos[`${user.uid}.A${element.matricula}`].frequencia;
+      }
 
-        aluno = {
-          nome: alunoExiste ? alunos[`${user.uid}.A${element.matricula}`].nome : element.nome,
-          matricula: element.matricula,
-          frequencia: frequencia
-        };
+      frequencia[getMesTabAtual(tabAtual)] =
+        frequencia[getMesTabAtual(tabAtual)] + 1;
+
+      aluno = {
+        nome: alunoExiste
+          ? alunos[`${user.uid}.A${element.matricula}`].nome
+          : element.nome,
+        matricula: element.matricula,
+        frequencia: frequencia,
+      };
       listaAlunos.push(aluno);
       removerAlunoChamadaVirtual(user, chamadaRef, element.matricula);
     });
@@ -1433,33 +1478,42 @@ function importarAlunosChamadaVirtual(user, collectionRef, chamadaRef) {
     listaAlunosChamadaVirtual = [];
     setarAluno(user, collectionRef, listaAlunos, false, null, () => {}, true);
     listaAlunos = [];
-    
-    const toast = new bootstrap.Toast(document.getElementById("toastChamadaVirtualFechada"));
+
+    const toast = new bootstrap.Toast(
+      document.getElementById('toastChamadaVirtualFechada')
+    );
     toast.show();
   }
-
 }
 
 function importarAlunosChamadaVirtualV2(user, alunosRef, chamadaRef) {
   listaAlunosChamadaVirtual.forEach(element => {
     alunosRef
       .doc(`${user.uid}.A${element.matricula}`)
-      .get({source: 'cache'})
+      .get({ source: 'cache' })
       .then(doc => {
         var frequencia = doc.data().frequencia;
-        frequencia[mesChamadaVirtualServer] = frequencia[mesChamadaVirtualServer] + 1;
+        frequencia[mesChamadaVirtualServer] =
+          frequencia[mesChamadaVirtualServer] + 1;
         editarAlunoFrequencia(user, alunosRef, element.matricula, frequencia);
-        console.log("O aluno teve a matrícula atualizada.")
+        console.log('O aluno teve a matrícula atualizada.');
       })
-      .catch((error) => {
-          // The document probably doesn't exist.
-          var frequencia = [0, 0, 0, 0];
-          frequencia[mesChamadaVirtualServer] = 1;
-          setarAluno(user, alunosRef, gerarAluno(element.nome, element.matricula, frequencia));//element.nome, element.matricula, frequencia)
-          console.error("O aluno n existia, adicionamos. Error updating document: ", error);
+      .catch(error => {
+        // The document probably doesn't exist.
+        var frequencia = [0, 0, 0, 0];
+        frequencia[mesChamadaVirtualServer] = 1;
+        setarAluno(
+          user,
+          alunosRef,
+          gerarAluno(element.nome, element.matricula, frequencia)
+        ); //element.nome, element.matricula, frequencia)
+        console.error(
+          'O aluno n existia, adicionamos. Error updating document: ',
+          error
+        );
       });
 
-      removerAlunoChamadaVirtual(user, chamadaRef, element.matricula)
+    removerAlunoChamadaVirtual(user, chamadaRef, element.matricula);
   });
   listaAlunosChamadaVirtual = [];
 }
@@ -1469,16 +1523,18 @@ function exibirListaDeAlunos(user, collectionRef, listGroups, meses) {
     .where('uid', '==', user.uid)
     //.orderBy("nome", "asc")
     .onSnapshot({ includeMetadataChanges: true }, querySnapshot => {
-    
       querySnapshot.forEach(doc => {
-        var alunosFiltrados = obterAlunosDoMonitor(doc.data())
+        var alunosFiltrados = obterAlunosDoMonitor(doc.data());
         alunos = doc.data().alunos;
-        
 
-        for (let frequenciaIndex = 0; frequenciaIndex < meses; frequenciaIndex++) {      
-        
-          const items = alunosFiltrados.map(doc => {//querySnapshot.docs.map(doc => {
-            
+        for (
+          let frequenciaIndex = 0;
+          frequenciaIndex < meses;
+          frequenciaIndex++
+        ) {
+          const items = alunosFiltrados.map(doc => {
+            //querySnapshot.docs.map(doc => {
+
             return `<a href="#" id="${doc.matricula}-${frequenciaIndex}"  
             class="list-group-item list-group-item-action flex-column align-items-start">
                 <!--Dados aluno-->
@@ -1519,24 +1575,26 @@ function exibirListaDeAlunos(user, collectionRef, listGroups, meses) {
         }
 
         //Caso barra de pesquisa esteja preechida
-        if(document.getElementById('searchbar').value != ""){
-          escolherFunc()//exibe a lista de acordo com a barra de pesquisa
+        if (document.getElementById('searchbar').value != '') {
+          escolherFunc(); //exibe a lista de acordo com a barra de pesquisa
         }
-      }); 
+      });
     });
   return unsubscribe;
 }
 
 function monitorarEstadoChamadaVirtual(user, collectionRef) {
   return collectionRef
-      .where('uid', '==', user.uid)
-      .onSnapshot(querySnapshot => {
-        const items = querySnapshot.docs.map(doc => {
-          chamadaVirtualAtivadaServer = doc.data().chamadaAtiva;
-          mesChamadaVirtualServer = doc.data().mes;
-          atualizarTextoBtnCV(user.uid);
-          console.log("A chamada está monitoradacomo" + chamadaVirtualAtivadaServer);  
-      })
+    .where('uid', '==', user.uid)
+    .onSnapshot(querySnapshot => {
+      const items = querySnapshot.docs.map(doc => {
+        chamadaVirtualAtivadaServer = doc.data().chamadaAtiva;
+        mesChamadaVirtualServer = doc.data().mes;
+        atualizarTextoBtnCV(user.uid);
+        console.log(
+          'A chamada está monitoradacomo' + chamadaVirtualAtivadaServer
+        );
+      });
     });
 }
 
@@ -1547,35 +1605,29 @@ function exibirListaDeAlunosChamadaVirtual(user, collectionRef) {
     .onSnapshot(querySnapshot => {
       const items = querySnapshot.docs.map(doc => {
         // TODO Falta resolver o bug das duplicatas
-        if (contemAluno(doc.data(), listaAlunosChamadaVirtual) === false)
-        {
-            listaAlunosChamadaVirtual.push(doc.data());
+        if (contemAluno(doc.data(), listaAlunosChamadaVirtual) === false) {
+          listaAlunosChamadaVirtual.push(doc.data());
         }
         return `<li>${doc.data().nome} \(${doc.data().matricula}\)</li>`;
       });
       totalAlunosChamadaVirtual.innerHTML = querySnapshot.docs.length;
       alunosListaChamadaVirtual.innerHTML = items.join('');
-      if (querySnapshot.docs.length > 0)
-      {
-          importarAlunosCVBtn.hidden = false;
-      }
-      else
-      {
+      if (querySnapshot.docs.length > 0) {
+        importarAlunosCVBtn.hidden = false;
+      } else {
         importarAlunosCVBtn.hidden = true;
       }
     });
 
-    
   return unsubscribe;
 }
-
 
 function contemAluno(obj, list) {
   var i;
   for (i = 0; i < list.length; i++) {
-      if (list[i].matricula === obj.matricula) {
-          return true;
-      }
+    if (list[i].matricula === obj.matricula) {
+      return true;
+    }
   }
 
   return false;
@@ -1600,45 +1652,43 @@ function attFrequencia(user, collectionRef, matricula, mes, valorFrec) {
 
 function criarMonitorNoBD(monitorRef, alunosRef, user) {
   monitorRef
-  .doc(`${user.uid}`)
-  .get()
-  .then(doc => {
-  })
-  .catch((error) => {
-    console.log("Monitor não cadastrado:", error);
-
-    alunosRef.where("uid", "==", user.uid)
+    .doc(`${user.uid}`)
     .get()
-    .then((querySnapshot) => {
-      var alunos = {};
-      querySnapshot.forEach((doc) => {
-          alunos[doc.id] = doc.data();
-      });
+    .then(doc => {})
+    .catch(error => {
+      console.log('Monitor não cadastrado:', error);
 
-      monitorRef
-      .doc(`${user.uid}`)
-      .set({
-          uid: user.uid,
-          alunos: alunos
-      });
+      alunosRef
+        .where('uid', '==', user.uid)
+        .get()
+        .then(querySnapshot => {
+          var alunos = {};
+          querySnapshot.forEach(doc => {
+            alunos[doc.id] = doc.data();
+          });
+
+          monitorRef.doc(`${user.uid}`).set({
+            uid: user.uid,
+            alunos: alunos,
+          });
+        });
     });
-  });
 }
 
 function obterAlunosDoMonitor(monitor) {
   //return monitor.alunos;
   //return Object.values(monitor.alunos);
   // Ordena a lista por nome
-  
+
   return ordenarAlunos(Object.values(monitor.alunos));
 }
 
 function ordenarAlunos(alunos) {
   var byName = alunos.slice(0);
-  byName.sort(function(a,b) {
-	var x = a.nome.toLowerCase();
-	var y = b.nome.toLowerCase();
-	return x < y ? -1 : x > y ? 1 : 0;
-});
+  byName.sort(function (a, b) {
+    var x = a.nome.toLowerCase();
+    var y = b.nome.toLowerCase();
+    return x < y ? -1 : x > y ? 1 : 0;
+  });
   return byName;
 }
