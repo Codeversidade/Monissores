@@ -39,3 +39,19 @@ Você também pode acessar o site [monissores.web.app](https://monissores.web.ap
 - [Carlos Pedro de Oliveira do Santos - Aluno do BCET na UFRB](https://github.com/iCarlosCode 'iCarlosCode aluno do BCET na UFRB')
 - [Narlan Menezes Aragão - Aluno do BCET na UFRB](https://github.com/MADARINH4 'iCarlosCode aluno do BCET na UFRB')
 - [Pedro Carlos de Oliveira do Santos - Aluno do BCET na UFRB](https://github.com/Manupedro 'iCarlosCode aluno do BCET na UFRB')
+
+## Contribuir
+Para rodar o projeto, clone o projeto para sua máquina.
+- Instale o Firebase Tools globalmente
+```
+npm i firebase-tools -g
+```
+- Faça login na conta do Firebase
+```
+firebase login
+```
+
+- Rode o projeto localmente
+```
+firebase emulators:start
+```
