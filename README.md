@@ -49,9 +49,17 @@ npm i firebase-tools -g
 - Faça login na conta do Firebase
 ```
 firebase login
+ou 
+npx firebase login
 ```
 
 - Rode o projeto localmente
 ```
 firebase emulators:start
+
+ou 
+npx firebase emulators:start
 ```
+
+- Dar um deploy
+npx firebase deploy
