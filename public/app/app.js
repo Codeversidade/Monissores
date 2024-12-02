@@ -98,6 +98,7 @@ let unsubscribeLA;
 let unsubscribeLCV;
 let unsubscribeEstadoCV;
 
+var matricula_velha_to_edition;
 auth.onAuthStateChanged(user => {
   if (user) {
     //console.log(firebase)
@@ -144,6 +145,7 @@ auth.onAuthStateChanged(user => {
       configurarBtnRemover(user, monitoresRef);
     };
     editarAlunoBtn.onclick = () => {
+      console.log('tentando editar')
       configurarBtnEditar(user, monitoresRef);
     };
     $('#btnDeletarConta').on('click', () => configurarBtnDeletarConta(user));
@@ -182,10 +184,29 @@ auth.onAuthStateChanged(user => {
         'editar',
         'selecao'
       );
-      nomeEditarAlunoInput.value = getNomeISLG(itensSelecionadosListGroup[0]);
-      matriculaEditarAlunoInput.value = getCpfISLG(
-        itensSelecionadosListGroup[0]
-      );
+      console.log('vamos pedro ', event);
+
+      // Obtém o elemento <a> que disparou o modal
+      const triggerElement = event.relatedTarget;
+
+      if (triggerElement) {
+        // Recupera os valores dos atributos data-* do elemento <a>
+        const matricula = triggerElement.getAttribute('data-matricula');
+        const nome = triggerElement.getAttribute('data-nome');
+        matricula_velha_to_edition = matricula;
+        if(matricula && nome){
+          nomeEditarAlunoInput.value = nome;
+          matriculaEditarAlunoInput.value = matricula;
+          console.log('nome e matricula', nome, matricula);
+          
+        }else{
+          nomeEditarAlunoInput.value = getNomeISLG(itensSelecionadosListGroup[0]);
+          matriculaEditarAlunoInput.value = getCpfISLG(
+            itensSelecionadosListGroup[0]
+          );
+        }
+      }
+     
     });
 
     chamadaVirtualModalDialog.addEventListener('show.bs.modal', event => {
@@ -256,6 +277,12 @@ auth.onAuthStateChanged(user => {
     configurarTabsPushState();
     configurarBtnSelecionarTudo();
 
+    //ruim pq a pessoa pode ficar focando e atualizar o valor 
+    // matriculaEditarAlunoInput.addEventListener('focus', () => {
+  
+    //     matriculaEditarAlunoInput.setAttribute('matricula-antiga', input.value);
+    
+    // });
     // Atualiza o Estado da chamada virtual
     unsubscribeEstadoCV = monitorarEstadoChamadaVirtual(user, chamadaRef);
     // Pega os dados dos alunos cadastrados no servidor e exibe eles na tela
@@ -1170,8 +1197,19 @@ function sanitizarInputs(nome, matricula, toast_id, mensagem) {
 }
 
 function configurarBtnEditar(user, collectionRef) {
-  var matricula_velha = getCpfISLG(itensSelecionadosListGroup[0]);
+  var matricula_velha;
+  if(itensSelecionadosListGroup.length > 0){
+    matricula_velha = getCpfISLG(itensSelecionadosListGroup[0]);
+  }else{
+      matricula_velha = matricula_velha_to_edition;
+
+  }
+   
+
+  console.log('matricula_velha', matricula_velha)
   var matricula_nova = parseInt(matriculaEditarAlunoInput.value);
+
+
   var nome = nomeEditarAlunoInput.value;
   var valido = sanitizarInputs(
     nome,
@@ -1534,9 +1572,11 @@ function exibirListaDeAlunos(user, collectionRef, listGroups, meses) {
         ) {
           const items = alunosFiltrados.map(doc => {
             //querySnapshot.docs.map(doc => {
-
+            //aqui
             return `<a href="#" id="${doc.matricula}-${frequenciaIndex}"  
-            class="list-group-item list-group-item-action flex-column align-items-start">
+            class="list-group-item list-group-item-action flex-column align-items-start"
+
+            >
                 <!--Dados aluno-->
                 <div style="float: left; margin-left: 10px;">
                   <span class="material-symbols-outlined">person</span>
@@ -1553,7 +1593,18 @@ function exibirListaDeAlunos(user, collectionRef, listGroups, meses) {
                 </div>
                 
                 <!--Botão-->
-                
+                           <button
+                id="editBtn"
+                class="buttonsExtraIndividual edit"
+                style="background-color: transparent; border: none; float: right; margin-right: 10px; margin-top: 15px; color="black";"
+                data-bs-toggle="modal"
+                data-bs-target="#editAlunoModalDialog"
+                data-matricula="${doc.matricula}"
+                data-nome="${doc.nome}"
+
+              >
+                <span class="material-symbols-outlined">edit</span>
+              </button>
                 <div class="btn-group" role="group" aria-label="Basic example" style="float: right; margin-right: 10px; margin-top: 10px;">
                     <button type="button" id="${
                       doc.matricula
@@ -1568,7 +1619,10 @@ function exibirListaDeAlunos(user, collectionRef, listGroups, meses) {
                     }-BA${frequenciaIndex}" value="${
               doc.frequencia[frequenciaIndex]
             }" class="btn btn-primary ba">+</button>
+ 
                 </div>
+              
+
               </a>`;
           });
           listGroups[frequenciaIndex].innerHTML = items.join('');

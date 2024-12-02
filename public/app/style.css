@@ -95,6 +95,11 @@ div#barraDePesquisa {
     color: white;
     background-color: var(--cor-principal);
 }
+.buttonsExtraIndividual {
+    border: none;
+    color: #0d6efd;
+    background-color: var(--cor-principal);
+}
 
 .btnChamadaVirtual.Ativada {
     width: -webkit-fill-available;
