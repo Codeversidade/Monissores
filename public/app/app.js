@@ -1582,7 +1582,7 @@ function exibirListaDeAlunos(user, collectionRef, listGroups, meses) {
                   <span class="material-symbols-outlined">person</span>
                   <label " class= "user name ${
                     doc.matricula
-                  }" style="vertical-align: top; max-width: 350px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${
+                  }" style="vertical-align: top; max-width: 130px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${
               doc.nome
             }</label>
                   <br>
